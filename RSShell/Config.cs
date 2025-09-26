@@ -6,6 +6,7 @@ using System.Text.Json;
 
 namespace RSShell;
 
+
 /// <summary>
 /// Representing the RSShell config file.
 /// </summary>
@@ -27,6 +28,7 @@ public class Config
     #region Static code
 
     static string Path => "settings.json";
+
     /// <summary>
     /// Saves the configuration file.
     /// </summary>
@@ -63,7 +65,7 @@ public class Config
                 return false;
             }
 
-            string data = File.ReadAllText(Path);
+            string data = File.ReadAllText(Path, Encoding.Unicode);
             config = (Config)JsonSerializer.Deserialize<Config>(data) ?? new Config();
             return true;
         }

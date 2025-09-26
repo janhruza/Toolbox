@@ -9,7 +9,8 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <StartupObject>RSShell.Program</StartupObject>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Platforms>AnyCPU;x64</Platforms>
+	<Platforms>AnyCPU;x64</Platforms>
+	<JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
 
 </Project>
