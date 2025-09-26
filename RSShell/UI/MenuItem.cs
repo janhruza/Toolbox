@@ -8,6 +8,16 @@ namespace RSShell.UI;
 public class MenuItem
 {
     /// <summary>
+    /// Creates a new <see cref="MenuItem"/> with no parameters.
+    /// No parameters means that this itemm will be initialized as a separator.
+    /// </summary>
+    public MenuItem()
+    {
+        this.Id = 0x1000;
+        this.Text = new string('―', 40); // horizontal box drawing character
+    }
+
+    /// <summary>
     /// Creates a new <see cref="MenuItem"/> with given parameters.
     /// </summary>
     /// <param name="id">Item's ID - used if the item is selected.</param>

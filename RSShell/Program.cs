@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using RSShell.Core;
 using RSShell.UI;
 
 #if WINDOWS
@@ -28,6 +30,10 @@ internal class Program
     const int ID_EXIT = 0;
     const int ID_ADD_FEED = 2;
     const int ID_ABOUT = 3;
+    const int ID_SEPARATOR = 0x1000;
+    const int ID_FETCH_FEEDS = 4;
+
+    static List<RssChannel> _channels = [];
 
     static async Task<int> Main(string[] args)
     {
@@ -115,6 +121,19 @@ internal class Program
                         }
                         break;
 
+                    case ID_SEPARATOR:
+                        break;
+
+                    case ID_FETCH_FEEDS:
+                        {
+                            if (await FetchAllFeeds() == true)
+                            {
+                                Console.Write("Press enter to continue. . . ");
+                                Console.ReadLine();
+                            }
+                        }
+                        break;
+
                     // 'exit' option
                     case ID_EXIT:
                         goto AppExit;
@@ -163,9 +182,12 @@ internal class Program
     {
         MenuItemCollection menu = new MenuItemCollection
         {
+            new MenuItem(ID_FETCH_FEEDS, "Fetch All Feeds"),
+            new MenuItem(),
             new MenuItem(ID_LIST_FEEDS, "List RSS Feeds"),
             new MenuItem(ID_ADD_FEED, "Add a new RSS feed"),
             new MenuItem(ID_ABOUT, "About RSShell"),
+            new MenuItem(),
             new MenuItem(ID_EXIT, "Exit"),
         };
 
@@ -218,6 +240,22 @@ internal class Program
         Console.Clear();
 
         Console.WriteLine("RSShell: Simple RSS reader inside your terminal!\n");
+        return true;
+    }
+
+    static async Task<bool> FetchAllFeeds()
+    {
+        Console.Clear();
+        _channels.Clear();
+        foreach (string uri in Config.Current.Feeds)
+        {
+            Uri url = new Uri(uri, UriKind.RelativeOrAbsolute);
+            Console.Write($"Fetching \e[38;5;200m{url.DnsSafeHost}\e[0m ");
+            RssChannel channel = await RssReader.Read(url);
+            _channels.Add(channel);
+            Console.WriteLine($"fetched!");
+        }
+
         return true;
     }
 }
