@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using RSShell.UI;
 
 namespace RSShell;
@@ -7,8 +8,19 @@ internal class Program
 {
     const int ID_EXIT = 0;
 
-    static int Main(string[] args)
+    static async Task<int> Main(string[] args)
     {
+        // load config
+        if (Config.Load(out Config cfg) == true)
+        {
+            Config.Current = cfg;
+        }
+
+        else
+        {
+            Config.Current = new Config();
+        }
+
         if (args.Length > 0)
         {
             // TODO: arguments disabled
@@ -34,8 +46,8 @@ internal class Program
                 }
             }
 
-            // cleanup code
-            AppExit:
+        // cleanup code
+        AppExit:
             PostExitCleanup();
             return 0;
         }
