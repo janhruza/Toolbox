@@ -1,11 +1,12 @@
-﻿using RSShell.UI;
-using System;
-using System.Security.Cryptography;
+﻿using System;
+using RSShell.UI;
 
 namespace RSShell;
 
 internal class Program
 {
+    const int ID_EXIT = 0;
+
     static int Main(string[] args)
     {
         if (args.Length > 0)
@@ -28,7 +29,7 @@ internal class Program
                 switch (option)
                 {
                     // 'exit' option
-                    case 0:
+                    case ID_EXIT:
                         goto AppExit;
                 }
             }
@@ -77,7 +78,7 @@ internal class Program
             new MenuItem(1, "List RSS Feeds"),
             new MenuItem(2, "Add a new RSS feed"),
             new MenuItem(3, "About RSShell"),
-            new MenuItem(0, "Exit"),
+            new MenuItem(ID_EXIT, "Exit"),
         };
 
         // get user input
