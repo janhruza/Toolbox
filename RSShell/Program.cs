@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RSShell.UI;
+using System;
 using System.Security.Cryptography;
 
 namespace RSShell;
@@ -22,12 +23,12 @@ internal class Program
                 Console.Clear();
                 DisplayBanner();
 
-                ConsoleKey option = HandleMenu();
+                int option = HandleMenu();
 
                 switch (option)
                 {
                     // 'exit' option
-                    case ConsoleKey.NumPad0:
+                    case 0:
                         goto AppExit;
                 }
             }
@@ -69,15 +70,17 @@ internal class Program
         return format + text + "\e[0m";
     }
 
-    static ConsoleKey HandleMenu()
+    static int HandleMenu()
     {
-        // draw menu
-        Console.WriteLine($"\t1. {AnsiiText("List RSS feeds", string.Empty)}");
-        Console.WriteLine($"\t2. {AnsiiText("Add a new RSS feed", string.Empty)}");
-        Console.WriteLine($"\t3. {AnsiiText("Options", string.Empty)}");
-        Console.WriteLine($"\t0. {AnsiiText("Exit", "\e[38;5;201m")}");
+        MenuItemCollection menu = new MenuItemCollection
+        {
+            new MenuItem(1, "List RSS Feeds"),
+            new MenuItem(2, "Add a new RSS feed"),
+            new MenuItem(3, "About RSShell"),
+            new MenuItem(0, "Exit"),
+        };
 
-        // return selected option
-        return Console.ReadKey(true).Key;
+        // get user input
+        return ConsoleMenu.SelectMenu(menu);
     }
 }
