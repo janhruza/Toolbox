@@ -35,6 +35,29 @@ public static class ConsoleMenu
         }
 
         Console.WriteLine($"\n\t\e[38;5;243mUse arrow up/down to navigate.\e[0m");
+
+        // write last log entry to the screen
+        {
+
+            Log.Entry entry = Log.GetLastEntry();
+            if (entry.EntryType == Log.LogType.Other)
+            {
+                // no log entries
+                return;
+            }
+
+            // go to the bottom of the visible screen
+            int top = Console.CursorTop;
+            int bottom = Console.WindowHeight - top;
+
+            // keep the height of the message in mind while counting the lines
+            for (int x = 0; x < bottom - entry.Message.Split(Environment.NewLine).Length; x++)
+            {
+                Console.WriteLine();
+            }
+
+            Console.Write($"{Log.TypeNamesFormatted[entry.EntryType]} {entry.Message.PadRight(50)}");
+        }
         return;
     }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -10,18 +11,113 @@ namespace Toolbox;
 /// </summary>
 public static class Log
 {
-    private enum LogType : byte
+    /// <summary>
+    /// Representing the log entry type.
+    /// </summary>
+    public enum LogType : byte
     {
-        Error = 0,
+        /// <summary>
+        /// Other unspecified entry type.
+        /// </summary>
+        Other = 0,
+
+        /// <summary>
+        /// The error entry type.
+        /// </summary>
+        Error,
+
+        /// <summary>
+        /// The warning entry type.
+        /// </summary>
         Warning,
+
+        /// <summary>
+        /// The informational entry type.
+        /// </summary>
         Information,
+
+        /// <summary>
+        /// The unhandled exception entry type.
+        /// </summary>
         Exception,
+
+        /// <summary>
+        /// The critical entry type.
+        /// </summary>
         Critical,
+
+        /// <summary>
+        /// The success entry type.
+        /// </summary>
         Success
     };
 
+    /// <summary>
+    /// Representing the names for the log entry types (<see cref="LogType"/>).
+    /// </summary>
+    public static Dictionary<LogType, string> TypeNames => new Dictionary<LogType, string>
+    {
+        { LogType.Other, "GENERIC" },
+        { LogType.Error, "ERROR" },
+        { LogType.Warning, "WARNING" },
+        { LogType.Information, "INFORMATION" },
+        { LogType.Exception, "EXCEPTION" },
+        { LogType.Critical, "CRITICAL" },
+        { LogType.Success, "SUCCESS" },
+    };
+
+    /// <summary>
+    /// Representing the ANSI formatted names/abbreviations for the log entry types (<see cref="LogType"/>).
+    /// </summary>
+    public static Dictionary<LogType, string> TypeNamesFormatted => new Dictionary<LogType, string>
+    {
+        { LogType.Other, "\e[48;5;255m\e[38;5;0m GNRL \e[0m" },
+        { LogType.Error, "\e[48;5;197m FAIL \e[0m" },
+        { LogType.Warning, "\e[48;5;226m\e[38;5;0m WARN \e[0m" },
+        { LogType.Information, "\e[48;5;21m INFO \e[0m" },
+        { LogType.Exception, "\e[48;5;200m EXCP \e[0m" },
+        { LogType.Critical, "\e[48;5;196m CRIT \e[0m" },
+        { LogType.Success, "\e[48;5;46m\e[38;5;0m  OK  \e[0m" },
+    };
+
+    /// <summary>
+    /// Representing a log entry.
+    /// </summary>
+    public struct Entry
+    {
+        /// <summary>
+        /// Representing the timestamp of the entry.
+        /// </summary>
+        public DateTime Timestamp;
+
+        /// <summary>
+        /// Representing the log type.
+        /// </summary>
+        public LogType EntryType;
+
+        /// <summary>
+        /// Representing the entry's tag.
+        /// </summary>
+        public string Tag;
+
+        /// <summary>
+        /// Representing the log message.
+        /// </summary>
+        public string Message;
+    }
+
     const string FILENAME = "Toolbox.log";
     const char SEPARATOR = ';';
+
+    private static Entry _lastEntry;
+
+    /// <summary>
+    /// Retrieves the last logged entry.
+    /// </summary>
+    /// <returns>
+    /// The last logged entry or an empty <see cref="Entry"/> object if no log entry was written yet.
+    /// </returns>
+    public static Entry GetLastEntry() => _lastEntry;
 
     private static bool WriteEntry(LogType type, string? tag, string message)
     {
@@ -36,10 +132,16 @@ public static class Log
 
         try
         {
+            Entry entry;
+            entry.Timestamp = DateTime.Now;
+            entry.EntryType = type;
+            entry.Tag = tag ?? "GENERIC";
+            entry.Message = message;
+
             StringBuilder sb = new StringBuilder();
 
             // add the date
-            sb.Append(DateTime.Now);
+            sb.Append(entry.Timestamp);
             sb.Append(SEPARATOR);
 
             // add the type
@@ -77,13 +179,16 @@ public static class Log
             sb.Append(SEPARATOR);
 
             // add the tag
-            sb.Append(tag ?? "GENERIC");
+            sb.Append(entry.Tag);
 
             // add the message + the new line separator
-            sb.AppendLine(message);
+            sb.AppendLine(entry.Message);
 
             // write the entry to the log file
             File.AppendAllText(FILENAME, sb.ToString(), Encoding.Unicode);
+
+            // assign the last entry
+            _lastEntry = entry;
             return true;
         }
 

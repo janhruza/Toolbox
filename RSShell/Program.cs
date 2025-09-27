@@ -79,6 +79,12 @@ internal class Program
                                 Console.Write($"\e[38;5;200mRSS feed added.\e[0m Press enter to continue. . . ");
                                 Console.ReadLine();
                             }
+
+                            else
+                            {
+                                Console.Write($"\e[38;5;196mNo feed was added.\e[0m Press enter to continue. . . ");
+                                Console.ReadLine();
+                            }
                         }
                         break;
 
@@ -137,6 +143,7 @@ internal class Program
     {
         // TODO: cleanup code
         Config.Save(Config.Current);
+        Console.Clear();
         return;
     }
 
@@ -157,11 +164,6 @@ internal class Program
         Console.Write("╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝");
         Console.WriteLine("\e[0m\n"); // reset + line break
         return;
-    }
-
-    static string AnsiiText(string text, string format)
-    {
-        return format + text + "\e[0m";
     }
 
     static int HandleMenu()
@@ -212,9 +214,15 @@ internal class Program
         Config.Current ??= new Config();
 
         Console.Clear();
-        Console.Write("Enter RSS feed source\n# \e[38;5;200m");
+        Console.Write("Enter RSS feed source (leave blank to cancel)\n# \e[38;5;200m");
         string addr = Console.ReadLine() ?? string.Empty;
         Console.WriteLine("\e[0m");
+
+        if (string.IsNullOrEmpty(addr))
+        {
+            // no feed added
+            return false;
+        }
 
         // add feed
         Config.Current.Feeds.Add(addr);
@@ -235,11 +243,20 @@ internal class Program
         _channels.Clear();
         foreach (string uri in Config.Current.Feeds)
         {
-            Uri url = new Uri(uri, UriKind.RelativeOrAbsolute);
-            Console.Write($"Fetching \e[38;5;200m{url.DnsSafeHost}\e[0m ");
-            RssChannel channel = await RssReader.Read(url);
-            _channels.Add(channel);
-            Console.WriteLine($"fetched!");
+            try
+            {
+                Uri url = new Uri(uri, UriKind.RelativeOrAbsolute);
+                Console.Write($"Fetching \e[38;5;200m{url.DnsSafeHost}\e[0m ");
+                RssChannel channel = await RssReader.Read(url);
+                _channels.Add(channel);
+                Console.WriteLine($"fetched!");
+                Log.Information($"Feed {uri} fetched.", nameof(FetchAllFeeds));
+            }
+
+            catch (Exception ex)
+            {
+                Log.Exception(ex);
+            }
         }
 
         return true;
@@ -250,6 +267,9 @@ internal class Program
         channel = new RssChannel();
         if (_channels.Count == 0)
         {
+            Console.WriteLine("No feeds fetched. Please fetch the feeds first using the \'\e[38;5;200mFetch All Feeds\e[0m\' option.");
+            Console.Write("Press enter to continue. . . ");
+            Console.ReadLine();
             return false;
         }
 
