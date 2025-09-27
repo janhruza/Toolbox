@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Log.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Setup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\ConsoleMenu.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\MenuItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Terminal.cs" />
   </ItemGroup>

@@ -14,7 +14,7 @@ public class MenuItem
     public MenuItem()
     {
         this.Id = 0x1000;
-        this.Text = new string('―', 40); // horizontal box drawing character
+        this.Text = new string('―', Constants.MENU_ITEM_WIDTH); // horizontal box drawing character
     }
 
     /// <summary>
