@@ -7,6 +7,8 @@ namespace Toolbox.UI;
 /// </summary>
 public static class ConsoleMenu
 {
+    const int MENU_ITEM_WIDTH = 40;
+
     /// <summary>
     /// Draws the console menu to the screen.
     /// </summary>
@@ -24,13 +26,13 @@ public static class ConsoleMenu
             if (x == idx)
             {
                 // item is selected
-                Console.WriteLine($"\e[48;5;200m  {items[x].Text.PadRight(40)}  \e[0m");
+                Console.WriteLine($"\e[48;5;200m  {items[x].Text,-MENU_ITEM_WIDTH}  \e[0m");
             }
 
             else
             {
                 // item is not selected
-                Console.WriteLine($"\e[0m  {items[x].Text.PadRight(40)}  \e[0m");
+                Console.WriteLine($"\e[0m  {items[x].Text,-MENU_ITEM_WIDTH}  \e[0m");
             }
         }
 
@@ -83,7 +85,7 @@ public static class ConsoleMenu
             Console.SetCursorPosition(left, top);
         }
 
-        Exit:
+    Exit:
         Console.SetCursorPosition(nleft, ntop);
         return selected;
     }

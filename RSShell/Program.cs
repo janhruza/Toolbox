@@ -81,7 +81,7 @@ internal class Program
 
                             else
                             {
-                                Terminal.Pause($"\e[38;5;196mNo feed was added.\e[0m Press enter to continue. . . ");;
+                                Terminal.Pause($"\e[38;5;196mNo feed was added.\e[0m Press enter to continue. . . "); ;
                             }
                         }
                         break;
