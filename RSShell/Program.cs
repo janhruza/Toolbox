@@ -47,6 +47,7 @@ internal class Program
         if (args.Length > 0)
         {
             // TODO: arguments disabled
+            Console.WriteLine("Arguments are disabled.");
             return 1;
         }
 
