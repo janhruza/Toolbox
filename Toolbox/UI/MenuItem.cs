@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RSShell.UI;
+namespace Toolbox.UI;
 
 /// <summary>
 /// Representing a single terminal menu item.

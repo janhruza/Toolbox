@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using RSShell.Core;
-using RSShell.UI;
+using Toolbox.UI;
 
 #if WINDOWS
 using System.Runtime.InteropServices;

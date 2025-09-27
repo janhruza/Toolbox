@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSShell", "RSShell\RSShell.csproj", "{234DE96D-2ABE-4BA5-853A-D2F3532FF3B7}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Toolbox", "Toolbox\Toolbox.shproj", "{16333AAF-F723-4375-AD7D-BAF2430E1076}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,5 +29,9 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {73990B9F-7047-498B-AA9B-BDAE97720C97}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Toolbox\Toolbox.projitems*{16333aaf-f723-4375-ad7d-baf2430e1076}*SharedItemsImports = 13
+		Toolbox\Toolbox.projitems*{234de96d-2abe-4ba5-853a-d2f3532ff3b7}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

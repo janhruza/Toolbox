@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RSShell.UI;
+namespace Toolbox.UI;
 
 /// <summary>
 /// Representing the terminal menu handler class.

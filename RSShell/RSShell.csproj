@@ -20,4 +20,6 @@
 	<Platforms>AnyCPU;x64</Platforms>
 	<JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
+	
+  <Import Project="..\Toolbox\Toolbox.projitems" Label="Shared" />
 </Project>
