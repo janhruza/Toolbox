@@ -67,8 +67,7 @@ internal class Program
                         {
                             if (ListFeeds() == true)
                             {
-                                Console.Write("Press enter to continue. . . ");
-                                Console.ReadLine();
+                                Terminal.Pause();
                             }
                         }
                         break;
@@ -77,14 +76,12 @@ internal class Program
                         {
                             if (AddRssFeed() == true)
                             {
-                                Console.Write($"\e[38;5;200mRSS feed added.\e[0m Press enter to continue. . . ");
-                                Console.ReadLine();
+                                Terminal.Pause($"\e[38;5;200mRSS feed added.\e[0m Press enter to continue. . . ");
                             }
 
                             else
                             {
-                                Console.Write($"\e[38;5;196mNo feed was added.\e[0m Press enter to continue. . . ");
-                                Console.ReadLine();
+                                Terminal.Pause($"\e[38;5;196mNo feed was added.\e[0m Press enter to continue. . . ");;
                             }
                         }
                         break;
@@ -93,8 +90,7 @@ internal class Program
                         {
                             if (AboutDialog() == true)
                             {
-                                Console.Write("Press enter to continue. . . ");
-                                Console.ReadLine();
+                                Terminal.Pause();
                             }
                         }
                         break;
@@ -106,8 +102,7 @@ internal class Program
                         {
                             if (await FetchAllFeeds() == true)
                             {
-                                Console.Write("Press enter to continue. . . ");
-                                Console.ReadLine();
+                                Terminal.Pause();
                             }
                         }
                         break;
@@ -121,8 +116,7 @@ internal class Program
                                 // open feed view
                                 Console.Clear();
                                 OpenFeedView(channel);
-                                Console.Write("Press enter to continue. . . ");
-                                Console.ReadLine();
+                                Terminal.Pause();
                             }
                         }
                         break;
@@ -225,8 +219,7 @@ internal class Program
         Config.Current ??= new Config();
 
         Console.Clear();
-        Console.Write("Enter RSS feed source (leave blank to cancel)\n# \e[38;5;200m");
-        string addr = Console.ReadLine() ?? string.Empty;
+        string addr = Terminal.Input("Enter RSS feed source (leave blank to cancel)\n# ", "\e[38;5;200m", false);
         Console.WriteLine("\e[0m");
 
         if (string.IsNullOrEmpty(addr))
@@ -252,6 +245,7 @@ internal class Program
     {
         Console.Clear();
         _channels.Clear();
+
         foreach (string uri in Config.Current.Feeds)
         {
             try
@@ -270,6 +264,7 @@ internal class Program
             }
         }
 
+        Console.WriteLine();
         return true;
     }
 
@@ -278,9 +273,8 @@ internal class Program
         channel = new RssChannel();
         if (_channels.Count == 0)
         {
-            Console.WriteLine("No feeds fetched. Please fetch the feeds first using the \'\e[38;5;200mFetch All Feeds\e[0m\' option.");
-            Console.Write("Press enter to continue. . . ");
-            Console.ReadLine();
+            Console.WriteLine("No feeds fetched. Please fetch the feeds first using the \'\e[38;5;200mFetch All Feeds\e[0m\' option.\n");
+            Terminal.Pause();
             return false;
         }
 

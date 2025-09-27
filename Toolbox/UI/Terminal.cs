@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Toolbox.UI;
 
@@ -20,8 +21,9 @@ public static class Terminal
         Log.Entry entry = Log.GetLastEntry();
         if (entry.EntryType == Log.LogType.Other)
         {
-            // no log entries
-            return;
+            // assign initial entry
+            entry.EntryType = Log.LogType.Other;
+            entry.Message = "No log entries so far.";
         }
 
         // go to the bottom of the visible screen
@@ -39,5 +41,60 @@ public static class Terminal
         // restore cursor position
         Console.SetCursorPosition(left, top);
         return;
+    }
+
+    /// <summary>
+    /// Pauses the execution until the enter (return) key is pressed.
+    /// </summary>
+    public static void Pause()
+    {
+        Console.Write("Press enter to continue. . . ");
+        Console.ReadLine();
+        return;
+    }
+
+    /// <summary>
+    /// Pauses the execution until the enter (return) key is pressed.
+    /// This method specifies the <paramref name="message"/> tha is printed as the prompt.
+    /// </summary>
+    /// <param name="message">Custom message prompt.</param>
+    public static void Pause(string message)
+    {
+        Console.Write(message);
+        Console.ReadLine();
+        return;
+    }
+
+    /// <summary>
+    /// Prompts the user to enter text input.
+    /// </summary>
+    /// <param name="prompt">The input prompt.</param>
+    /// <param name="ansiStyle">Custom input style specified using the ANSI escape code.</param>
+    /// <param name="ensureValue">Determines whther the user must provide an input. If <see langword="true"/>, the method will not return until a non empty string is inputed.</param>
+    /// <returns></returns>
+    public static string Input(string prompt, string ansiStyle = "\e[38;5;200m", bool ensureValue = true)
+    {
+        string output = string.Empty;
+
+        if (ensureValue)
+        {
+            // empty input prohibited
+            while (string.IsNullOrWhiteSpace(output))
+            {
+                Console.Write(prompt + ansiStyle);
+                output = Console.ReadLine() ?? string.Empty;
+                Console.Write("\e[0m");
+            }
+        }
+
+        else
+        {
+            // empty input allowed
+            Console.Write(prompt + ansiStyle);
+            output = Console.ReadLine() ?? string.Empty;
+            Console.Write("\e[0m");
+        }
+
+        return output;
     }
 }
