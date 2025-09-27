@@ -11,7 +11,7 @@ namespace RSShell;
 /// <summary>
 /// Representing the RSShell program class.
 /// </summary>
-internal class Program
+internal class Program : IApplication
 {
     const int ID_EXIT = 0;
     const int ID_LIST_FEEDS = 1;
@@ -135,7 +135,7 @@ internal class Program
         }
     }
 
-    static void PostExitCleanup()
+    public static void PostExitCleanup()
     {
         // TODO: cleanup code
         Config.Save(Config.Current);
@@ -143,7 +143,7 @@ internal class Program
         return;
     }
 
-    static void DisplayBanner()
+    public static void DisplayBanner()
     {
         // Displays the ANSI colored banner
         Console.Write("\e[38;5;21m");
