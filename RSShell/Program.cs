@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using RSShell.Core;
 using RSShell.UI;
@@ -26,12 +27,13 @@ internal class Program
     static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
 #endif
 
-    const int ID_LIST_FEEDS = 1;
     const int ID_EXIT = 0;
+    const int ID_LIST_FEEDS = 1;
     const int ID_ADD_FEED = 2;
     const int ID_ABOUT = 3;
     const int ID_SEPARATOR = 0x1000;
     const int ID_FETCH_FEEDS = 4;
+    const int ID_SELECT_FEED = 5;
 
     static List<RssChannel> _channels = [];
 
@@ -134,6 +136,21 @@ internal class Program
                         }
                         break;
 
+                    case ID_SELECT_FEED:
+                        {
+                            // open feedview to select the feed to view
+                            Console.Clear();
+                            if (SelectFeed(out RssChannel channel) == true)
+                            {
+                                // open feed view
+                                Console.Clear();
+                                OpenFeedView(channel);
+                                Console.Write("Press enter to continue. . . ");
+                                Console.ReadLine();
+                            }
+                        }
+                        break;
+
                     // 'exit' option
                     case ID_EXIT:
                         goto AppExit;
@@ -182,6 +199,8 @@ internal class Program
     {
         MenuItemCollection menu = new MenuItemCollection
         {
+            new MenuItem(ID_SELECT_FEED, "Open Feed"),
+            new MenuItem(),
             new MenuItem(ID_FETCH_FEEDS, "Fetch All Feeds"),
             new MenuItem(),
             new MenuItem(ID_LIST_FEEDS, "List RSS Feeds"),
@@ -254,6 +273,52 @@ internal class Program
             RssChannel channel = await RssReader.Read(url);
             _channels.Add(channel);
             Console.WriteLine($"fetched!");
+        }
+
+        return true;
+    }
+
+    static bool SelectFeed(out RssChannel channel)
+    {
+        channel = new RssChannel();
+        if (_channels.Count == 0)
+        {
+            return false;
+        }
+
+        MenuItemCollection items = [];
+        for (int x = 0; x < _channels.Count; x++)
+        {
+            items.Add(new MenuItem(x, _channels[x].Title ?? _channels[x].Description));
+        }
+
+        // select channel
+        int option = ConsoleMenu.SelectMenu(items);
+        if (option == -1)
+        {
+            // selection cancelled
+            return false;
+        }
+
+        channel = _channels[option];
+        return true;
+    }
+
+    static bool OpenFeedView(RssChannel channel)
+    {
+        if (channel.Items.Count == 0)
+        {
+            // no items in the feed
+            Console.WriteLine("No items found in this feed.");
+            return true;
+        }
+
+        foreach (RssItem item in channel.Items)
+        {
+            // print item to the screen
+            Console.WriteLine($"\e[38;5;200m{item.Title}\e[0m");
+            Console.WriteLine(item.Description);
+            Console.WriteLine();
         }
 
         return true;
