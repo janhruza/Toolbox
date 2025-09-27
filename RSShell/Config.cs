@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using Toolbox;
 
 namespace RSShell;
 
@@ -45,6 +46,7 @@ public class Config
 
         catch (Exception ex)
         {
+            Log.Exception(ex, nameof(Save));
             return false;
         }
     }
@@ -72,6 +74,7 @@ public class Config
 
         catch (Exception ex)
         {
+            Log.Exception(ex, nameof(Load));
             return false;
         }
     }

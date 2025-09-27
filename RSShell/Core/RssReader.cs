@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
+using Toolbox;
 
 namespace RSShell.Core;
 
@@ -10,6 +11,14 @@ namespace RSShell.Core;
 /// </summary>
 public static class RssReader
 {
+    /// <summary>
+    /// Attempts to fetch the RSS feed from the given <paramref name="uri"/> address.
+    /// </summary>
+    /// <param name="uri">The source of the RSS document.</param>
+    /// <returns>
+    /// Parsed RSS channel of type <see cref="RssChannel"/>.
+    /// If an error occurred, an empty <see cref="RssChannel"/> object is returned.
+    /// </returns>
     public static async Task<RssChannel> Read(Uri uri)
     {
         // initialize the return object
@@ -71,7 +80,8 @@ public static class RssReader
 
         catch (Exception ex)
         {
-            // TODO: add logging
+            // an error occurred
+            Log.Exception(ex, nameof(Read));
         }
 
         return channel;

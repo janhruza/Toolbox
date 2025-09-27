@@ -7,6 +7,9 @@ using Toolbox.UI;
 
 namespace RSShell;
 
+/// <summary>
+/// Representing the RSShell program class.
+/// </summary>
 internal class Program
 {
     const int ID_EXIT = 0;
@@ -19,6 +22,11 @@ internal class Program
 
     static List<RssChannel> _channels = [];
 
+    /// <summary>
+    /// Representing the main application method.
+    /// </summary>
+    /// <param name="args">Command-line arguments.</param>
+    /// <returns>Application exit code.</returns>
     static async Task<int> Main(string[] args)
     {
         // initialize workspace
@@ -177,7 +185,8 @@ internal class Program
 
     static bool ListFeeds()
     {
-        if (Config.Current == null) return false;
+        // ensure config
+        Config.Current ??= new Config();
 
         Console.Clear();
 
@@ -194,16 +203,13 @@ internal class Program
         }
 
         Console.WriteLine();
-
         return true;
     }
 
     static bool AddRssFeed()
     {
-        if (Config.Current == null)
-        {
-            Config.Current = new Config();
-        }
+        // ensure config
+        Config.Current ??= new Config();
 
         Console.Clear();
         Console.Write("Enter RSS feed source\n# \e[38;5;200m");
