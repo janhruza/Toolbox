@@ -24,7 +24,7 @@ public static class ConsoleMenu
             if (x == idx)
             {
                 // item is selected
-                Console.WriteLine($"\e[48;5;200m  {items[x].Text,-Constants.MENU_ITEM_WIDTH}  \e[0m");
+                Console.WriteLine($"{Terminal.AccentHighlightStyle}  {items[x].Text,-Constants.MENU_ITEM_WIDTH}  \e[0m");
             }
 
             else

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Toolbox.UI;
 
 namespace Toolbox;
 
@@ -71,7 +72,7 @@ public static class Log
     /// </summary>
     public static Dictionary<LogType, string> TypeNamesFormatted => new Dictionary<LogType, string>
     {
-        { LogType.Other, "\e[48;5;255m\e[38;5;0m GNRL \e[0m" },
+        { LogType.Other, $"{Terminal.AccentHighlightStyle} GNRL \e[0m" },
         { LogType.Error, "\e[48;5;197m FAIL \e[0m" },
         { LogType.Warning, "\e[48;5;226m\e[38;5;0m WARN \e[0m" },
         { LogType.Information, "\e[48;5;21m INFO \e[0m" },

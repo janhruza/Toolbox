@@ -71,7 +71,7 @@ public static class Terminal
     /// <param name="ansiStyle">Custom input style specified using the ANSI escape code.</param>
     /// <param name="ensureValue">Determines whther the user must provide an input. If <see langword="true"/>, the method will not return until a non empty string is inputed.</param>
     /// <returns></returns>
-    public static string Input(string prompt, string ansiStyle = "\e[38;5;200m", bool ensureValue = true)
+    public static string Input(string prompt, bool ensureValue = true)
     {
         string output = string.Empty;
 
@@ -80,7 +80,7 @@ public static class Terminal
             // empty input prohibited
             while (string.IsNullOrWhiteSpace(output))
             {
-                Console.Write(prompt + ansiStyle);
+                Console.Write(prompt + AccentTextStyle);
                 output = Console.ReadLine() ?? string.Empty;
                 Console.Write("\e[0m");
             }
@@ -89,11 +89,23 @@ public static class Terminal
         else
         {
             // empty input allowed
-            Console.Write(prompt + ansiStyle);
+            Console.Write(prompt + AccentTextStyle);
             output = Console.ReadLine() ?? string.Empty;
             Console.Write("\e[0m");
         }
 
         return output;
     }
+
+    /// <summary>
+    /// Representing a style of the custom colored text, such as captions, keywords and other, non-highlighted, elements,
+    /// The style is represented as an ANSI escape sequence.
+    /// </summary>
+    public static string AccentTextStyle { get; set; } = "\e[38;5;210m";
+
+    /// <summary>
+    /// Representing a style of the highlighted items - such as highlighted menu item.
+    /// The style is represented as an ANSI escape sequence.
+    /// </summary>
+    public static string AccentHighlightStyle { get; set; } = "\e[48;5;210m\e[38;5;0m";
 }

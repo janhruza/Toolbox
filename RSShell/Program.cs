@@ -33,6 +33,10 @@ internal class Program : IApplication
         // initialize workspace
         Setup.Initialize();
 
+        // setup colors
+        Terminal.AccentTextStyle = "\e[38;5;200m";
+        Terminal.AccentHighlightStyle = "\e[48;5;200m\e[38;5;0m";
+
         // load config
         if (Config.Load(out Config cfg) == true)
         {
@@ -158,7 +162,9 @@ internal class Program : IApplication
         Console.WriteLine("██║  ██║███████║███████║██║  ██║███████╗███████╗███████╗");
         Console.Write("\e[38;5;201m");
         Console.Write("╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝");
-        Console.WriteLine("\e[0m\n"); // reset + line break
+        Console.WriteLine("\e[0m"); // reset
+        Console.WriteLine("Terminal RSS reader                       by @jendahruza");
+        Console.WriteLine();
         return;
     }
 
@@ -220,7 +226,7 @@ internal class Program : IApplication
         Config.Current ??= new Config();
 
         Console.Clear();
-        string addr = Terminal.Input("Enter RSS feed source (leave blank to cancel)\n# ", "\e[38;5;200m", false);
+        string addr = Terminal.Input("Enter RSS feed source (leave blank to cancel)\n# ", false);
         Console.WriteLine("\e[0m");
 
         if (string.IsNullOrEmpty(addr))
