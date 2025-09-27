@@ -1,4 +1,5 @@
 ﻿#if WINDOWS
+using System;
 using System.Runtime.InteropServices;
 #endif
 
@@ -24,29 +25,29 @@ public static class Setup
 #endif
 
     /// <summary>
-    /// Initializes the working environment.
+    /// Initializes the working environment. Contains platform-specific code.
     /// </summary>
     /// <returns>Operation result.</returns>
+    /// <remarks>
+    /// Enables the virtual terminal processing on the Windows platform.
+    /// </remarks>
     public static bool Initialize()
     {
 #if WINDOWS
             {
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                // enable ANSI escape codes to older terminals
+                var handle = GetStdHandle(STD_OUTPUT_HANDLE);
+                if (!GetConsoleMode(handle, out uint mode))
                 {
-                    // enable ANSI escape codes to older terminals
-                    var handle = GetStdHandle(STD_OUTPUT_HANDLE);
-                    if (!GetConsoleMode(handle, out uint mode))
-                    {
-                        Console.WriteLine("Failed to get console mode.");
-                        return -1;
-                    }
+                    Console.WriteLine("Failed to get console mode.");
+                    return false;
+                }
 
-                    mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-                    if (!SetConsoleMode(handle, mode))
-                    {
-                        Console.WriteLine("Failed to set console mode.");
-                        return -1;
-                    }
+                mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+                if (!SetConsoleMode(handle, mode))
+                {
+                    Console.WriteLine("Failed to set console mode.");
+                    return false;
                 }
             }
 #endif

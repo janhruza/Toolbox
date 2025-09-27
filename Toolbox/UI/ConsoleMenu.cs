@@ -77,7 +77,7 @@ public static class ConsoleMenu
                     goto Exit;
 
                 default:
-                    continue;
+                    break;
             }
 
             Console.SetCursorPosition(left, top);

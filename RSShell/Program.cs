@@ -170,7 +170,7 @@ internal class Program
             new MenuItem(ID_FETCH_FEEDS, "Fetch All Feeds"),
             new MenuItem(),
             new MenuItem(ID_LIST_FEEDS, "List RSS Feeds"),
-            new MenuItem(ID_ADD_FEED, "Add a new RSS feed"),
+            new MenuItem(ID_ADD_FEED, "Add a new RSS Feed"),
             new MenuItem(ID_ABOUT, "About RSShell"),
             new MenuItem(),
             new MenuItem(ID_EXIT, "Exit"),
@@ -189,7 +189,7 @@ internal class Program
 
         if (Config.Current.Feeds.Count == 0)
         {
-            Console.WriteLine("No RSS feeds found. Use the \'\e[38;5;201mAdd a new RSS feed\e[0m\' option to start.");
+            Console.WriteLine("No RSS feeds found. Use the \'\e[38;5;201mAdd a new RSS Feed\e[0m\' option to start.\n");
             return true;
         }
 
@@ -245,6 +245,12 @@ internal class Program
     {
         Console.Clear();
         _channels.Clear();
+
+        if (Config.Current.Feeds.Count == 0)
+        {
+            Console.WriteLine($"No RSS feeds to fetch. Use the \'\e[38;5;200mAdd a new RSS Feed\e[0m\' option to add new feeds.\n");
+            return true;
+        }
 
         foreach (string uri in Config.Current.Feeds)
         {
