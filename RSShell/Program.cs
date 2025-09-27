@@ -1,32 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 using RSShell.Core;
+using Toolbox;
 using Toolbox.UI;
-
-#if WINDOWS
-using System.Runtime.InteropServices;
-#endif
 
 namespace RSShell;
 
 internal class Program
 {
-#if WINDOWS
-    const int STD_OUTPUT_HANDLE = -11;
-    const uint ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
-
-    [DllImport("kernel32.dll", SetLastError = true)]
-    static extern IntPtr GetStdHandle(int nStdHandle);
-
-    [DllImport("kernel32.dll")]
-    static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
-
-    [DllImport("kernel32.dll")]
-    static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
-#endif
-
     const int ID_EXIT = 0;
     const int ID_LIST_FEEDS = 1;
     const int ID_ADD_FEED = 2;
@@ -39,6 +21,9 @@ internal class Program
 
     static async Task<int> Main(string[] args)
     {
+        // initialize workspace
+        Setup.Initialize();
+
         // load config
         if (Config.Load(out Config cfg) == true)
         {
@@ -59,30 +44,6 @@ internal class Program
         else
         {
             Console.Title = "RSShell - Terminal RSS Reader";
-
-            {
-#if WINDOWS
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                {
-                    // enable ANSI escape codes to older terminals
-                    var handle = GetStdHandle(STD_OUTPUT_HANDLE);
-                    if (!GetConsoleMode(handle, out uint mode))
-                    {
-                        Console.WriteLine("Failed to get console mode.");
-                        return -1;
-                    }
-
-                    mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-                    if (!SetConsoleMode(handle, mode))
-                    {
-                        Console.WriteLine("Failed to set console mode.");
-                        return -1;
-                    }
-                }
-
-#endif
-            }
-
 
             while (true)
             {

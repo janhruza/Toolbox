@@ -9,6 +9,8 @@
     <Import_RootNamespace>Toolbox</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Log.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Setup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\ConsoleMenu.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\MenuItem.cs" />
   </ItemGroup>
