@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using RSShell.Core;
 using Toolbox;
@@ -198,10 +199,20 @@ internal class Program
             return true;
         }
 
-        foreach (string feed in Config.Current.Feeds)
+        //foreach (string feed in Config.Current.Feeds)
+        //{
+        //    if (string.IsNullOrEmpty(feed)) continue;
+        //    Console.WriteLine(feed);
+        //}
+
+        // size of the longest URL in the feeds list
+        int longest = Config.Current.Feeds.Max(x => x.Length);
+
+        Console.WriteLine($"ID\tURL Address");
+        Console.WriteLine($"--\t{new string('\u2015', longest)}");
+        for (int x = 0; x < Config.Current.Feeds.Count; x++)
         {
-            if (string.IsNullOrEmpty(feed)) continue;
-            Console.WriteLine(feed);
+            Console.WriteLine($"{(x + 1):D2}\t{Config.Current.Feeds[x]}");
         }
 
         Console.WriteLine();

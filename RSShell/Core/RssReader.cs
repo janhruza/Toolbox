@@ -57,12 +57,12 @@ public static class RssReader
                         {
                             RssItem item = new RssItem
                             {
-                                Title = node?.SelectSingleNode("title")?.InnerText ?? string.Empty,
-                                Description = node?.SelectSingleNode("description")?.InnerText ?? string.Empty,
-                                Author = node?.SelectSingleNode("author")?.InnerText ?? string.Empty,
-                                Date = node?.SelectSingleNode("pubDate")?.InnerText ?? string.Empty,
-                                Link = node?.SelectSingleNode("link")?.InnerText ?? string.Empty,
-                                Guid = node?.SelectSingleNode("guid")?.InnerText ?? string.Empty,
+                                Title = node?.SelectSingleNode("title")?.InnerText.Trim() ?? string.Empty,
+                                Description = node?.SelectSingleNode("description")?.InnerText.Trim() ?? string.Empty,
+                                Author = node?.SelectSingleNode("author")?.InnerText.Trim() ?? string.Empty,
+                                Date = node?.SelectSingleNode("pubDate")?.InnerText.Trim() ?? string.Empty,
+                                Link = node?.SelectSingleNode("link")?.InnerText.Trim() ?? string.Empty,
+                                Guid = node?.SelectSingleNode("guid")?.InnerText.Trim() ?? string.Empty,
                             };
 
                             channel.Items.Add(item);
