@@ -258,7 +258,7 @@ internal class Program
     {
         Console.Clear();
 
-        Console.WriteLine("RSShell: Simple RSS reader inside your terminal!\n");
+        Console.WriteLine("\e[38;5;200mAbout RSShell\e[0m\nSimple RSS reader inside your terminal!\n");
         return true;
     }
 
