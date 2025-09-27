@@ -68,7 +68,6 @@ public static class Terminal
     /// Prompts the user to enter text input.
     /// </summary>
     /// <param name="prompt">The input prompt.</param>
-    /// <param name="ansiStyle">Custom input style specified using the ANSI escape code.</param>
     /// <param name="ensureValue">Determines whther the user must provide an input. If <see langword="true"/>, the method will not return until a non empty string is inputed.</param>
     /// <returns></returns>
     public static string Input(string prompt, bool ensureValue = true)

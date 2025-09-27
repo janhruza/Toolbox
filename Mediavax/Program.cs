@@ -1,4 +1,5 @@
 ﻿using System;
+using Mediavax.Core;
 using Toolbox;
 using Toolbox.UI;
 
@@ -34,8 +35,12 @@ internal class Program : IApplication
             return 1;
         }
 
+        // initialize
         Setup.Initialize();
         Console.Title = "Mediavax - YT-DLP wrapper";
+
+        // set terminal size
+        //Console.Write("\e[8;25;80t");
 
         // main app loop
         while (true)
@@ -47,9 +52,9 @@ internal class Program : IApplication
             // draw menu
             MenuItemCollection menu = new MenuItemCollection
             {
-                new MenuItem(0x10, "Media", "[select]"),
+                new MenuItem(0x10, "Media", string.IsNullOrWhiteSpace(MediaItem.Current.Address) ? "[select]" : MediaItem.Current.Address),
                 new MenuItem(),
-                new MenuItem(0, "Exit")
+                new MenuItem(0, "Exit", "ESC")
             };
 
             // get selected menu item
@@ -57,6 +62,7 @@ internal class Program : IApplication
 
             switch (option)
             {
+                case -1:    // ESC key pressed
                 case 0:
                     goto AppExit;
 
