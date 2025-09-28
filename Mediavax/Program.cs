@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Mediavax.Core;
 using Toolbox;
 using Toolbox.UI;
