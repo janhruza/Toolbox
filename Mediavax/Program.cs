@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Mediavax.Core;
 using Toolbox;
 using Toolbox.UI;
@@ -26,6 +27,7 @@ internal class Program : IApplication
 
     public static void PostExitCleanup()
     {
+        Console.Clear();
         return;
     }
 
@@ -102,7 +104,7 @@ internal class Program : IApplication
                 new MenuItem(),
                 new MenuItem((int)ID_EXTRAS, "Extras", ">"),
                 new MenuItem(),
-                new MenuItem((int)ID_START_DOWNLOAD, "Download"),
+                new MenuItem((int)ID_START_DOWNLOAD, "Verify & Download"),
                 new MenuItem(),
                 new MenuItem((int)ID_EXIT, "Exit", "ESC")
             };
