@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Net.Http.Headers;
 using Mediavax.Core;
 using Toolbox;
 using Toolbox.UI;
 
 using static Mediavax.MenuIds;
+using static Toolbox.ANSI;
 
 namespace Mediavax;
 
@@ -65,6 +68,9 @@ internal static class MenuActions
             MenuItemCollection items = new MenuItemCollection
             {
                 new MenuItem((int)ID_IMPORT_COOKIES, "Import cookies", MediaItem.Current.BrowserCookies == string.Empty ? "None" : MediaItem.Current.BrowserCookies),
+                new MenuItem((int)ID_CUSTOM_ARGUMENTS, "Cutsom YT-DLP arguments", MediaItem.Current.CustomOptions == string.Empty ? "None" : "[values]"),
+                new MenuItem(),
+                new MenuItem((int)ID_UPDATE_YTDLP, "Check for Updates", ">"),
                 new MenuItem(),
                 new MenuItem((int)ID_EXIT, "Back", "ESC")
             };
@@ -79,6 +85,18 @@ internal static class MenuActions
                 case (int)ID_IMPORT_COOKIES:
                     {
                         SelectBrowser();
+                    }
+                    break;
+
+                case (int)ID_CUSTOM_ARGUMENTS:
+                    {
+                        GetCustomArguments();
+                    }
+                    break;
+
+                case (int)ID_UPDATE_YTDLP:
+                    {
+                        UpdateDownloader();
                     }
                     break;
 
@@ -180,6 +198,20 @@ internal static class MenuActions
             return true;
     }
 
+    public static bool GetCustomArguments()
+    {
+        Console.Clear();
+        string args = Terminal.Input($"Enter {Terminal.AccentTextStyle}additional arguments{ANSI_RESET}\nCurrent value: {Terminal.AccentTextStyle}{MediaItem.Current.CustomOptions}{ANSI_RESET}\n\nNew value\n# ", false);
+
+        if (string.IsNullOrWhiteSpace(args))
+        {
+            return false;
+        }
+
+        MediaItem.Current.CustomOptions = args;
+        return true;
+    }
+
     public static bool StartDownload()
     {
         // check if the download can start
@@ -191,6 +223,41 @@ internal static class MenuActions
         }
 
         // confirm selected before proceeding to the download
+        Console.Clear();
+
+        Console.WriteLine($"{Terminal.AccentHighlightStyle} SUMMARY {ANSI_RESET}");
+        Console.WriteLine($"\tSource:   {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.Address)}{ANSI_RESET}");
+        Console.WriteLine($"\tMode:     {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.Mode)}{ANSI_RESET}");
+        Console.WriteLine($"\tQuality:  {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.Quality)}{ANSI_RESET}");
+        Console.WriteLine($"\tFormat:   {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.Format)}{ANSI_RESET}");
+        Console.WriteLine($"\tLocation: {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.Location)}{ANSI_RESET}");
+        Console.WriteLine($"\tCookies:  {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.BrowserCookies, "None")}{ANSI_RESET}");
+        Terminal.Pause();
+
         return true;
+    }
+
+    public static bool UpdateDownloader()
+    {
+        Console.Clear();
+        if (Toolbox.Core.CreateProcess("yt-dlp", "--update", out Process? process) == true)
+        {
+            Console.WriteLine("Update process started\n");
+            process?.WaitForExit();
+            
+            if (process.ExitCode == 0)
+            {
+                return true;
+            }
+
+            else
+            {
+                Terminal.Pause($"\nUpdate process {Terminal.AccentTextStyle}failed{ANSI_RESET} with exit code {Terminal.AccentTextStyle}{process.ExitCode}{ANSI_RESET}.\nPress {Terminal.AccentTextStyle}enter{ANSI_RESET} to continue. . . ");
+                return false;
+            }
+        }
+
+        // can't start process
+        return false;
     }
 }

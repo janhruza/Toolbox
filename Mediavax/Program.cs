@@ -123,9 +123,7 @@ internal class Program : IApplication
                 case (int)ID_SELECT_URL:
                     {
                         Console.Clear();
-                        HandleAction(MenuActions.SelectMediaSource(),
-                            trueMessage: $"Selected media {Terminal.AccentTextStyle}updated{ANSI_RESET} to {Terminal.AccentTextStyle}{MediaItem.Current.Address}{ANSI_RESET}",
-                            falseMessage: $"Action {Terminal.AccentTextStyle}cancelled{ANSI.ANSI_RESET}.");
+                        MenuActions.SelectMediaSource();
                     }
                     break;
 

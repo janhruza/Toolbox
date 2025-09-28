@@ -26,5 +26,9 @@ internal enum MenuIds : int
     ID_BROWSER_FIREFOX,
     ID_BROWSER_SAFARI,
     ID_BROWSER_WHALE,
-    ID_BROWSER_BRAVE
+    ID_BROWSER_BRAVE,
+
+    // more options
+    ID_UPDATE_YTDLP,
+    ID_CUSTOM_ARGUMENTS
 }

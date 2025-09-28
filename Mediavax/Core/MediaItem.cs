@@ -32,6 +32,7 @@ public class MediaItem
         Format = string.Empty;
         Location = string.Empty;
         BrowserCookies = string.Empty;
+        CustomOptions = string.Empty;
         Current = this;
     }
 
@@ -66,6 +67,11 @@ public class MediaItem
     /// Can be <see cref="string.Empty"/>.
     /// </summary>
     public string BrowserCookies { get; set; }
+
+    /// <summary>
+    /// Representing additional command line arguments for the YT-DLP.
+    /// </summary>
+    public string CustomOptions { get; set; }
 
     /// <summary>
     /// Determines whether the item can be downloaded.
