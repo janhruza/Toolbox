@@ -4,6 +4,8 @@ using System.IO;
 using System.Text;
 using Toolbox.UI;
 
+using static Toolbox.ANSI;
+
 namespace Toolbox;
 
 /// <summary>
@@ -72,13 +74,13 @@ public static class Log
     /// </summary>
     public static Dictionary<LogType, string> TypeNamesFormatted => new Dictionary<LogType, string>
     {
-        { LogType.Other, $"{Terminal.AccentHighlightStyle} GNRL \e[0m" },
-        { LogType.Error, "\e[48;5;197m FAIL \e[0m" },
-        { LogType.Warning, "\e[48;5;226m\e[38;5;0m WARN \e[0m" },
-        { LogType.Information, "\e[48;5;21m INFO \e[0m" },
-        { LogType.Exception, "\e[48;5;200m EXCP \e[0m" },
-        { LogType.Critical, "\e[48;5;196m CRIT \e[0m" },
-        { LogType.Success, "\e[48;5;46m\e[38;5;0m  OK  \e[0m" },
+        { LogType.Other, $"{Terminal.AccentHighlightStyle} GNRL {ANSI_RESET}" },
+        { LogType.Error, $"\e[48;5;197m FAIL {ANSI_RESET}" },
+        { LogType.Warning, $"\e[48;5;226m\e[38;5;0m WARN {ANSI_RESET}" },
+        { LogType.Information, $"\e[48;5;21m INFO {ANSI_RESET}" },
+        { LogType.Exception, $"\e[48;5;200m EXCP {ANSI_RESET}" },
+        { LogType.Critical, $"\e[48;5;196m CRIT {ANSI_RESET}" },
+        { LogType.Success, $"\e[48;5;46m\e[38;5;0m GOOD {ANSI_RESET}" },
     };
 
     /// <summary>

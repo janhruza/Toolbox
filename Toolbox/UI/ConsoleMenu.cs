@@ -1,5 +1,7 @@
 ﻿using System;
 
+using static Toolbox.ANSI;
+
 namespace Toolbox.UI;
 
 /// <summary>
@@ -24,17 +26,17 @@ public static class ConsoleMenu
             if (x == idx)
             {
                 // item is selected
-                Console.WriteLine($"{Terminal.AccentHighlightStyle}  {items[x].Text,-Constants.MENU_ITEM_WIDTH}  \e[0m");
+                Console.WriteLine($"{Terminal.AccentHighlightStyle}  {items[x].Text,-Constants.MENU_ITEM_WIDTH}  {ANSI_RESET}");
             }
 
             else
             {
                 // item is not selected
-                Console.WriteLine($"\e[0m  {items[x].Text,-Constants.MENU_ITEM_WIDTH}  \e[0m");
+                Console.WriteLine($"\e[0m  {items[x].Text,-Constants.MENU_ITEM_WIDTH}  {ANSI_RESET}");
             }
         }
 
-        Console.WriteLine($"\n\t\e[38;5;243mUse arrow up/down to navigate.\e[0m");
+        Console.WriteLine($"\n\t\e[38;5;243mUse arrow up/down to navigate.{ANSI_RESET}");
 
         // write last log entry to the screen
         Terminal.WriteLastLogEntry();

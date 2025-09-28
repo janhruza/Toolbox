@@ -37,6 +37,13 @@ public class MenuItem
     public MenuItem(int id, string text, string alt)
     {
         this.Id = id;
+
+        // trim text if needed
+        if (alt.Length > Constants.MENU_ALT_MAX_SIZE)
+        {
+            alt = alt.Substring(0, Constants.MENU_ALT_MAX_SIZE - 3) + "...";
+        }
+
         int availableWidth = Constants.MENU_ITEM_WIDTH - alt.Length;
         string paddedText = text.Length > availableWidth
             ? text.Substring(0, availableWidth)

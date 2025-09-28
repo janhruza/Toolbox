@@ -1,5 +1,7 @@
 ﻿using System;
 
+using static Toolbox.ANSI;
+
 namespace Toolbox.UI;
 
 /// <summary>
@@ -81,7 +83,7 @@ public static class Terminal
             {
                 Console.Write(prompt + AccentTextStyle);
                 output = Console.ReadLine() ?? string.Empty;
-                Console.Write("\e[0m");
+                Console.Write(ANSI_RESET);
             }
         }
 
@@ -90,7 +92,7 @@ public static class Terminal
             // empty input allowed
             Console.Write(prompt + AccentTextStyle);
             output = Console.ReadLine() ?? string.Empty;
-            Console.Write("\e[0m");
+            Console.Write(ANSI_RESET);
         }
 
         return output;
