@@ -55,6 +55,7 @@ public static class ConsoleMenu
         top = Console.CursorTop;
         left = Console.CursorLeft;
 
+        Console.CursorVisible = false;
         while (true)
         {
             DrawMenu(items, index);
@@ -86,6 +87,7 @@ public static class ConsoleMenu
         }
 
     Exit:
+        Console.CursorVisible = true;
         Console.SetCursorPosition(nleft, ntop);
         return selected;
     }

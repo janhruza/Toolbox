@@ -19,6 +19,8 @@ public static class Terminal
     /// </remarks>
     public static void WriteLastLogEntry()
     {
+        // FIXME: correct display of strings longer than terminal columns size
+
         Log.Entry entry = Log.GetLastEntry();
         if (entry.EntryType == Log.LogType.Other)
         {
@@ -37,7 +39,10 @@ public static class Terminal
             Console.WriteLine();
         }
 
-        Console.Write($"{Log.TypeNamesFormatted[entry.EntryType]} {entry.Message.PadRight(50)}");
+        if (entry.Message.Length > 0)
+        {
+            Console.Write($"{Log.TypeNamesFormatted[entry.EntryType]} {entry.Message}");
+        }
 
         // restore cursor position
         Console.SetCursorPosition(left, top);
