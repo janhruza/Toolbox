@@ -50,45 +50,59 @@ public static class ConsoleMenu
     /// <returns>The ID of the selected menu item.</returns>
     public static int SelectMenu(MenuItemCollection items)
     {
-        int top, left, index, ntop, nleft, selected;
-        index = 0;
-        top = Console.CursorTop;
-        left = Console.CursorLeft;
-
-        Console.CursorVisible = false;
-        while (true)
+        try
         {
-            DrawMenu(items, index);
-            var key = Console.ReadKey(true).Key;
-            (nleft, ntop) = Console.GetCursorPosition();
+            int top, left, index, ntop, nleft, selected;
+            index = 0;
+            top = Console.CursorTop;
+            left = Console.CursorLeft;
 
-            switch (key)
+            Console.CursorVisible = false;
+            while (true)
             {
-                case ConsoleKey.Escape:
-                    return -1;
+                DrawMenu(items, index);
+                var key = Console.ReadKey(true).Key;
+                (nleft, ntop) = Console.GetCursorPosition();
 
-                case ConsoleKey.UpArrow:
-                    index = (index > 0 && index < items.Count) ? --index : items.Count - 1;
-                    break;
+                switch (key)
+                {
+                    case ConsoleKey.Escape:
+                        return -1;
 
-                case ConsoleKey.DownArrow:
-                    index = (index < items.Count - 1) ? ++index : 0;
-                    break;
+                    case ConsoleKey.UpArrow:
+                        index = (index > 0 && index < items.Count) ? --index : items.Count - 1;
+                        break;
 
-                case ConsoleKey.Enter:
-                    selected = items[index].Id;
-                    goto Exit;
+                    case ConsoleKey.DownArrow:
+                        index = (index < items.Count - 1) ? ++index : 0;
+                        break;
 
-                default:
-                    break;
+                    case ConsoleKey.Enter:
+                        selected = items[index].Id;
+                        goto Exit;
+
+                    default:
+                        break;
+                }
+
+                Console.SetCursorPosition(left, top);
             }
 
-            Console.SetCursorPosition(left, top);
+        Exit:
+            Console.CursorVisible = true;
+            Console.SetCursorPosition(nleft, ntop);
+            return selected;
         }
 
-    Exit:
-        Console.CursorVisible = true;
-        Console.SetCursorPosition(nleft, ntop);
-        return selected;
+        catch (Exception ex)
+        {
+            Log.Exception(ex);
+            return 0xDEAD;
+        }
+
+        finally
+        {
+            Console.CursorVisible = true;
+        }
     }
 }

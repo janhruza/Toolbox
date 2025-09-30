@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace Toolbox;
 
@@ -23,10 +24,17 @@ public static class Core
             return process != null;
         }
 
+        catch (FileNotFoundException)
+        {
+            process = null;
+            Log.Error($"Command \'{command}\' not found.", nameof(CreateProcess));
+            return false;
+        }
+
         catch (Exception ex)
         {
             process = null;
-            Log.Exception(ex);
+            Log.Exception(ex, nameof(CreateProcess));
             return false;
         }
     }
