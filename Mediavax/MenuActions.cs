@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Net.Http.Headers;
+using System.IO;
 using Mediavax.Core;
 using Toolbox;
 using Toolbox.UI;
@@ -51,11 +51,55 @@ internal static class MenuActions
 
     public static bool SelectFormat()
     {
-        return true;
+        if (string.IsNullOrEmpty(MediaItem.Current.Address) == true)
+        {
+            Log.Warning("Select a media source first.", nameof(SelectFormat));
+            return false;
+        }
+
+        if (File.Exists("yt-dlp") == false)
+        {
+            Log.Error("yt-dlp was not found.", nameof(SelectFormat));
+            return false;
+        }
+
+        string json = string.Empty;
+        Console.Write("Gathering available formats... ");
+        if (Toolbox.Core.CreateProcess("yt-dlp", $"--dump-json --no-warnings -F {MediaItem.Current.Address}", out Process? proc, false, string.Empty) == true)
+        {
+            proc.WaitForExit();
+            Console.WriteLine();
+            json = proc.StandardOutput.ReadToEnd().Trim();
+
+            Console.WriteLine("FORMATS: ");
+            Console.WriteLine(json);
+            return true;
+        }
+
+        else
+        {
+            Log.Error("Unable to get available formats.", nameof(SelectFormat));
+            return false;
+        }
     }
 
     public static bool SelectLocation()
     {
+        string location = Terminal.Input($"Enter the {Terminal.AccentTextStyle}output directory{ANSI.ANSI_RESET}. Leave blank to cancel.\n# ", false);
+        if (string.IsNullOrWhiteSpace(location))
+        {
+            Log.Information("Location selection cancelled.", nameof(SelectLocation));
+            return false;
+        }
+
+        if (Directory.Exists(location) == false)
+        {
+            Log.Warning($"Directory not found. Action cancelled.", nameof(SelectLocation));
+            return false;
+        }
+
+        MediaItem.Current.Location = location;
+        Log.Success("Location updated.", nameof(SelectLocation));
         return true;
     }
 
@@ -70,6 +114,7 @@ internal static class MenuActions
                 new MenuItem((int)ID_IMPORT_COOKIES, "Import cookies", MediaItem.Current.BrowserCookies == string.Empty ? "None" : MediaItem.Current.BrowserCookies),
                 new MenuItem((int)ID_CUSTOM_ARGUMENTS, "Cutsom YT-DLP arguments", MediaItem.Current.CustomOptions == string.Empty ? "None" : "[values]"),
                 new MenuItem(),
+                new MenuItem((int)ID_YT_DLP_VERSION, "YT-DLP Version", Program.ActionText(Program._ytdlp_version, "Unknown")),
                 new MenuItem((int)ID_UPDATE_YTDLP, "Check for Updates", ">"),
                 new MenuItem(),
                 new MenuItem((int)ID_EXIT, "Back", "ESC")
@@ -247,6 +292,7 @@ internal static class MenuActions
             
             if (process.ExitCode == 0)
             {
+                Log.Success("YT-DLP was updated.", nameof(UpdateDownloader));
                 return true;
             }
 

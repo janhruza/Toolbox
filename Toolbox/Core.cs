@@ -38,4 +38,53 @@ public static class Core
             return false;
         }
     }
+
+    /// <summary>
+    /// Starts a new process.
+    /// This method is the extended version of the basic <see cref="CreateProcess(string, string, out Process?)"/> method.
+    /// </summary>
+    /// <param name="command">Command or file name.</param>
+    /// <param name="arguments">Command line arguments. Optional.</param>
+    /// <param name="process">Output <see cref="Process"/> object.</param>
+    /// <param name="shellExec">Determines whether the shell will start the process.</param>
+    /// <param name="directory">Specifies the <paramref name="process"/> working directory.</param>
+    /// <returns><see langword="true"/> if a new <see cref="Process"/> is created, otherwise <see langword="false"/>.</returns>
+    public static bool CreateProcess(string command, string arguments, out Process? process, bool shellExec, string directory)
+    {
+        try
+        {
+            process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = command,
+                    Arguments = arguments,
+                    UseShellExecute = shellExec,
+                    WorkingDirectory = directory,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    RedirectStandardInput = true
+                }
+            };
+
+            // TODO: remove when works
+            process.OutputDataReceived += (s, e) => Console.Write(e.Data);
+
+            return process.Start();
+        }
+
+        catch (FieldAccessException)
+        {
+            process = null;
+            Log.Error($"File or command \'{command}\' not found.", nameof(CreateProcess));
+            return false;
+        }
+
+        catch (Exception ex)
+        {
+            process = null;
+            Log.Exception(ex);
+            return false;
+        }
+    }
 }

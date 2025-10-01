@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using Mediavax.Core;
 using Toolbox;
 using Toolbox.UI;
@@ -26,8 +28,54 @@ internal class Program : IApplication
 
     public static void PostExitCleanup()
     {
+        // post exit cleanup
         Console.Clear();
         return;
+    }
+
+    /// <summary>
+    /// Checks if YT-DLP exists in local directory, in directory defined in the PATH variable, both directories or none at all.
+    /// </summary>
+    /// <returns></returns>
+    public static (bool yt_dlpExists, bool yt_dlpExistsPath) DownloaderExists()
+    {
+        // TODO: check if yt-dlp exists in local path, PATH env. variable or both
+        return (true, true);
+    }
+
+    public static string _ytdlp_version;
+    static string version_file = Path.GetTempFileName();
+
+    public static bool GetDownloaderVersion(out string version)
+    {
+        version = string.Empty;
+
+        try
+        {
+            Console.Write("Checking YT-DLP version... ");
+            if (Toolbox.Core.CreateProcess("yt-dlp", $"--version > {version_file}", out Process? proc, false, string.Empty) == true)
+            {
+                proc.WaitForExit();
+                version = proc.StandardOutput.ReadToEnd().Trim();
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+        }
+
+        catch (Exception ex)
+        {
+            Log.Exception(ex);
+            return false;
+        }
+    }
+
+    public static bool GetDownloaderVersion()
+    {
+        return GetDownloaderVersion(out _ytdlp_version);
     }
 
     /// <summary>
@@ -81,6 +129,13 @@ internal class Program : IApplication
         // initialize
         Setup.Initialize();
         Console.Title = "Mediavax - YT-DLP wrapper";
+
+        // get downloader version
+        if (GetDownloaderVersion(out _ytdlp_version) == false)
+        {
+            Log.Error("YT-DLP was not found in the PATH.");
+            return 0xDEAD;
+        }
 
         // set terminal size
         //Console.Write("\e[8;25;80t");
@@ -136,10 +191,22 @@ internal class Program : IApplication
 
                 // select output format: MP4, MP3, etc
                 case (int)ID_SELECT_FORMAT:
+                    {
+                        Console.Clear();
+                        if (MenuActions.SelectFormat() == false)
+                        {
+                            Console.WriteLine("Unable to get available formats.");
+                            Terminal.Pause();
+                        }
+                    }
                     break;
 
                 // select output directory
                 case (int)ID_SELECT_LOCATION:
+                    {
+                        Console.Clear();
+                        MenuActions.SelectLocation();
+                    }
                     break;
 
                 // open extras menu
