@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.Intrinsics.X86;
 using Mediavax.Core;
 using Toolbox;
 using Toolbox.UI;
@@ -12,6 +13,11 @@ namespace Mediavax;
 
 internal class Program : IApplication
 {
+    static Program()
+    {
+        _ytdlp_version = string.Empty;
+    }
+
     public static void DisplayBanner()
     {
         Console.WriteLine($"\e[38;5;213m███╗   ███╗███████╗██████╗ ██╗ █████╗ ██╗   ██╗ █████╗ ██╗  ██╗\e[0m");
@@ -34,26 +40,68 @@ internal class Program : IApplication
     }
 
     /// <summary>
+    /// Gets the name of the yt-dlp executable name (dynamic, different on Linux, Mac and Windows).
+    /// </summary>
+    public static string YT_DLP => Environment.OSVersion.Platform == PlatformID.Win32NT ? "yt-dlp.exe" : "yt-dlp";
+
+    /// <summary>
     /// Checks if YT-DLP exists in local directory, in directory defined in the PATH variable, both directories or none at all.
     /// </summary>
     /// <returns></returns>
     public static (bool yt_dlpExists, bool yt_dlpExistsPath) DownloaderExists()
     {
         // TODO: check if yt-dlp exists in local path, PATH env. variable or both
-        return (true, true);
+        bool yt_dlpExists = false;
+        bool yt_dlpExistsPath = false;
+
+        // Semicolot (;)    - Windows
+        // Colon (:)        - Linux & macOS
+        char separator = Environment.OSVersion.Platform == PlatformID.Win32NT ? ';' : ':';
+
+        if (Environment.GetEnvironmentVariable("PATH") is string pathValue)
+        {
+            string[] dirs = pathValue.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string dir in dirs)
+            {
+                string fullPath = Path.Combine(dir, YT_DLP);
+                if (File.Exists(fullPath))
+                {
+                    yt_dlpExistsPath = true;
+                    _path = fullPath;
+                    break; // Optional: stop after first match
+                }
+            }
+        }
+
+        else
+        {
+            yt_dlpExistsPath = false;
+        }
+
+        // check if local file exists
+        yt_dlpExists = File.Exists(YT_DLP);
+
+        // return
+        return (yt_dlpExists, yt_dlpExistsPath);
     }
 
     public static string _ytdlp_version;
-    static string version_file = Path.GetTempFileName();
 
     public static bool GetDownloaderVersion(out string version)
     {
         version = string.Empty;
 
+        (bool b1, bool b2) = DownloaderExists();
+        if (b1 == false && b2 == false)
+        {
+            Log.Error("YT-DLP not found.");
+            return false;
+        }
+
         try
         {
             Console.Write("Checking YT-DLP version... ");
-            if (Toolbox.Core.CreateProcess("yt-dlp", $"--version > {version_file}", out Process? proc, false, string.Empty) == true)
+            if (Toolbox.Core.CreateProcess(GetDownloader(), $"--version", out Process? proc, false, string.Empty) == true)
             {
                 proc.WaitForExit();
                 version = proc.StandardOutput.ReadToEnd().Trim();
@@ -76,6 +124,31 @@ internal class Program : IApplication
     public static bool GetDownloaderVersion()
     {
         return GetDownloaderVersion(out _ytdlp_version);
+    }
+
+    internal static string _path;
+
+    /// <summary>
+    /// Gets path of the found YT-DLP.
+    /// </summary>
+    /// <returns>Path to the YT-DLP or <see cref="string.Empty"/> if no downloader is found.</returns>
+    public static string GetDownloader()
+    {
+        (bool b1, bool b2) = DownloaderExists();
+        if (b1 == false && b2 == false)
+        {
+            return string.Empty;
+        }
+
+        else if (b1 == true)
+        {
+            return YT_DLP;
+        }
+
+        else
+        {
+            return _path;
+        }
     }
 
     /// <summary>

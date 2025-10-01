@@ -68,7 +68,7 @@ public static class Core
             };
 
             // TODO: remove when works
-            process.OutputDataReceived += (s, e) => Console.Write(e.Data);
+            //process.OutputDataReceived += (s, e) => Console.Write(e.Data);
 
             return process.Start();
         }

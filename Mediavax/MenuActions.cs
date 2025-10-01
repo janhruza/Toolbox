@@ -57,16 +57,23 @@ internal static class MenuActions
             return false;
         }
 
-        if (File.Exists("yt-dlp") == false)
+        (bool bFile, bool bPath) = Program.DownloaderExists();
+        if (bFile == false && bPath == false)
         {
-            Log.Error("yt-dlp was not found.", nameof(SelectFormat));
+            Log.Warning("YT-DLP was not found.");
             return false;
         }
 
         string json = string.Empty;
         Console.Write("Gathering available formats... ");
-        if (Toolbox.Core.CreateProcess("yt-dlp", $"--dump-json --no-warnings -F {MediaItem.Current.Address}", out Process? proc, false, string.Empty) == true)
+        if (Toolbox.Core.CreateProcess(Program.GetDownloader(), $"--dump-json --no-warnings -F {MediaItem.Current.Address}", out Process? proc, shellExec:false, string.Empty) == true)
         {
+            if (proc == null)
+            {
+                Log.Error("Process object is null.", nameof(SelectFormat));
+                return false;
+            }
+
             proc.WaitForExit();
             Console.WriteLine();
             json = proc.StandardOutput.ReadToEnd().Trim();
