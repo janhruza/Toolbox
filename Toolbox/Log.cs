@@ -183,6 +183,7 @@ public static class Log
 
             // add the tag
             sb.Append(entry.Tag);
+            sb.Append(SEPARATOR);
 
             // add the message + the new line separator
             sb.AppendLine(entry.Message);

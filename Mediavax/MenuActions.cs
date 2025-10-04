@@ -51,43 +51,85 @@ internal static class MenuActions
 
     public static bool SelectFormat()
     {
-        if (string.IsNullOrEmpty(MediaItem.Current.Address) == true)
+        if (string.IsNullOrEmpty(MediaItem.Current.Address))
         {
             Log.Warning("Select a media source first.", nameof(SelectFormat));
             return false;
         }
 
         (bool bFile, bool bPath) = Program.DownloaderExists();
-        if (bFile == false && bPath == false)
+        if (!bFile && !bPath)
         {
             Log.Warning("YT-DLP was not found.");
             return false;
         }
 
-        string json = string.Empty;
-        Console.Write("Gathering available formats... ");
         string path = Program.GetDownloader();
+        string args = $"--dump-json --no-warnings {MediaItem.Current.Address}";
 
-        if (Toolbox.Core.CreateProcess(path, $"--dump-json --no-warnings -F {MediaItem.Current.Address}", out Process? proc, shellExec:false, string.Empty) == true)
+        try
         {
-            if (proc == null)
+            var psi = new ProcessStartInfo
             {
-                Log.Error("Process object is null.", nameof(SelectFormat));
-                return false;
+                FileName = path,
+                Arguments = args,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using (var proc = Process.Start(psi))
+            {
+                if (proc == null)
+                {
+                    Log.Error("Process object is null.", nameof(SelectFormat));
+                    return false;
+                }
+
+                Console.Write("Gathering formats info... ");
+
+                // Read output BEFORE waiting
+                string json = proc.StandardOutput.ReadToEnd();
+                string err = proc.StandardError.ReadToEnd();
+
+                proc.WaitForExit();
+                Console.WriteLine("\n");
+
+                if (string.IsNullOrWhiteSpace(err) == false)
+                {
+                    Console.WriteLine($"{Terminal.AccentTextStyle}yt-dlp error{ANSI_RESET}: " + err);
+                    return false;
+                }
+
+                // parse formats
+                if (YtDlpParser.GetInfo(json, out YtDlpInfo info) == true)
+                {
+                    Console.WriteLine("FORMATS");
+                    foreach (YtDlpFormat format in info.formats)
+                    {
+                        // FIXME: list formats properly
+                        if (format.height == null) continue;
+                        Console.WriteLine($"{format.format_id}: {format.width}x{format.height}");
+                    }
+
+                    Console.WriteLine();
+                    Terminal.Pause();
+                }
+
+                else
+                {
+                    Log.Error("Unable to parse formats.", nameof(SelectFormat));
+                    return false;
+                }
+
+                return true;
             }
-
-            proc.WaitForExit();
-            Console.WriteLine();
-            json = proc.StandardOutput.ReadToEnd().Trim();
-
-            Console.WriteLine("FORMATS: ");
-            Console.WriteLine(json);
-            return true;
         }
-
-        else
+        catch (Exception ex)
         {
-            Log.Error("Unable to get available formats.", nameof(SelectFormat));
+            Console.Error.WriteLine($"{Log.TypeNamesFormatted[Log.LogType.Error]} {ex.Message}");
+            Log.Error($"Exception: {ex.Message}", nameof(SelectFormat));
             return false;
         }
     }
