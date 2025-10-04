@@ -207,6 +207,7 @@ internal class Program : IApplication
         if (GetDownloaderVersion(out _ytdlp_version) == false)
         {
             Log.Error("YT-DLP was not found in either PATH or local folder.");
+            Console.Error.WriteLine($"YT-DLP was not found.");
             return 0xDEAD;
         }
 
