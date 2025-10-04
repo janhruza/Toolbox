@@ -66,7 +66,9 @@ internal static class MenuActions
 
         string json = string.Empty;
         Console.Write("Gathering available formats... ");
-        if (Toolbox.Core.CreateProcess(Program.GetDownloader(), $"--dump-json --no-warnings -F {MediaItem.Current.Address}", out Process? proc, shellExec:false, string.Empty) == true)
+        string path = Program.GetDownloader();
+
+        if (Toolbox.Core.CreateProcess(path, $"--dump-json --no-warnings -F {MediaItem.Current.Address}", out Process? proc, shellExec:false, string.Empty) == true)
         {
             if (proc == null)
             {
