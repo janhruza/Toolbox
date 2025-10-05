@@ -3,10 +3,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+
 using Toolbox;
 
 namespace RSShell;
 
+/// <summary>
+/// Representing the type descriptor of the <see cref="RSShell.Config"/> type for the JSON serialization.
+/// </summary>
+[JsonSerializable(typeof(Config))]
+public partial class ConfigContext : JsonSerializerContext
+{
+}
 
 /// <summary>
 /// Representing the RSShell config file.
@@ -39,7 +48,7 @@ public class Config
     {
         try
         {
-            string data = JsonSerializer.Serialize(config);
+            string data = JsonSerializer.Serialize(config, ConfigContext.Default.Config);
             File.WriteAllText(Path, data, Encoding.Unicode);
             return true;
         }

@@ -336,12 +336,18 @@ internal static class MenuActions
     public static bool UpdateDownloader()
     {
         Console.Clear();
-        if (Toolbox.Core.CreateProcess("yt-dlp", "--update", out Process? process) == true)
+        if (Toolbox.Core.CreateProcess(Program.YT_DLP, "--update", out Process? process) == true)
         {
+            if (process == null)
+            {
+                Log.Error("Unable to start a new process.");
+                return false;
+            }
+
             Console.WriteLine("Update process started\n");
             process?.WaitForExit();
             
-            if (process.ExitCode == 0)
+            if (process?.ExitCode == 0)
             {
                 Log.Success("YT-DLP was updated.", nameof(UpdateDownloader));
                 return true;

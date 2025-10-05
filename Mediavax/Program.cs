@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Mediavax.Core;
+
+using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.Intrinsics.X86;
-using Mediavax.Core;
+
 using Toolbox;
 using Toolbox.UI;
 
@@ -16,6 +17,7 @@ internal class Program : IApplication
     static Program()
     {
         _ytdlp_version = string.Empty;
+        _path = string.Empty;
     }
 
     public static void DisplayBanner()
