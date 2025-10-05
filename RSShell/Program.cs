@@ -34,8 +34,8 @@ internal class Program : IApplication
         Setup.Initialize();
 
         // setup colors
-        Terminal.AccentTextStyle = "\e[38;5;200m";
-        Terminal.AccentHighlightStyle = "\e[48;5;200m\e[38;5;0m";
+        Terminal.AccentTextStyle = "\e[38;5;153m";
+        Terminal.AccentHighlightStyle = "\e[48;5;153m\e[38;5;0m";
 
         // load config
         if (Config.Load(out Config cfg) == true)
@@ -81,12 +81,12 @@ internal class Program : IApplication
                         {
                             if (AddRssFeed() == true)
                             {
-                                Terminal.Pause($"\e[38;5;200mRSS feed added.\e[0m Press enter to continue. . . ");
+                                Terminal.Pause($"{Terminal.AccentTextStyle}RSS feed added.{ANSI.ANSI_RESET} Press enter to continue. . . ");
                             }
 
                             else
                             {
-                                Terminal.Pause($"\e[38;5;196mNo feed was added.\e[0m Press enter to continue. . . "); ;
+                                Terminal.Pause($"{Terminal.AccentTextStyle}No feed was added.{ANSI.ANSI_RESET} Press enter to continue. . . "); ;
                             }
                         }
                         break;
@@ -196,15 +196,9 @@ internal class Program : IApplication
 
         if (Config.Current.Feeds.Count == 0)
         {
-            Console.WriteLine("No RSS feeds found. Use the \'\e[38;5;201mAdd a new RSS Feed\e[0m\' option to start.\n");
+            Console.WriteLine($"No RSS feeds found. Use the \'{Terminal.AccentTextStyle}Add a new RSS Feed{ANSI.ANSI_RESET}\' option to start.\n");
             return true;
         }
-
-        //foreach (string feed in Config.Current.Feeds)
-        //{
-        //    if (string.IsNullOrEmpty(feed)) continue;
-        //    Console.WriteLine(feed);
-        //}
 
         // size of the longest URL in the feeds list
         int longest = Config.Current.Feeds.Max(x => x.Length);
@@ -226,10 +220,10 @@ internal class Program : IApplication
         Config.Current ??= new Config();
 
         Console.Clear();
-        string addr = Terminal.Input("Enter RSS feed source (leave blank to cancel)\n# ", false);
-        Console.WriteLine("\e[0m");
+        string addr = Terminal.Input($"Enter {Terminal.AccentTextStyle}RSS feed source{ANSI.ANSI_RESET} (leave blank to cancel)\n# ", false);
+        Console.WriteLine(ANSI.ANSI_RESET);
 
-        if (string.IsNullOrEmpty(addr))
+        if (addr.IsEmpty() == true)
         {
             // no feed added
             return false;
@@ -244,7 +238,7 @@ internal class Program : IApplication
     {
         Console.Clear();
 
-        Console.WriteLine("\e[38;5;200mAbout RSShell\e[0m\nSimple RSS reader inside your terminal!\n");
+        Console.WriteLine($"{Terminal.AccentTextStyle}About RSShell{ANSI.ANSI_RESET}\nSimple RSS reader inside your terminal!\n");
         return true;
     }
 
@@ -255,7 +249,7 @@ internal class Program : IApplication
 
         if (Config.Current.Feeds.Count == 0)
         {
-            Console.WriteLine($"No RSS feeds to fetch. Use the \'\e[38;5;200mAdd a new RSS Feed\e[0m\' option to add new feeds.\n");
+            Console.WriteLine($"No RSS feeds to fetch. Use the \'{Terminal.AccentTextStyle}Add a new RSS Feed{ANSI.ANSI_RESET}\' option to add new feeds.\n");
             return true;
         }
 
@@ -264,7 +258,7 @@ internal class Program : IApplication
             try
             {
                 Uri url = new Uri(uri, UriKind.RelativeOrAbsolute);
-                Console.Write($"Fetching \e[38;5;200m{url.DnsSafeHost}\e[0m ");
+                Console.Write($"Fetching {Terminal.AccentTextStyle}{url.DnsSafeHost}{ANSI.ANSI_RESET} "); // extra space for the aesthetics
                 RssChannel channel = await RssReader.Read(url);
                 _channels.Add(channel);
                 Console.WriteLine($"fetched!");
@@ -286,7 +280,7 @@ internal class Program : IApplication
         channel = new RssChannel();
         if (_channels.Count == 0)
         {
-            Console.WriteLine("No feeds fetched. Please fetch the feeds first using the \'\e[38;5;200mFetch All Feeds\e[0m\' option.\n");
+            Console.WriteLine($"No feeds fetched. Please fetch the feeds first using the \'{Terminal.AccentTextStyle}Fetch All Feeds{ANSI.ANSI_RESET}\' option.\n");
             Terminal.Pause();
             return false;
         }
@@ -321,7 +315,7 @@ internal class Program : IApplication
         foreach (RssItem item in channel.Items)
         {
             // print item to the screen
-            Console.WriteLine($"\e[38;5;200m{item.Title}\e[0m");
+            Console.WriteLine($"{Terminal.AccentHighlightStyle}{item.Title}{ANSI.ANSI_RESET}");
             Console.WriteLine(item.Description);
             Console.WriteLine();
         }
