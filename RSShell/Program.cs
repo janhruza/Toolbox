@@ -34,8 +34,8 @@ internal class Program : IApplication
         Setup.Initialize();
 
         // setup colors
-        Terminal.AccentTextStyle = "\e[38;5;153m";
-        Terminal.AccentHighlightStyle = "\e[48;5;153m\e[38;5;0m";
+        Terminal.AccentTextStyle = "\e[38;5;225m";
+        Terminal.AccentHighlightStyle = "\e[48;5;225m\e[38;5;0m";
 
         // load config
         if (Config.Load(out Config cfg) == true)
