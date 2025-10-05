@@ -163,7 +163,7 @@ internal class Program : IApplication
         Console.Write("\e[38;5;201m");
         Console.Write("╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝");
         Console.WriteLine("\e[0m"); // reset
-        Console.WriteLine("Terminal RSS reader                       by @jendahruza");
+        Console.WriteLine($"Terminal RSS reader                       by {Terminal.AccentTextStyle}@jendahruza{ANSI.ANSI_RESET}");
         Console.WriteLine();
         return;
     }
