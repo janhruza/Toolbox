@@ -49,4 +49,24 @@ public class YtDlpFormat
     /// Representing the url property.
     /// </summary>
     public string url { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Representing a value of no codec.
+    /// </summary>
+    public const string NO_CODEC = "none";
+
+    /// <summary>
+    /// Determines whether the format has video track.
+    /// </summary>
+    public bool HasVideo => vcodec != NO_CODEC;
+
+    /// <summary>
+    /// Determines whether the format has audio track.
+    /// </summary>
+    public bool HasAudio => acodec != NO_CODEC;
+
+    /// <summary>
+    /// Determines whether the format is not an actual media, but thumbnail or preview.
+    /// </summary>
+    public bool IsThumbnail => vcodec == "images";
 }

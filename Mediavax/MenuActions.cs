@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Mediavax.Core;
+
+using Microsoft.VisualBasic;
+
 using Toolbox;
 using Toolbox.UI;
 
@@ -96,7 +100,7 @@ internal static class MenuActions
                 proc.WaitForExit();
                 Console.WriteLine("\n");
 
-                if (string.IsNullOrWhiteSpace(err) == false)
+                if (err.IsEmpty() == false)
                 {
                     Console.WriteLine($"{Terminal.AccentTextStyle}yt-dlp error{ANSI_RESET}: " + err);
                     return false;
@@ -105,16 +109,52 @@ internal static class MenuActions
                 // parse formats
                 if (YtDlpParser.GetInfo(json, out YtDlpInfo info) == true)
                 {
+                    List<YtDlpFormat> audioOnly = [];
+                    List<YtDlpFormat> videoOnly = [];
+                    List<YtDlpFormat> combined = [];
+
+                    int index = 0x01;
+                    Dictionary<int, YtDlpFormat> dict = [];
+
+                    // add id and format to dict
+                    // then user option is index in dict
+
                     Console.WriteLine("FORMATS");
                     foreach (YtDlpFormat format in info.formats)
                     {
                         // FIXME: list formats properly
-                        if (format.height == null) continue;
-                        Console.WriteLine($"{format.format_id}: {format.width}x{format.height}");
+                        //if (format.height == null) continue;
+                        //Console.WriteLine($"{format.format_id}: {format.width}x{format.height}");
+
+                        // get audio and video codecs only
+                        // and then the combined formats
+
+                        if (format.HasVideo == true && format.HasAudio == false)
+                        {
+                            // video only
+                            videoOnly.Add(format);
+                        }
+
+                        else if (format.HasVideo == false && format.HasAudio == true)
+                        {
+                            // audio only
+                            audioOnly.Add(format);
+                        }
+
+                        else if (format.HasVideo == true && format.HasVideo == true)
+                        {
+                            // combined - both audio and video
+                            combined.Add(format);
+                        }
+
+                        else
+                        {
+                            // invalid format, e.g. thumbnail
+                            continue;
+                        }
                     }
 
-                    Console.WriteLine();
-                    Terminal.Pause();
+                    // TODO: fill dict with ids and formats
                 }
 
                 else
