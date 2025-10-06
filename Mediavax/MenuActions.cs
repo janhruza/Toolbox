@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Mediavax.Core;
+
+using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-
-using Mediavax.Core;
-
-using Microsoft.VisualBasic;
 
 using Toolbox;
 using Toolbox.UI;
@@ -285,9 +281,9 @@ internal static class MenuActions
             }
         }
 
-        // method exit
-        MethodExit:
-            return true;
+    // method exit
+    MethodExit:
+        return true;
     }
 
     public static bool GetCustomArguments()
@@ -342,7 +338,7 @@ internal static class MenuActions
 
             Console.WriteLine("Update process started\n");
             process?.WaitForExit();
-            
+
             if (process?.ExitCode == 0)
             {
                 Log.Success("YT-DLP was updated.", nameof(UpdateDownloader));

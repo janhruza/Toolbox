@@ -34,22 +34,22 @@ public static class Setup
     public static bool Initialize()
     {
 #if WINDOWS
+        {
+            // enable ANSI escape codes to older terminals
+            var handle = GetStdHandle(STD_OUTPUT_HANDLE);
+            if (!GetConsoleMode(handle, out uint mode))
             {
-                // enable ANSI escape codes to older terminals
-                var handle = GetStdHandle(STD_OUTPUT_HANDLE);
-                if (!GetConsoleMode(handle, out uint mode))
-                {
-                    Console.WriteLine("Failed to get console mode.");
-                    return false;
-                }
-
-                mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-                if (!SetConsoleMode(handle, mode))
-                {
-                    Console.WriteLine("Failed to set console mode.");
-                    return false;
-                }
+                Console.WriteLine("Failed to get console mode.");
+                return false;
             }
+
+            mode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+            if (!SetConsoleMode(handle, mode))
+            {
+                Console.WriteLine("Failed to set console mode.");
+                return false;
+            }
+        }
 #endif
         return true;
     }
