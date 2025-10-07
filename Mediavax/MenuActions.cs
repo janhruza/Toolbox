@@ -65,18 +65,19 @@ internal static class MenuActions
             YtDlpFormat format = kp.Value;
 
             // combined
-            if (format.HasVideo == true && format.HasAudio == true) items.Add(new MenuItem(id, $"", format.format_id));
+            if (format.HasVideo == true && format.HasAudio == true) items.Add(new MenuItem(id, $"{(format.height+"p").PadRight(15)}{format.ext}", format.format_id));
 
             // audio only
-            else if (format.HasVideo == false && format.HasVideo == true) items.Add(new MenuItem(id, $"", format.format_id));
+            else if (format.HasVideo == false && format.HasVideo == true) items.Add(new MenuItem(id, $"{format.acodec.PadRight(15)}{format.ext}", format.format_id));
 
             // video only
-            else if (format.HasVideo == true && format.HasVideo == false) items.Add(new MenuItem(id, $"", format.format_id));
+            else if (format.HasVideo == true && format.HasVideo == false) items.Add(new MenuItem(id, $"{format.vcodec.PadRight(15)}{format.ext}", format.format_id));
 
             // extras
-            else items.Add(new MenuItem(id, $"", format.format_id));
+            else items.Add(new MenuItem(id, $"{format.format_note.PadRight(15)}{format.ext}", format.format_id));
         }
 
+        Console.Clear();
         int option = ConsoleMenu.SelectMenu(items);
         if (option == 0 || option == 0xDEAD)
         {
@@ -207,25 +208,25 @@ internal static class MenuActions
                         case (int)ID_FORMATS_COMBINED:
                             {
                                 // TODO: list combined formats
-                                return SelectCombinedFormat(combined);
+                                return SelectFormat(combined);
                             }
 
                         case (int)ID_FORMATS_AUDIO:
                             {
                                 // TODO: list audio formats
-                                return SelectAudioFormat(audioOnly);
+                                return SelectFormat(audioOnly);
                             }
 
                         case (int)ID_FORMATS_VIDEO:
                             {
                                 // TODO: list video formats
-                                return SelectVideoFormat(videoOnly);
+                                return SelectFormat(videoOnly);
                             }
 
                         case (int)ID_FORMATS_EXTRA:
                             {
                                 // TODO: list extra formats
-                                return SelectExtraFormat(extras);
+                                return SelectFormat(extras);
                             }
 
                         default: break;
