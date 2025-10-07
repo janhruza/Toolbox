@@ -13,4 +13,6 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
+  <Import Project="..\Toolbox\Toolbox.projitems" Label="Shared" />
+
 </Project>
