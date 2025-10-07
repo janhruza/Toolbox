@@ -79,7 +79,7 @@ internal static class MenuActions
 
         Console.Clear();
         int option = ConsoleMenu.SelectMenu(items);
-        if (option == 0 || option == 0xDEAD)
+        if (option == 0 || option == -1)
         {
             // selection cancelled
             Log.Information("Format selection cancelled", nameof(SelectFormat));
@@ -198,11 +198,12 @@ internal static class MenuActions
                     // extras
                     if (extras.Count > 0) categoriesMenu.Add(new MenuItem((int)ID_FORMATS_EXTRA, "Extras", extras.Count.ToString()));
 
+                    Console.Clear();
                     int category = ConsoleMenu.SelectMenu(categoriesMenu);
                     switch (category)
                     {
                         case 0:
-                        case 0xDEAD:
+                        case -1:
                             return false;
 
                         case (int)ID_FORMATS_COMBINED:
