@@ -425,13 +425,14 @@ internal static class MenuActions
         return true;
     }
 
-    public static bool StartDownload()
+    private static bool _downloadVerified = false;
+    public static bool VerifyDownload()
     {
         // check if the download can start
         if (MediaItem.Current.IsValid() == false)
         {
             // can't download, not all required fields are filled with data
-            Log.Error("Insufficient parameters. Fill all required fields.", nameof(StartDownload));
+            Log.Error("Insufficient parameters. Fill all required fields.", nameof(VerifyDownload));
             return false;
         }
 
@@ -439,15 +440,50 @@ internal static class MenuActions
         Console.Clear();
 
         Console.WriteLine($"{Terminal.AccentHighlightStyle} SUMMARY {ANSI_RESET}");
-        Console.WriteLine($"\tSource:   {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.Address)}{ANSI_RESET}");
-        Console.WriteLine($"\tMode:     {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.Mode)}{ANSI_RESET}");
-        Console.WriteLine($"\tQuality:  {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.Quality)}{ANSI_RESET}");
-        Console.WriteLine($"\tFormat:   {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.Format)}{ANSI_RESET}");
-        Console.WriteLine($"\tLocation: {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.Location)}{ANSI_RESET}");
-        Console.WriteLine($"\tCookies:  {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.BrowserCookies, "None")}{ANSI_RESET}");
-        Terminal.Pause();
+        Console.WriteLine($"Source:   {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.Address)}{ANSI_RESET}");
+        Console.WriteLine($"Format:   {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.Format)}{ANSI_RESET}");
+        Console.WriteLine($"Location: {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.Location)}{ANSI_RESET}");
+        Console.WriteLine($"Cookies:  {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.BrowserCookies, "None")}{ANSI_RESET}");
+        Console.WriteLine($"Extras:   {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.CustomOptions, "None")}{ANSI_RESET}");
+        Console.WriteLine();
+        
+        // confirm to start
+        if (string.Equals(Terminal.Input("Do you want to start the download? [Y/n]: ", true), "y", StringComparison.OrdinalIgnoreCase) == true)
+        {
+            // verify download
+            _downloadVerified = true;
+            Log.Success("Download verified.", nameof(VerifyDownload));
+            return true;
+        }
 
-        return true;
+        else
+        {
+            // download cancelled
+            _downloadVerified = false;
+            return false;
+        }
+    }
+
+    public static bool StartDownload()
+    {
+        if (_downloadVerified == false)
+        {
+            // download was not confirmed
+            Log.Warning("Download was not confirmed.", nameof(StartDownload));
+            return false;
+        }
+
+        if (Toolbox.Core.CreateProcess(Program.YT_DLP, MediaItem.Current.BuildCommand(), out Process? proc))
+        {
+            proc.WaitForExit();
+            return proc.ExitCode == 0 ? true : false;
+        }
+
+        else
+        {
+            Log.Error("Can't start the download process.", nameof(StartDownload));
+            return false;
+        }
     }
 
     public static bool UpdateDownloader()

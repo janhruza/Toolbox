@@ -192,6 +192,19 @@ internal class Program : IApplication
         return string.IsNullOrWhiteSpace(value) ? alt : value;
     }
 
+    static string GetDisplayLocation()
+    {
+        if (MediaItem.Current.Location.StartsWith(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)))
+        {
+            return MediaItem.Current.Location.Replace(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "~");
+        }
+
+        else
+        {
+            return MediaItem.Current.Location;
+        }
+    }
+
     static int Main(string[] args)
     {
         if (args.Length > 0)
@@ -227,10 +240,8 @@ internal class Program : IApplication
             MenuItemCollection menu = new MenuItemCollection
             {
                 new MenuItem((int)ID_SELECT_URL, "Media", ActionText(MediaItem.Current.Address, "[select]")),
-                new MenuItem((int)ID_SELECT_MODE, "Mode", ActionText(MediaItem.Current.Mode)),
-                new MenuItem((int)ID_SELECT_QUALITY, "Quality", ActionText(MediaItem.Current.Quality)),
                 new MenuItem((int)ID_SELECT_FORMAT, "Format", ActionText(MediaItem.Current.Format)),
-                new MenuItem((int)ID_SELECT_LOCATION, "Location", ActionText(MediaItem.Current.Location)),
+                new MenuItem((int)ID_SELECT_LOCATION, "Location", ActionText(GetDisplayLocation())),
                 new MenuItem(),
                 new MenuItem((int)ID_EXTRAS, "Extras", ">"),
                 new MenuItem(),
@@ -297,9 +308,26 @@ internal class Program : IApplication
                 case (int)ID_START_DOWNLOAD:
                     {
                         Console.Clear();
-                        HandleAction(MenuActions.StartDownload(),
-                            trueMessage: $"The {Terminal.AccentTextStyle}download{ANSI_RESET} has {Terminal.AccentTextStyle}started{ANSI_RESET}.",
-                            falseMessage: $"{Terminal.AccentTextStyle}Unable to start{ANSI_RESET} download.");
+                        if (MenuActions.VerifyDownload() == true)
+                        {
+                            Console.Clear();
+                            if (MenuActions.StartDownload() == false)
+                            {
+                                Log.Error("Download process failed.", nameof(Main));
+                                Console.WriteLine($"{Environment.NewLine}Download process {Terminal.AccentTextStyle}failed{ANSI_RESET}.");
+                            }
+
+                            else
+                            {
+                                Log.Success("Download completed.", nameof(Main));
+                                Console.WriteLine($"{Environment.NewLine}Download {Terminal.AccentTextStyle}completed{ANSI_RESET}.");
+
+                                // set a new download item
+                                MediaItem.Current = new MediaItem();
+                            }
+
+                            Terminal.Pause();
+                        }
                     }
                     break;
 

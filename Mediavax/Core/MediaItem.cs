@@ -1,4 +1,10 @@
-﻿namespace Mediavax.Core;
+﻿using System;
+using System.IO;
+using System.Text;
+
+using Toolbox;
+
+namespace Mediavax.Core;
 
 /// <summary>
 /// Representing a single media item.
@@ -27,10 +33,8 @@ public class MediaItem
     public MediaItem()
     {
         Address = string.Empty;
-        Mode = string.Empty;
-        Quality = string.Empty;
         Format = string.Empty;
-        Location = string.Empty;
+        Location = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         BrowserCookies = string.Empty;
         CustomOptions = string.Empty;
         Current = this;
@@ -40,16 +44,6 @@ public class MediaItem
     /// Representing the media source (URL address).
     /// </summary>
     public string Address { get; set; }
-
-    /// <summary>
-    /// Representing the download mode: video-only, audio-only or both.
-    /// </summary>
-    public string Mode { get; set; }
-
-    /// <summary>
-    /// Representing the download quality.
-    /// </summary>
-    public string Quality { get; set; }
 
     /// <summary>
     /// Representing the download format, such as: MP4, MP3, etc.
@@ -80,6 +74,47 @@ public class MediaItem
     public bool IsValid()
     {
         return string.IsNullOrEmpty(Address) == false;
+    }
+
+    /// <summary>
+    /// Builds the final command for yt-dlp.
+    /// </summary>
+    /// <returns></returns>
+    public string BuildCommand()
+    {
+        if (Address.IsEmpty() == true)
+        {
+            return string.Empty;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.Append(Address);
+
+        if (Format.IsEmpty() == false)
+        {
+            // custom format
+            sb.Append($" -f {Format}");
+        }
+
+        if (Directory.Exists(Location) == true)
+        {
+            // custom download folder
+            sb.Append($" -o {Path.Combine(Location, "%(title)s.%(ext)s")}");
+        }
+
+        if (BrowserCookies.IsEmpty() == false)
+        {
+            // import cookies
+            sb.Append($" --cookies-from-browser {BrowserCookies}");
+        }
+
+        if (CustomOptions.IsEmpty() == false)
+        {
+            // additional custom arguments
+            sb.Append($" {CustomOptions}");
+        }
+
+        return sb.ToString();
     }
 
     /// <summary>
