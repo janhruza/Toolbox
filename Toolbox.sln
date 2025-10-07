@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11018.127 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSShell", "RSShell\RSShell.csproj", "{234DE96D-2ABE-4BA5-853A-D2F3532FF3B7}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Toolbox", "Toolbox\Toolbox.shproj", "{16333AAF-F723-4375-AD7D-BAF2430E1076}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mediavax", "Mediavax\Mediavax.csproj", "{5339025F-BC2E-4517-865A-B6D336B8D7A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CnbRat", "CnbRat\CnbRat.csproj", "{E62928BF-2807-44F5-ABCC-B9B70E41441C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,14 @@ Global
 		{5339025F-BC2E-4517-865A-B6D336B8D7A1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5339025F-BC2E-4517-865A-B6D336B8D7A1}.Release|x64.ActiveCfg = Release|Any CPU
 		{5339025F-BC2E-4517-865A-B6D336B8D7A1}.Release|x64.Build.0 = Release|Any CPU
+		{E62928BF-2807-44F5-ABCC-B9B70E41441C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E62928BF-2807-44F5-ABCC-B9B70E41441C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E62928BF-2807-44F5-ABCC-B9B70E41441C}.Debug|x64.ActiveCfg = Debug|x64
+		{E62928BF-2807-44F5-ABCC-B9B70E41441C}.Debug|x64.Build.0 = Debug|x64
+		{E62928BF-2807-44F5-ABCC-B9B70E41441C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E62928BF-2807-44F5-ABCC-B9B70E41441C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E62928BF-2807-44F5-ABCC-B9B70E41441C}.Release|x64.ActiveCfg = Release|Any CPU
+		{E62928BF-2807-44F5-ABCC-B9B70E41441C}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
