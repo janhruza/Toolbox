@@ -1,8 +1,11 @@
 ﻿using Mediavax.Core;
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 using Toolbox;
 using Toolbox.UI;
@@ -51,7 +54,48 @@ internal static class MenuActions
         return true;
     }
 
-    public static bool SelectFormat()
+    public static bool SelectFormat(Dictionary<int, YtDlpFormat> formats)
+    {
+        // Key: ID
+        // Value: Associated format
+        MenuItemCollection items = new MenuItemCollection();
+        foreach (var kp in formats)
+        {
+            int id = kp.Key;
+            YtDlpFormat format = kp.Value;
+
+            // combined
+            if (format.HasVideo == true && format.HasAudio == true) items.Add(new MenuItem(id, $"", format.format_id));
+
+            // audio only
+            else if (format.HasVideo == false && format.HasVideo == true) items.Add(new MenuItem(id, $"", format.format_id));
+
+            // video only
+            else if (format.HasVideo == true && format.HasVideo == false) items.Add(new MenuItem(id, $"", format.format_id));
+
+            // extras
+            else items.Add(new MenuItem(id, $"", format.format_id));
+        }
+
+        int option = ConsoleMenu.SelectMenu(items);
+        if (option == 0 || option == 0xDEAD)
+        {
+            // selection cancelled
+            Log.Information("Format selection cancelled", nameof(SelectFormat));
+            return false;
+        }
+
+        else
+        {
+            // selected format
+            string format = formats[option].format_id;
+            MediaItem.Current.Format = format;
+            Log.Success($"New format selected: {format}", nameof(SelectFormat));
+            return true;
+        }
+    }
+
+    public static bool ListFormats()
     {
         if (string.IsNullOrEmpty(MediaItem.Current.Address))
         {
@@ -108,6 +152,85 @@ internal static class MenuActions
                 if (YtDlpParser.GetInfo(json, out YtDlpInfo info) == true)
                 {
                     // TODO: JSON parsed, enum audio/video only and combined formats and offer them to the user
+                    int idx = 0x10;
+                    Dictionary<int, YtDlpFormat> combined = [];
+                    Dictionary<int, YtDlpFormat> audioOnly = [];
+                    Dictionary<int, YtDlpFormat> videoOnly = [];
+                    Dictionary<int, YtDlpFormat> extras = [];
+
+                    // representing combined formats
+                    foreach (YtDlpFormat format in info.formats.Where(x => x.HasVideo == true && x.HasAudio == true))
+                    {
+                        combined.Add(idx++, format);
+                    }
+
+                    // audio only
+                    foreach (YtDlpFormat format in info.formats.Where(x => x.HasVideo == false && x.HasAudio))
+                    {
+                        audioOnly.Add(idx++, format);
+                    }
+
+                    // video only
+                    foreach (YtDlpFormat format in info.formats.Where(x => x.HasVideo && x.HasAudio == false))
+                    {
+                        videoOnly.Add(idx++, format);
+                    }
+
+                    // extras, thumbnails, etc.
+                    foreach (YtDlpFormat format in info.formats.Where(x => x.HasVideo == false && x.HasAudio == false))
+                    {
+                        extras.Add(idx++, format);
+                    }
+
+                    // display available categories
+                    MenuItemCollection categoriesMenu = new MenuItemCollection();
+
+                    // combined
+                    if (combined.Count > 0) categoriesMenu.Add(new MenuItem((int)ID_FORMATS_COMBINED, "Combined", combined.Count.ToString()));
+
+                    // audio only
+                    if (audioOnly.Count > 0) categoriesMenu.Add(new MenuItem((int)ID_FORMATS_AUDIO, "Audio Only", audioOnly.Count.ToString()));
+
+                    // video only
+                    if (videoOnly.Count > 0) categoriesMenu.Add(new MenuItem((int)ID_FORMATS_VIDEO, "Video Only", videoOnly.Count.ToString()));
+
+                    // extras
+                    if (extras.Count > 0) categoriesMenu.Add(new MenuItem((int)ID_FORMATS_EXTRA, "Extras", extras.Count.ToString()));
+
+                    int category = ConsoleMenu.SelectMenu(categoriesMenu);
+                    switch (category)
+                    {
+                        case 0:
+                        case 0xDEAD:
+                            return false;
+
+                        case (int)ID_FORMATS_COMBINED:
+                            {
+                                // TODO: list combined formats
+                                return SelectCombinedFormat(combined);
+                            }
+
+                        case (int)ID_FORMATS_AUDIO:
+                            {
+                                // TODO: list audio formats
+                                return SelectAudioFormat(audioOnly);
+                            }
+
+                        case (int)ID_FORMATS_VIDEO:
+                            {
+                                // TODO: list video formats
+                                return SelectVideoFormat(videoOnly);
+                            }
+
+                        case (int)ID_FORMATS_EXTRA:
+                            {
+                                // TODO: list extra formats
+                                return SelectExtraFormat(extras);
+                            }
+
+                        default: break;
+                    }
+
                     return true;
                 }
 

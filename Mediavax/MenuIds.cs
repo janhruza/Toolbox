@@ -31,5 +31,11 @@ internal enum MenuIds : int
     // more options
     ID_UPDATE_YTDLP,
     ID_CUSTOM_ARGUMENTS,
-    ID_YT_DLP_VERSION
+    ID_YT_DLP_VERSION,
+
+    // formats options
+    ID_FORMATS_COMBINED,
+    ID_FORMATS_AUDIO,
+    ID_FORMATS_VIDEO,
+    ID_FORMATS_EXTRA
 }

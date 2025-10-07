@@ -269,7 +269,7 @@ internal class Program : IApplication
                 case (int)ID_SELECT_FORMAT:
                     {
                         Console.Clear();
-                        if (MenuActions.SelectFormat() == false)
+                        if (MenuActions.ListFormats() == false)
                         {
                             Console.WriteLine("Unable to get available formats.");
                             Terminal.Pause();
