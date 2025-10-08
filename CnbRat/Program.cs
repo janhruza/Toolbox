@@ -1,4 +1,5 @@
-﻿using CnbRat.Core;
+﻿using CnbRat;
+using CnbRat.Core;
 
 using System;
 
@@ -40,6 +41,10 @@ internal class Program : IApplication
         // initialize terminal
         Setup.Initialize();
 
+        // set default values
+        Terminal.AccentTextStyle = "\e[38;5;40m";                   // green text
+        Terminal.AccentHighlightStyle = "\e[48;5;40m\e[38;5;0m";    // green highlight
+
         // construct menu
         MenuItemCollection mainMenu;
 
@@ -66,6 +71,14 @@ internal class Program : IApplication
                 case 0:
                 case -1:
                     goto AppExit;
+
+                case (int)ID_ABOUT_CNBRAT:
+                    {
+                        Console.Clear();
+                        MenuActions.AboutCnbRat();
+                        Terminal.Pause();
+                    }
+                    break;
 
                 default: break;
             }
