@@ -19,6 +19,7 @@ public class ExchangeManager
     public ExchangeManager()
     {
         _rates = [];
+        _ready = false;
     }
 
     /// <summary>
@@ -124,6 +125,7 @@ public class ExchangeManager
                 _rates.Add(rate);
             }
 
+            _ready = true;
             return true;
         }
 
@@ -136,6 +138,7 @@ public class ExchangeManager
 
     private ExchangeInfo _info;
     private List<RateInfo> _rates;
+    private bool _ready;
 
     /// <summary>
     /// Representing the recieved exchange info.
@@ -146,4 +149,9 @@ public class ExchangeManager
     /// Representing the list of available exchange rates.
     /// </summary>
     public List<RateInfo> Rates => _rates;
+
+    /// <summary>
+    /// Determines whether the manager has fetched data successfully at least once.
+    /// </summary>
+    public bool IsReady => _ready;
 }
