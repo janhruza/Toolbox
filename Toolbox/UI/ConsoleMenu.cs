@@ -10,6 +10,11 @@ namespace Toolbox.UI;
 public static class ConsoleMenu
 {
     /// <summary>
+    /// Representing a value when the menu is escaped using the ESC key.
+    /// </summary>
+    public const int KEY_ESCAPE = -1;
+
+    /// <summary>
     /// Draws the console menu to the screen.
     /// </summary>
     /// <param name="items">Menu items collection.</param>
@@ -67,7 +72,7 @@ public static class ConsoleMenu
                 switch (key)
                 {
                     case ConsoleKey.Escape:
-                        return -1;
+                        return KEY_ESCAPE;
 
                     case ConsoleKey.UpArrow:
                         index = (index > 0 && index < items.Count) ? --index : items.Count - 1;

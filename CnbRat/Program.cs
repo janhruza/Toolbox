@@ -1,7 +1,11 @@
-﻿using System;
+﻿using CnbRat.Core;
+
+using System;
 
 using Toolbox;
 using Toolbox.UI;
+
+using static CnbRat.MenuIds;
 
 internal class Program : IApplication
 {
@@ -14,12 +18,14 @@ internal class Program : IApplication
         Console.WriteLine($"{Terminal.AccentTextStyle}╚██████╗██║ ╚████║██████╔╝██║  ██║██║  ██║   ██║   {ANSI.ANSI_RESET}");
         Console.WriteLine($"{Terminal.AccentTextStyle} ╚═════╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   {ANSI.ANSI_RESET}");
         Console.WriteLine($"CNB Exchange rates!                  by {Terminal.AccentTextStyle}@jendahruza{ANSI.ANSI_RESET}");
+        Console.WriteLine();
         return;
     }
 
     public static void PostExitCleanup()
     {
         // post exit cleanup
+        Console.Clear();
         return;
     }
 
@@ -34,15 +40,24 @@ internal class Program : IApplication
         // initialize terminal
         Setup.Initialize();
 
-        MenuItemCollection mainMenu = new MenuItemCollection
-        {
-            new MenuItem()
-        };
+        // construct menu
+        MenuItemCollection mainMenu;
 
         while (true)
         {
             Console.Clear();
             DisplayBanner();
+
+            mainMenu = new MenuItemCollection
+            {
+                new MenuItem((int)ID_FETCH_DATA, "Fetch", DateTime.Now.ToShortDateString()),
+                new MenuItem((int)ID_FETCH_DATA_SPECIFIC, "Fetch to Date", "[select]"),
+                new MenuItem(),
+                new MenuItem((int)ID_LAST_REPORT, "Last Report"),
+                new MenuItem((int)ID_ABOUT_CNBRAT, "About CnbRat"),
+                new MenuItem(),
+                new MenuItem((int)ID_EXIT, "Exit", "ESC")
+            };
 
             // TODO: main menu goes here
             int option = ConsoleMenu.SelectMenu(mainMenu);
@@ -59,7 +74,6 @@ internal class Program : IApplication
 
     AppExit:
         PostExitCleanup();
-
         return 0;
     }
 }
