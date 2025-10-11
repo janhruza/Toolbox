@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Net.Http;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 using Toolbox;
 
@@ -148,7 +145,7 @@ public class ExchangeManager
             return true;
         }
 
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Log.Exception(ex, nameof(Fetch));
             return false;

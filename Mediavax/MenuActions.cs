@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 
 using Toolbox;
 using Toolbox.UI;
@@ -65,7 +64,7 @@ internal static class MenuActions
             YtDlpFormat format = kp.Value;
 
             // combined
-            if (format.HasVideo == true && format.HasAudio == true) items.Add(new MenuItem(id, $"{(format.height+"p").PadRight(15)}{format.ext}", format.format_id));
+            if (format.HasVideo == true && format.HasAudio == true) items.Add(new MenuItem(id, $"{(format.height + "p").PadRight(15)}{format.ext}", format.format_id));
 
             // audio only
             else if (format.HasVideo == false && format.HasVideo == true) items.Add(new MenuItem(id, $"{format.acodec.PadRight(15)}{format.ext}", format.format_id));
@@ -446,7 +445,7 @@ internal static class MenuActions
         Console.WriteLine($"Cookies:  {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.BrowserCookies, "None")}{ANSI_RESET}");
         Console.WriteLine($"Extras:   {Terminal.AccentTextStyle}{Program.ActionText(MediaItem.Current.CustomOptions, "None")}{ANSI_RESET}");
         Console.WriteLine();
-        
+
         // confirm to start
         if (string.Equals(Terminal.Input("Do you want to start the download? [Y/n]: ", true), "y", StringComparison.OrdinalIgnoreCase) == true)
         {
