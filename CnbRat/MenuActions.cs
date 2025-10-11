@@ -157,7 +157,7 @@ internal static class MenuActions
             RateInfo rate1 = manager.Rates[x];
             RateInfo rate2;
 
-            if (manager.Rates.Count > x+1)
+            if (manager.Rates.Count > x + 1)
             {
                 rate2 = manager.Rates[x + 1];
             }
@@ -298,7 +298,7 @@ internal static class MenuActions
         {
             for (int y = 0; y < batchSize; y++)
             {
-                if (files.Length <= x+y) break;
+                if (files.Length <= x + y) break;
                 string filename = Path.GetFileNameWithoutExtension(files[x + y]);
 
                 // parse the info from the name
@@ -309,7 +309,7 @@ internal static class MenuActions
                     continue;
                 }
 
-                Console.Write($"{Terminal.AccentTextStyle}{(x+y):D2}{ANSI_RESET} {info.Date} #{info.Release:D3} ");
+                Console.Write($"{Terminal.AccentTextStyle}{(x + y):D2}{ANSI_RESET} {info.Date} #{info.Release:D3} ");
             }
 
             Console.WriteLine();
