@@ -235,6 +235,11 @@ public class ExchangeManager
     {
         try
         {
+            // empty the default data
+            _info = default;
+            _rates.Clear();
+            _rawData = string.Empty;
+
             // check if file exists
             if (File.Exists(filename) == false) return false;
 

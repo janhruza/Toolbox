@@ -13,6 +13,7 @@ internal class Program : IApplication
     static Program()
     {
         _exchangeManager = new ExchangeManager();
+        Config.LoadDefault(out _config);
     }
 
     public static void DisplayBanner()
@@ -32,11 +33,14 @@ internal class Program : IApplication
     {
         // post exit cleanup
         Console.Clear();
+        Config.WriteDefault(_config);
         return;
     }
 
     // associated objects
     static ExchangeManager _exchangeManager;
+
+    static Config _config;
 
     private static int Main(string[] args)
     {
@@ -50,9 +54,13 @@ internal class Program : IApplication
         Setup.Initialize();
         Console.Title = "CnbRat - Exchange Rates";
 
+        // load config
+        Terminal.AccentTextStyle = _config.AccentTextStyle;
+        Terminal.AccentHighlightStyle = _config.AccentHighlightStyle;
+
         // set default values
-        Terminal.AccentTextStyle = "\e[38;5;40m";                   // green text
-        Terminal.AccentHighlightStyle = "\e[48;5;40m\e[38;5;0m";    // green highlight
+        //Terminal.AccentTextStyle = "\e[38;5;40m";                   // green text
+        //Terminal.AccentHighlightStyle = "\e[48;5;40m\e[38;5;0m";    // green highlight
 
         // construct menu
         MenuItemCollection mainMenu;
