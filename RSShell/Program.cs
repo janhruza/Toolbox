@@ -170,6 +170,12 @@ internal class Program : IApplication
         return;
     }
 
+    public static void LoadConfig()
+    {
+        // NOTE: implemented to satisfy IApplication interface, no real use
+        return;
+    }
+
     static int HandleMenu()
     {
         MenuItemCollection menu = new MenuItemCollection

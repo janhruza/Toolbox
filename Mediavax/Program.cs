@@ -41,6 +41,12 @@ internal class Program : IApplication
         return;
     }
 
+    public static void LoadConfig()
+    {
+        // NOTE: implemented only to satisfy the interface requirement, no real use in this app
+        return;
+    }
+
     /// <summary>
     /// Gets the name of the yt-dlp executable name (dynamic, different on Linux, Mac and Windows).
     /// </summary>

@@ -14,4 +14,9 @@ public interface IApplication
     /// Performs the post-exit cleanup.
     /// </summary>
     static abstract void PostExitCleanup();
+
+    /// <summary>
+    /// Loads the application config (if any) and applies it to the application. For example, set accent colors, modify default styles, etc.
+    /// </summary>
+    static abstract void LoadConfig();
 }
