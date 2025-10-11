@@ -62,6 +62,11 @@ internal static class MenuActions
         return result;
     }
 
+    static int GetLongerValue(int val1, int val2)
+    {
+        return val1 > val2 ? val1 : val2;
+    }
+
     public static bool ViewReport(ExchangeManager manager)
     {
         // check exchange manager
@@ -71,15 +76,21 @@ internal static class MenuActions
         // display report (currencies, values, etc.)
         int lcountry, lcurrency, lamount, lcode, lrate;
 
+        string COUNTRY = "Country";
+        string CURRENCY = "Currency";
+        string AMOUNT = "Amount";
+        string CODE = "Code";
+        string RATE = "Rate (CZK)";
+
         // get data size (for display purposes)
-        lcountry = manager.Rates.Max(x => x.Country.Length);
-        lcurrency = manager.Rates.Max(x => x.Currency.Length);
-        lamount = manager.Rates.Max(x => x.Amount.ToString().Length);
-        lcode = manager.Rates.Max(x => x.Code.Length);
-        lrate = manager.Rates.Max(x => x.Value.ToString().Length);
+        lcountry = GetLongerValue(manager.Rates.Max(x => x.Country.Length), COUNTRY.Length);
+        lcurrency = GetLongerValue(manager.Rates.Max(x => x.Currency.Length), CURRENCY.Length);
+        lamount = GetLongerValue(manager.Rates.Max(x => x.Amount.ToString().Length), AMOUNT.Length);
+        lcode = GetLongerValue(manager.Rates.Max(x => x.Code.Length), CODE.Length);
+        lrate = GetLongerValue(manager.Rates.Max(x => x.Value.ToString().Length), RATE.Length);
 
         // first rows
-        string firstLine = $"{"Country".PadRight(lcountry)} {"Currency".PadRight(lcurrency)} {"Amount".PadRight(lamount)} {"Code".PadRight(lcode)} {"Rate".PadRight(lrate)}";
+        string firstLine = $"{COUNTRY.PadRight(lcountry)} {CURRENCY.PadRight(lcurrency)} {AMOUNT.PadRight(lamount)} {CODE.PadRight(lcode)} {RATE.PadRight(lrate)}";
         Console.WriteLine(firstLine);
         Console.WriteLine(new string('-', firstLine.Length));
 
