@@ -10,7 +10,7 @@ namespace CnbRat;
 /// <summary>
 /// Representing the configuration class.
 /// </summary>
-public class Config
+public class Config : Toolbox.UI.IConfig
 {
     /// <summary>
     /// Creates a new <see cref="Config"/> instance.

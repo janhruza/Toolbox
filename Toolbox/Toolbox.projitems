@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Setup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\ConsoleMenu.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\IConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\MenuItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Terminal.cs" />
   </ItemGroup>
