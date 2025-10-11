@@ -18,4 +18,22 @@ public static class ANSI
     /// or highlighting specific output. Support for ANSI escape sequences may vary depending on the terminal or console
     /// environment.</remarks>
     public const string ANSI_REVERSE = "\e[7m";
+
+    /// <summary>
+    /// Represents the ANSI escape sequence for dim text formatting.
+    /// </summary>
+    public const string ANSI_DIM = "\e[2m";
+
+    /// <summary>
+    /// Represents the ANSI escape sequence for blinking text formatting.
+    /// </summary>
+    public const string ANSI_BLINK = "\e[5m";
+
+    /// <summary>
+    /// Represents the ANSI escape sequence for fast blinking text formatting.
+    /// </summary>
+    /// <remarks>Use this constant to apply fast blink styling to console output that supports ANSI escape
+    /// codes. Not all terminals or environments support this formatting; behavior may vary depending on the
+    /// platform.</remarks>
+    public const string ANSI_BLINK_FAST = "\e[6m";
 }
