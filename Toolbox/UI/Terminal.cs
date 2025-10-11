@@ -107,6 +107,8 @@ public static class Terminal
     /// Representing a style of the custom colored text, such as captions, keywords and other, non-highlighted, elements,
     /// The style is represented as an ANSI escape sequence.
     /// </summary>
+    /// <remarks>Use this property to customize the color scheme for console applications that support ANSI
+    /// color codes. The value should be a valid ANSI escape sequence recognized by the target terminal.</remarks>
     public static string AccentTextStyle { get; set; } = "\e[38;5;210m";
 
     /// <summary>
@@ -114,4 +116,13 @@ public static class Terminal
     /// The style is represented as an ANSI escape sequence.
     /// </summary>
     public static string AccentHighlightStyle { get; set; } = "\e[48;5;210m\e[38;5;0m";
+
+    #region Accent colors
+
+    /// <summary>
+    /// Representing the active color scheme.
+    /// </summary>
+    public static ColorScheme Colors { get; set; } = new ColorScheme();
+
+    #endregion
 }

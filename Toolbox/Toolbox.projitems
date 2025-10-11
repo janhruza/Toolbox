@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)IApplication.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Log.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Setup.cs" />
+    <Compile Include="..\Toolbox\UI\ColorScheme.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\ConsoleMenu.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\IConfig.cs" />
