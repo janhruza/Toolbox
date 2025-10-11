@@ -13,7 +13,11 @@ internal class Program : IApplication
     static Program()
     {
         _exchangeManager = new ExchangeManager();
+        _version = new Version(2025, 10, 11);
     }
+
+    static Version _version;
+
     public static void DisplayBanner()
     {
         Console.WriteLine($"\t{Terminal.AccentTextStyle} ██████╗███╗   ██╗██████╗ ██████╗  █████╗ ████████╗{ANSI.ANSI_RESET}");
@@ -66,10 +70,12 @@ internal class Program : IApplication
                 new MenuItem((int)ID_FETCH_DATA, "Fetch", DateTime.Now.ToShortDateString()),
                 new MenuItem((int)ID_FETCH_DATA_SPECIFIC, "Fetch Specific Date", "[select]"),
                 new MenuItem(),
+                new MenuItem((int)ID_CONVERTER, "Currency Converter"),
+                new MenuItem(),
                 new MenuItem((int)ID_VIEW_RATES, "View Exchange Rates"),
                 new MenuItem(),
                 new MenuItem((int)ID_LAST_REPORT, "Last Report"),
-                new MenuItem((int)ID_ABOUT_CNBRAT, "About CnbRat"),
+                new MenuItem((int)ID_ABOUT_CNBRAT, "About CnbRat", _version.ToString()),
                 new MenuItem(),
                 new MenuItem((int)ID_EXIT, "Exit", "ESC")
             };
@@ -146,6 +152,19 @@ internal class Program : IApplication
                             MenuActions.ErrorNoReport();
                         }
 
+                        Console.WriteLine();
+                        Terminal.Pause();
+                    }
+                    break;
+
+                case (int)ID_CONVERTER:
+                    {
+                        Console.Clear();
+                        if (MenuActions.CurrencyConverter(_exchangeManager) == false)
+                        {
+                            // no report available
+                            MenuActions.ErrorNoReport();
+                        }
                         Console.WriteLine();
                         Terminal.Pause();
                     }

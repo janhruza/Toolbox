@@ -139,4 +139,98 @@ internal static class MenuActions
 
         return true;
     }
+
+    static int SelectCurrency(ExchangeManager manager, string prompt)
+    {
+        // check exchange manager (if conversions are available)
+        if (manager == null || manager.IsReady == false) return -1;
+
+        // list currencies and let user select one
+        int longest = manager.Rates.Max(x => x.Country.Length);
+
+        Console.Clear();
+        for (int x = 0; x < manager.Rates.OrderBy(x => x.Code.Normalize()).Count(); x += 2)
+        {
+            RateInfo rate1 = manager.Rates[x];
+            RateInfo rate2;
+
+            if (manager.Rates.Count > x+1)
+            {
+                rate2 = manager.Rates[x + 1];
+            }
+            else
+            {
+                rate2 = new RateInfo { Code = "N/A" };
+            }
+
+            Console.Write($"{Terminal.AccentTextStyle}{rate1.Code:D2}{ANSI_RESET} - {rate1.Country.Normalize().PadRight(longest)} | ");
+
+            if (rate2.Code != "N/A")
+            {
+                Console.WriteLine($"{Terminal.AccentTextStyle}{rate2.Code:D2}{ANSI_RESET} - {rate2.Country.Normalize().PadRight(longest)}");
+            }
+
+            else
+            {
+                Console.WriteLine(); // line break
+            }
+        }
+
+        Console.WriteLine();
+
+        string selectedCode = Terminal.Input($"{prompt}{Environment.NewLine}Select currency by {Terminal.AccentTextStyle}code{ANSI_RESET}: ", false);
+        int index = manager.Rates.FindIndex(x => string.Equals(x.Code, selectedCode, StringComparison.OrdinalIgnoreCase));
+        if (index >= 0)
+        {
+            return index;
+        }
+
+        else
+        {
+            return -2;
+        }
+    }
+
+    public static bool CurrencyConverter(ExchangeManager manager)
+    {
+        // check exchange manager (if conversions are available)
+        if (manager == null || manager.IsReady == false) return false;
+
+        // get source currency code (convert from)
+        int sourceIndex = SelectCurrency(manager, "Select source currency (convert from)");
+        Console.WriteLine();
+
+        // get target currency code (convert to)
+        int targetIndex = SelectCurrency(manager, "Select target currency (convert to)");
+        Console.WriteLine();
+
+        // check inputs
+        if (sourceIndex < 0 || targetIndex < 0)
+        {
+            Log.Warning("Invalid currency code.");
+            Console.WriteLine("Invalid currency code.");
+            return false;
+        }
+
+        Console.Clear();
+
+        // get amount to convert (decimal)
+        Console.WriteLine($"Converting from {Terminal.AccentTextStyle}{manager.Rates[sourceIndex].Code}{ANSI_RESET} to {Terminal.AccentTextStyle}{manager.Rates[targetIndex].Code}{ANSI_RESET}");
+        Console.WriteLine();
+
+        if (int.TryParse(Terminal.Input($"Enter amount in {Terminal.AccentTextStyle}{manager.Rates[sourceIndex].Code}{ANSI_RESET}: ", false), out int amount) == false || amount <= 0)
+        {
+            Log.Warning("Invalid amount.");
+            Console.WriteLine("Invalid amount.");
+            return false;
+        }
+
+        // perform conversion
+        // each rate contains a representation of 1 unit of currency in CZK (no need to multiply by amount)
+        decimal result = manager.Rates[sourceIndex].Value / manager.Rates[targetIndex].Value * amount;
+
+        // display result
+        Console.WriteLine($"Result: {amount} {manager.Rates[sourceIndex].Code} is {Terminal.AccentTextStyle}{result:F2}{ANSI_RESET} {manager.Rates[targetIndex].Code}");
+        return true;
+    }
 }

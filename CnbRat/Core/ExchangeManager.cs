@@ -141,6 +141,17 @@ public class ExchangeManager
                 _rates.Add(rate);
             }
 
+            // add the CZK entry manually
+            RateInfo czk = new RateInfo
+            {
+                Country = "Česká republika",
+                Currency = "koruna",
+                Amount = 1,
+                Code = "CZK",
+                Value = 1.0m
+            };
+            _rates.Add(czk);
+
             _ready = true;
             return true;
         }
