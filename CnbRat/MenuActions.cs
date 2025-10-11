@@ -6,6 +6,8 @@ using System.Linq;
 using Toolbox;
 using Toolbox.UI;
 
+using static Toolbox.ANSI;
+
 namespace CnbRat;
 
 internal static class MenuActions
@@ -13,14 +15,14 @@ internal static class MenuActions
     public static bool ErrorNoReport()
     {
         Log.Warning("No report available.");
-        Console.WriteLine($"No report available. {Terminal.AccentTextStyle}Fetch{ANSI.ANSI_RESET} a report first.");
+        Console.WriteLine($"No report available. {Terminal.AccentTextStyle}Fetch{ANSI_RESET} a report first.");
         return true;
     }
 
     public static bool AboutCnbRat()
     {
-        Console.WriteLine($"About {Terminal.AccentTextStyle}CnbRat{ANSI.ANSI_RESET}");
-        Console.WriteLine($"Convert currencies with CNB precision. {Terminal.AccentTextStyle}Local. Fast. Reliable.{ANSI.ANSI_RESET}");
+        Console.WriteLine($"About {Terminal.AccentTextStyle}CnbRat{ANSI_RESET}");
+        Console.WriteLine($"Convert currencies with CNB precision. {Terminal.AccentTextStyle}Local. Fast. Reliable.{ANSI_RESET}");
         Console.WriteLine();
         Console.WriteLine($"CnbRat is a local-first CLI tool for currency conversion using official daily exchange rates from the Czech National Bank (ČNB). Fetch rates, view supported currencies, and convert money amounts directly in your terminal. Fast, offline-friendly, and configurable via JSON.");
         return true;
@@ -32,10 +34,10 @@ internal static class MenuActions
         if (manager.IsReady == false) return false;
 
         // display lates report info
-        Console.WriteLine($"{Terminal.AccentHighlightStyle} LAST REPORT {ANSI.ANSI_RESET}");
-        Console.WriteLine($"Date:       {Terminal.AccentTextStyle}{manager.Exchange.Date}{ANSI.ANSI_RESET}\n" +
-                          $"Release:    {Terminal.AccentTextStyle}{manager.Exchange.Release}{ANSI.ANSI_RESET}\n" +
-                          $"Currencies: {Terminal.AccentTextStyle}{manager.Rates.Count}{ANSI.ANSI_RESET}");
+        Console.WriteLine($"{Terminal.AccentHighlightStyle} LAST REPORT {ANSI_RESET}");
+        Console.WriteLine($"Date:       {Terminal.AccentTextStyle}{manager.Exchange.Date}{ANSI_RESET}\n" +
+                          $"Release:    {Terminal.AccentTextStyle}{manager.Exchange.Release}{ANSI_RESET}\n" +
+                          $"Currencies: {Terminal.AccentTextStyle}{manager.Rates.Count}{ANSI_RESET}");
 
         return true;
     }
@@ -51,12 +53,12 @@ internal static class MenuActions
 
         if (result == false)
         {
-            Console.WriteLine($"Unable to fetch report data. See the {Terminal.AccentTextStyle}log file{ANSI.ANSI_RESET} for more information.");
+            Console.WriteLine($"Unable to fetch report data. See the {Terminal.AccentTextStyle}log file{ANSI_RESET} for more information.");
         }
 
         else
         {
-            Console.WriteLine($"Data {Terminal.AccentTextStyle}fetched successfully{ANSI.ANSI_RESET}.");
+            Console.WriteLine($"Data {Terminal.AccentTextStyle}fetched successfully{ANSI_RESET}.");
         }
 
         return result;
@@ -91,7 +93,7 @@ internal static class MenuActions
 
         // first rows
         string firstLine = $"{COUNTRY.PadRight(lcountry)} {CURRENCY.PadRight(lcurrency)} {AMOUNT.PadRight(lamount)} {CODE.PadRight(lcode)} {RATE.PadRight(lrate)}";
-        Console.WriteLine(firstLine);
+        Console.WriteLine($"{Terminal.AccentTextStyle}{firstLine}{ANSI_RESET}");
         Console.WriteLine(new string('-', firstLine.Length));
 
         // data rows
@@ -100,7 +102,7 @@ internal static class MenuActions
             RateInfo rate = manager.Rates[x];
 
             // TODO: fix line coloring
-            Console.WriteLine($"{(x % 2 == 0 ? "\e[7m" : ANSI.ANSI_RESET)}{rate.Country.PadRight(lcountry)} {rate.Currency.PadRight(lcurrency)} {rate.Amount.ToString().PadLeft(lamount)} {rate.Code.PadRight(lcode)} {rate.Value.ToString().PadLeft(lrate)}{ANSI.ANSI_RESET}");
+            Console.WriteLine($"{(x % 2 == 0 ? ANSI_REVERSE : ANSI_RESET)}{rate.Country.PadRight(lcountry)} {rate.Currency.PadRight(lcurrency)} {rate.Amount.ToString().PadLeft(lamount)} {rate.Code.PadRight(lcode)} {rate.Value.ToString().PadLeft(lrate)}{ANSI.ANSI_RESET}");
         }
 
         return true;

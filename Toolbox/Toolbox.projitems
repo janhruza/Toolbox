@@ -9,7 +9,7 @@
     <Import_RootNamespace>Toolbox</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Ansi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ANSI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IApplication.cs" />
