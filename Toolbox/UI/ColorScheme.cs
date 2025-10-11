@@ -46,4 +46,11 @@ public class ColorScheme
     /// <remarks>Use this property to customize the color scheme for console applications that support ANSI
     /// color codes. The value should be a valid ANSI escape sequence recognized by the target terminal.</remarks>
     public string Accent6 { get; set; } = "\e[38;5;220m";
+
+    /// <summary>
+    /// Represents the ANSI escape sequence for gray text formatting.
+    /// </summary>
+    /// <remarks>Use this property to customize the color scheme for console applications that support ANSI
+    /// color codes. The value should be a valid ANSI escape sequence recognized by the target terminal.</remarks>
+    public string GrayText { get; set; } = "\e[38;5;243m";
 }

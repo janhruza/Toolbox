@@ -41,7 +41,7 @@ public static class ConsoleMenu
             }
         }
 
-        Console.WriteLine($"\n\t\e[38;5;243mUse arrow up/down to navigate.{ANSI_RESET}");
+        Console.WriteLine($"\n\t{Terminal.Colors.GrayText}Use arrows to navigate.{ANSI_RESET}");
 
         // write last log entry to the screen
         Terminal.WriteLastLogEntry();
