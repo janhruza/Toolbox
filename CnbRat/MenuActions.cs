@@ -48,7 +48,39 @@ internal static class MenuActions
         if (manager == null) return false;
 
         Console.Write("Fetching data... ");
-        bool result = manager.Fetch();
+        bool result = manager.Fetch(DateOnly.MinValue);
+        Console.WriteLine();
+
+        if (result == false)
+        {
+            Console.WriteLine($"Unable to fetch report data. See the {Terminal.AccentTextStyle}log file{ANSI_RESET} for more information.");
+        }
+
+        else
+        {
+            Console.WriteLine($"Data {Terminal.AccentTextStyle}fetched successfully{ANSI_RESET}.");
+        }
+
+        return result;
+    }
+
+    public static bool FetchReportToDate(ExchangeManager manager)
+    {
+        // check if can fetch
+        if (manager == null) return false;
+
+        // get date from user
+        string input = Terminal.Input("Enter date (YYYY-MM-DD): ", true);
+        if (DateOnly.TryParse(input, out DateOnly date) == false)
+        {
+            Log.Warning("Invalid date format.");
+            Console.WriteLine("Invalid date format.");
+            return false;
+        }
+
+        // fetch data to date
+        Console.Write("Fetching data... ");
+        bool result = manager.Fetch(date);
         Console.WriteLine();
 
         if (result == false)

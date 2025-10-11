@@ -98,6 +98,22 @@ internal class Program : IApplication
                     }
                     break;
 
+                case (int)ID_FETCH_DATA_SPECIFIC:
+                    {
+                        Console.Clear();
+                        if (MenuActions.FetchReportToDate(_exchangeManager) == true)
+                        {
+                            Log.Success($"Report fetched.");
+                        }
+
+                        else
+                        {
+                            Console.WriteLine();
+                            Terminal.Pause();
+                        }
+                    }
+                    break;
+
                 case (int)ID_ABOUT_CNBRAT:
                     {
                         Console.Clear();

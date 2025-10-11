@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using Toolbox;
@@ -25,11 +26,14 @@ public class ExchangeManager
     /// <summary>
     /// Attempts to fetch the current exchange records from the official source defined in <see cref="Resources.URL_EXCHANGE_RATES"/>.
     /// </summary>
+    /// <param name="date">
+    /// The specific date for which to fetch exchange rates. Use <see cref="DateOnly.MinValue"/> to fetch the latest available rates.
+    /// </param>
     /// <returns><see langword="true"/> if the fetch was successful, otherwise <see langword="false"/>.</returns>
     /// <remarks>
     /// If this method succeeds, the resulting properties can be found in the <see cref="Exchange"/> and <see cref="Rates"/> properties.
     /// </remarks>
-    public bool Fetch()
+    public bool Fetch(DateOnly date)
     {
         try
         {
@@ -37,10 +41,25 @@ public class ExchangeManager
             _info = default;
             _rates.Clear();
 
+            string requestUri;
+            if (date == DateOnly.MinValue)
+            {
+                // fetch the latest data
+                requestUri = Resources.URL_EXCHANGE_RATES;
+            }
+            else
+            {
+                // fetch historical data
+                requestUri = Resources.URL_EXCHANGE_RATES_HISTORICAL
+                    .Replace("{day}", date.Day.ToString("D2"))
+                    .Replace("{month}", date.Month.ToString("D2"))
+                    .Replace("{year}", date.Year.ToString("D4"));
+            }
+
             string data = string.Empty;
             using (HttpClient client = new HttpClient())
             {
-                var task = client.GetStringAsync(new Uri(Resources.URL_EXCHANGE_RATES, UriKind.RelativeOrAbsolute));
+                var task = client.GetStringAsync(new Uri(requestUri, UriKind.RelativeOrAbsolute));
                 task.Wait();
 
                 // check if the task has faulted
