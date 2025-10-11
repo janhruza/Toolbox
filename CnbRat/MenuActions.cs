@@ -70,7 +70,7 @@ internal static class MenuActions
         if (manager == null) return false;
 
         // get date from user
-        string input = Terminal.Input("Enter date (YYYY-MM-DD): ", true);
+        string input = Terminal.Input("Enter date (YYYY-MM-DD): ", false);
         if (DateOnly.TryParse(input, out DateOnly date) == false)
         {
             Log.Warning("Invalid date format.");
