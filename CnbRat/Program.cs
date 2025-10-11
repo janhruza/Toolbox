@@ -13,10 +13,7 @@ internal class Program : IApplication
     static Program()
     {
         _exchangeManager = new ExchangeManager();
-        _version = new Version(2025, 10, 11);
     }
-
-    static Version _version;
 
     public static void DisplayBanner()
     {
@@ -69,13 +66,13 @@ internal class Program : IApplication
             {
                 new MenuItem((int)ID_FETCH_DATA, "Fetch", DateTime.Now.ToShortDateString()),
                 new MenuItem((int)ID_FETCH_DATA_SPECIFIC, "Fetch Specific Date", "[select]"),
+                new MenuItem((int)ID_OPEN_ARCHIVE, "Archived Reports"),
                 new MenuItem(),
                 new MenuItem((int)ID_CONVERTER, "Currency Converter"),
-                new MenuItem(),
                 new MenuItem((int)ID_VIEW_RATES, "View Exchange Rates"),
                 new MenuItem(),
                 new MenuItem((int)ID_LAST_REPORT, "Last Report"),
-                new MenuItem((int)ID_ABOUT_CNBRAT, "About CnbRat", _version.ToString()),
+                new MenuItem((int)ID_ABOUT_CNBRAT, "About CnbRat", Resources.Version.ToString()),
                 new MenuItem(),
                 new MenuItem((int)ID_EXIT, "Exit", "ESC")
             };
@@ -167,6 +164,17 @@ internal class Program : IApplication
                         }
                         Console.WriteLine();
                         Terminal.Pause();
+                    }
+                    break;
+
+                case (int)ID_OPEN_ARCHIVE:
+                    {
+                        Console.Clear();
+                        if (MenuActions.BrowseArchive(_exchangeManager) == false)
+                        {
+                            Console.WriteLine("Action failed.");
+                            Terminal.Pause();
+                        }
                     }
                     break;
 

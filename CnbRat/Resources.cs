@@ -1,4 +1,7 @@
-﻿namespace CnbRat;
+﻿using System;
+using System.Text;
+
+namespace CnbRat;
 
 /// <summary>
 /// Representing application resources.
@@ -23,4 +26,22 @@ public static class Resources
     /// Representing the source data culture. This data includes the reports downloaded from the internet.
     /// </summary>
     public const string Culture = "cs-CZ";
+
+    /// <summary>
+    /// Representing the encoding for any text files used by this application.
+    /// </summary>
+    public static Encoding Encoding => Encoding.UTF8;
+
+    /// <summary>
+    /// Representing the name of the report archive directory.
+    /// </summary>
+    public const string ARCHIVE_DIRECTORY = "Archive";
+
+    /// <summary>
+    /// Representing the version of the program.
+    /// </summary>
+    /// <remarks>
+    /// Versioning: <see cref="Version.Major"/>: Year of release, <see cref="Version.Minor"/>: Month of release, <see cref="Version.Build"/>: Day of release, <see cref="Version.Revision"/>: Not used (0).
+    /// </remarks>
+    public static Version Version => new Version(2025, 10, 11);
 }

@@ -10,5 +10,6 @@ internal enum MenuIds
 
     // exchange-related ids
     ID_VIEW_RATES,
-    ID_CONVERTER
+    ID_CONVERTER,
+    ID_OPEN_ARCHIVE
 }

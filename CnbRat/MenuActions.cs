@@ -1,6 +1,7 @@
 ﻿using CnbRat.Core;
 
 using System;
+using System.IO;
 using System.Linq;
 
 using Toolbox;
@@ -58,6 +59,7 @@ internal static class MenuActions
 
         else
         {
+            manager.ArchiveReport();
             Console.WriteLine($"Data {Terminal.AccentTextStyle}fetched successfully{ANSI_RESET}.");
         }
 
@@ -90,6 +92,7 @@ internal static class MenuActions
 
         else
         {
+            manager.ArchiveReport();
             Console.WriteLine($"Data {Terminal.AccentTextStyle}fetched successfully{ANSI_RESET}.");
         }
 
@@ -232,5 +235,111 @@ internal static class MenuActions
         // display result
         Console.WriteLine($"Result: {amount} {manager.Rates[sourceIndex].Code} is {Terminal.AccentTextStyle}{result:F2}{ANSI_RESET} {manager.Rates[targetIndex].Code}");
         return true;
+    }
+
+    static ExchangeInfo GetInfoFromName(string filename)
+    {
+        // eg.  20250510180
+        //          - year (4)
+        //          - month (2)
+        //          - day (2)
+        //          - release (1+)
+
+        // invalid file name (too short)
+        if (filename.Length < 9) return new ExchangeInfo();
+
+        // fallback object to return
+        ExchangeInfo invalid = new ExchangeInfo
+        {
+            Date = DateOnly.MinValue,
+            Release = 0
+        };
+
+        // parse the info from the name
+        if (int.TryParse(filename[0..4], out int year) == false) return invalid;
+        if (int.TryParse(filename[4..6], out int month) == false) return invalid;
+        if (int.TryParse(filename[6..8], out int day) == false) return invalid;
+        if (int.TryParse(filename[8..], out int release) == false) return invalid;
+
+        // return the info
+        return new ExchangeInfo
+        {
+            Date = new DateOnly(year, month, day),
+            Release = release
+        };
+    }
+
+    public static bool BrowseArchive(ExchangeManager manager)
+    {
+        // browse the archived exchange reports (so the user can load them instead of fetching a new one)
+        if (Directory.Exists(ExchangeManager.ArchiveDirectory) == false)
+        {
+            Log.Warning("No archive directory found.", nameof(BrowseArchive));
+            return false;
+        }
+
+        string[] files = Directory.GetFiles(ExchangeManager.ArchiveDirectory);
+        if (files.Length == 0)
+        {
+            Log.Warning("The archive is empty.", nameof(BrowseArchive));
+            return false;
+        }
+
+        if (manager == null)
+        {
+            manager = new ExchangeManager();
+        }
+
+        Console.Clear();
+
+        // display files
+        int batchSize = 5;
+        for (int x = 0; x < files.Length; x += batchSize)
+        {
+            for (int y = 0; y < batchSize; y++)
+            {
+                if (files.Length <= x+y) break;
+                string filename = Path.GetFileNameWithoutExtension(files[x + y]);
+
+                // parse the info from the name
+                ExchangeInfo info = GetInfoFromName(filename);
+                if (info.Date == DateOnly.MinValue || info.Release == 0)
+                {
+                    // invalid file name
+                    continue;
+                }
+
+                Console.Write($"{Terminal.AccentTextStyle}{(x+y):D2}{ANSI_RESET} {info.Date} #{info.Release:D3} ");
+            }
+
+            Console.WriteLine();
+        }
+
+        if (int.TryParse(Terminal.Input($"{Environment.NewLine}Enter the report {Terminal.AccentTextStyle}index{ANSI_RESET}: ", false), out int index) == false)
+        {
+            Log.Warning("Invalid index (user-defined).", nameof(BrowseArchive));
+            return false;
+        }
+
+        string path = files.ElementAtOrDefault(index) ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(path) == true || File.Exists(path) == false)
+        {
+            Log.Warning("Invalid index (out of range).", nameof(BrowseArchive));
+            return false;
+        }
+
+        // load the selected file
+        bool result = manager.OpenArchivedRecord(path);
+        if (result == true)
+        {
+            Log.Success("Archived report loaded.", nameof(BrowseArchive));
+        }
+
+        else
+        {
+            Log.Error("Unable to open archived report.", nameof(BrowseArchive));
+        }
+
+        return result;
     }
 }
