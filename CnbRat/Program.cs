@@ -57,6 +57,7 @@ internal class Program : IApplication
         // load config
         Terminal.AccentTextStyle = _config.AccentTextStyle;
         Terminal.AccentHighlightStyle = _config.AccentHighlightStyle;
+        Terminal.Colors = _config.Colors;
 
         // set default values
         //Terminal.AccentTextStyle = "\e[38;5;40m";                   // green text

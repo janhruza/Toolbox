@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using Toolbox;
+using Toolbox.UI;
 
 namespace CnbRat;
 
@@ -19,6 +20,7 @@ public class Config : Toolbox.UI.IConfig
     {
         this.AccentTextStyle = "\e[38;5;76m";
         this.AccentHighlightStyle = "\e[48;5;40m\e[38;5;0m";
+        this.Colors = new ColorScheme();
     }
 
     /// <summary>
@@ -30,6 +32,11 @@ public class Config : Toolbox.UI.IConfig
     /// Representing a style of the highlighted items - such as highlighted menu item.
     /// </summary>
     public string AccentHighlightStyle { get; set; }
+
+    /// <summary>
+    /// Representing a custom color scheme definition.
+    /// </summary>
+    public ColorScheme Colors { get; set; }
 
     #region Static code
 
