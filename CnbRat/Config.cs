@@ -17,7 +17,7 @@ public class Config : Toolbox.UI.IConfig
     /// </summary>
     public Config()
     {
-        this.AccentTextStyle = "\e[38;5;40m";
+        this.AccentTextStyle = "\e[38;5;76m";
         this.AccentHighlightStyle = "\e[48;5;40m\e[38;5;0m";
     }
 

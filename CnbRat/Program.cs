@@ -18,12 +18,12 @@ internal class Program : IApplication
 
     public static void DisplayBanner()
     {
-        Console.WriteLine($"\t{Terminal.AccentTextStyle} ██████╗███╗   ██╗██████╗ ██████╗  █████╗ ████████╗{ANSI.ANSI_RESET}");
-        Console.WriteLine($"\t{Terminal.AccentTextStyle}██╔════╝████╗  ██║██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝{ANSI.ANSI_RESET}");
-        Console.WriteLine($"\t{Terminal.AccentTextStyle}██║     ██╔██╗ ██║██████╔╝██████╔╝███████║   ██║   {ANSI.ANSI_RESET}");
-        Console.WriteLine($"\t{Terminal.AccentTextStyle}██║     ██║╚██╗██║██╔══██╗██╔══██╗██╔══██║   ██║   {ANSI.ANSI_RESET}");
-        Console.WriteLine($"\t{Terminal.AccentTextStyle}╚██████╗██║ ╚████║██████╔╝██║  ██║██║  ██║   ██║   {ANSI.ANSI_RESET}");
-        Console.WriteLine($"\t{Terminal.AccentTextStyle} ╚═════╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   {ANSI.ANSI_RESET}");
+        Console.WriteLine($"\t\e[38;5;040m ██████╗███╗   ██╗██████╗ ██████╗  █████╗ ████████╗{ANSI.ANSI_RESET}");
+        Console.WriteLine($"\t\e[38;5;076m██╔════╝████╗  ██║██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝{ANSI.ANSI_RESET}");
+        Console.WriteLine($"\t\e[38;5;112m██║     ██╔██╗ ██║██████╔╝██████╔╝███████║   ██║   {ANSI.ANSI_RESET}");
+        Console.WriteLine($"\t\e[38;5;148m██║     ██║╚██╗██║██╔══██╗██╔══██╗██╔══██║   ██║   {ANSI.ANSI_RESET}");
+        Console.WriteLine($"\t\e[38;5;184m╚██████╗██║ ╚████║██████╔╝██║  ██║██║  ██║   ██║   {ANSI.ANSI_RESET}");
+        Console.WriteLine($"\t\e[38;5;220m ╚═════╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   {ANSI.ANSI_RESET}");
         Console.WriteLine($"\tCNB Exchange rates!                  by {Terminal.AccentTextStyle}@jendahruza{ANSI.ANSI_RESET}");
         Console.WriteLine();
         return;
