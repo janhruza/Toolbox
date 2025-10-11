@@ -80,7 +80,7 @@ internal class Program : IApplication
                 new MenuItem((int)ID_CONVERTER, "Currency Converter"),
                 new MenuItem((int)ID_VIEW_RATES, "View Exchange Rates"),
                 new MenuItem(),
-                new MenuItem((int)ID_LAST_REPORT, "Last Report"),
+                new MenuItem((int)ID_LAST_REPORT, "View Latest Report"),
                 new MenuItem((int)ID_ABOUT_CNBRAT, "About CnbRat", Resources.Version.ToString()),
                 new MenuItem(),
                 new MenuItem((int)ID_EXIT, "Exit", "ESC")

@@ -35,7 +35,7 @@ internal static class MenuActions
         if (manager.IsReady == false) return false;
 
         // display lates report info
-        Console.WriteLine($"{Terminal.AccentHighlightStyle} LAST REPORT {ANSI_RESET}");
+        Console.WriteLine($"{Terminal.Colors.Accent4}LATEST REPORT{ANSI_RESET}");
         Console.WriteLine($"Date:       {Terminal.AccentTextStyle}{manager.Exchange.Date}{ANSI_RESET}\n" +
                           $"Release:    {Terminal.AccentTextStyle}{manager.Exchange.Release}{ANSI_RESET}\n" +
                           $"Currencies: {Terminal.AccentTextStyle}{manager.Rates.Count}{ANSI_RESET}");
@@ -137,7 +137,7 @@ internal static class MenuActions
             RateInfo rate = manager.Rates[x];
 
             // TODO: fix line coloring
-            Console.WriteLine($"{(x % 2 == 0 ? ANSI_REVERSE : ANSI_RESET)}{rate.Country.PadRight(lcountry)} {rate.Currency.PadRight(lcurrency)} {rate.Amount.ToString().PadLeft(lamount)} {rate.Code.PadRight(lcode)} {rate.Value.ToString().PadLeft(lrate)}{ANSI.ANSI_RESET}");
+            Console.WriteLine($"{(x % 2 == 0 ? Terminal.Colors.Accent6 : ANSI_RESET)}{rate.Country.PadRight(lcountry)} {rate.Currency.PadRight(lcurrency)} {rate.Amount.ToString().PadLeft(lamount)} {rate.Code.PadRight(lcode)} {rate.Value.ToString().PadLeft(lrate)}{ANSI.ANSI_RESET}");
         }
 
         return true;
@@ -229,8 +229,12 @@ internal static class MenuActions
         }
 
         // perform conversion
-        // each rate contains a representation of 1 unit of currency in CZK (no need to multiply by amount)
-        decimal result = manager.Rates[sourceIndex].Value / manager.Rates[targetIndex].Value * amount;
+        // FIXED: not all currencies are represented correctly! eg: thailands currency is described in amount of 100 not 1
+        //decimal result = manager.Rates[sourceIndex].Value / manager.Rates[targetIndex].Value * amount;
+
+        // correct conversion formula
+        decimal sourceToCzk = (manager.Rates[sourceIndex].Value / manager.Rates[sourceIndex].Amount) * amount;
+        decimal result = sourceToCzk / (manager.Rates[targetIndex].Value / manager.Rates[targetIndex].Amount);
 
         // display result
         Console.WriteLine($"Result: {amount} {manager.Rates[sourceIndex].Code} is {Terminal.AccentTextStyle}{result:F2}{ANSI_RESET} {manager.Rates[targetIndex].Code}");
