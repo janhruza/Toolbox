@@ -8,12 +8,17 @@ namespace Toolbox.UI;
 public class MenuItem
 {
     /// <summary>
+    /// Representing the ID of a separator item.
+    /// </summary>
+    public const int ID_SEPARATOR = 0x1000;
+
+    /// <summary>
     /// Creates a new <see cref="MenuItem"/> with no parameters.
     /// No parameters means that this itemm will be initialized as a separator.
     /// </summary>
     public MenuItem()
     {
-        this.Id = 0x1000;
+        this.Id = ID_SEPARATOR;
         this.Text = new string('―', Constants.MENU_ITEM_WIDTH); // horizontal box drawing character
     }
 

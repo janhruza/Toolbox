@@ -84,6 +84,13 @@ public static class ConsoleMenu
 
                     case ConsoleKey.Enter:
                         selected = items[index].Id;
+
+                        if (selected == MenuItem.ID_SEPARATOR)
+                        {
+                            // ignore selection of separator
+                            break;
+                        }
+
                         goto Exit;
 
                     default:
