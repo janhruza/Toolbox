@@ -1,6 +1,7 @@
 ﻿using Mediavax.Core;
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -19,6 +20,20 @@ internal class Program : IApplication
         _ytdlp_version = string.Empty;
         _path = string.Empty;
     }
+
+    public static Dictionary<string, (string, string)> ThemeOptions => new Dictionary<string, (string AccentStyle, string HighlightStyle)>
+    {
+        { "Default", ("\e[38;5;210m", "\e[48;5;210m\e[38;5;0m") },
+        { "Red", ("\e[38;5;196m", "\e[48;5;196m\e[38;5;15m") },
+        { "Green", ("\e[38;5;46m", "\e[48;5;46m\e[38;5;0m") },
+        { "Blue", ("\e[38;5;21m", "\e[48;5;21m\e[38;5;15m") },
+        { "Cyan", ("\e[38;5;51m", "\e[48;5;51m\e[38;5;0m") },
+        { "Magenta", ("\e[38;5;201m", "\e[48;5;201m\e[38;5;0m") },
+        { "Yellow", ("\e[38;5;226m", "\e[48;5;226m\e[38;5;0m") },
+        { "Orange", ("\e[38;5;214m", "\e[48;5;214m\e[38;5;0m") },
+        { "Purple", ("\e[38;5;93m", "\e[48;5;93m\e[38;5;15m") },
+        { "Pink", ("\e[38;5;205m", "\e[48;5;205m\e[38;5;0m") }
+    };
 
     public static void DisplayBanner()
     {

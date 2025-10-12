@@ -37,5 +37,8 @@ internal enum MenuIds : int
     ID_FORMATS_COMBINED,
     ID_FORMATS_AUDIO,
     ID_FORMATS_VIDEO,
-    ID_FORMATS_EXTRA
+    ID_FORMATS_EXTRA,
+
+    // other options
+    ID_SELECT_THEME
 }

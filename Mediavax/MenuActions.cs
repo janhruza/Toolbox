@@ -283,6 +283,7 @@ internal static class MenuActions
                 new MenuItem(),
                 new MenuItem((int)ID_YT_DLP_VERSION, "YT-DLP Version", Program.ActionText(Program._ytdlp_version, "Unknown")),
                 new MenuItem((int)ID_UPDATE_YTDLP, "Check for Updates", ">"),
+                new MenuItem((int)ID_SELECT_THEME, "Select Theme", ""),
                 new MenuItem(),
                 new MenuItem((int)ID_EXIT, "Back", "ESC")
             };
@@ -312,12 +313,56 @@ internal static class MenuActions
                     }
                     break;
 
+                case (int)ID_SELECT_THEME:
+                    {
+                        SelectTheme();
+                    }
+                    break;
+
                 default:
                     break;
             }
         }
 
     MethodExit:
+        return true;
+    }
+
+    public static bool SelectTheme()
+    {
+        MenuItemCollection themeMenu = new MenuItemCollection();
+
+        
+
+        do
+        {
+            themeMenu.Clear();
+            for (int x = 1; x <= Program.ThemeOptions.Count; x++)
+            {
+                int realIndex = x - 1;
+                var kp = Program.ThemeOptions.ElementAt(realIndex);
+                themeMenu.Add(new MenuItem(x, kp.Key));
+            }
+
+            themeMenu.Add(new MenuItem());
+            themeMenu.Add(new MenuItem((int)ID_EXIT, "Back", "ESC"));
+
+            Console.Clear();
+            int option = ConsoleMenu.SelectMenu(themeMenu);
+            switch (option)
+            {
+                case (int)ID_EXIT:
+                case ConsoleMenu.KEY_ESCAPE:
+                    goto MethodReturn;
+
+                default:
+                    Terminal.AccentTextStyle = Program.ThemeOptions.ElementAt(option - 1).Value.Item1;
+                    Terminal.AccentHighlightStyle = Program.ThemeOptions.ElementAt(option - 1).Value.Item2;
+                    break;
+            }
+        } while (true);
+
+    MethodReturn:
         return true;
     }
 
