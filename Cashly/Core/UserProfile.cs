@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -26,6 +27,7 @@ public class UserProfile
     public UserProfile()
     {
         Id = Guid.CreateVersion7();
+        Created = DateTime.Now;
         Name = Environment.UserName;
         Transactions = new List<Transaction>();
     }
@@ -46,6 +48,11 @@ public class UserProfile
     /// This list contains both income and expense transactions.
     /// </summary>
     public List<Transaction> Transactions { get; }
+
+    /// <summary>
+    /// Representing the date and time when this profile was created.
+    /// </summary>
+    public DateTime Created { get; }
 
     #region Static code
 
@@ -145,6 +152,30 @@ public class UserProfile
 
         Log.Information($"Found {profiles.Count} profile(s).", nameof(ListProfiles));
         return true;
+    }
+
+    /// <summary>
+    /// Enumerates all profiles in the default "Profiles" directory.
+    /// </summary>
+    /// <param name="profiles">Output list of available profiles.</param>
+    /// <returns><see langword="true"/> if the operation is successful, otherwise <see langword="false"/>.</returns>
+    public static bool EnumProfiles(out List<UserProfile> profiles)
+    {
+        profiles = new List<UserProfile>();
+        if (ListProfiles(out List<string> files) == true)
+        {
+            foreach (string file in files)
+            {
+                if (Load(file, out UserProfile profile) == true)
+                {
+                    profiles.Add(profile);
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     #endregion

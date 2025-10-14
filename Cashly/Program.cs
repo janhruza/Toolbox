@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Cashly.Core;
+
+using System;
 
 using Toolbox;
 using Toolbox.UI;
 
+using static Toolbox.ANSI;
 using static Cashly.MenuIds;
 
 namespace Cashly;
@@ -43,6 +46,16 @@ internal class Program : IApplication
         return;
     }
 
+    /// <summary>
+    /// Clears the console screen and buffer (same as <see cref="Console.Clear"/>) and prints the banner afterwards using the <see cref="DisplayBanner"/> method.
+    /// </summary>
+    public static void Clear()
+    {
+        Console.Clear();
+        DisplayBanner();
+        return;
+    }
+
     static int Main(string[] args)
     {
         if (args.Length > 0)
@@ -62,8 +75,7 @@ internal class Program : IApplication
 
         while (true)
         {
-            Console.Clear();
-            DisplayBanner();
+            Program.Clear();
 
             startMenu = new MenuItemCollection
             {
@@ -79,6 +91,41 @@ internal class Program : IApplication
                 case ConsoleMenu.KEY_ESCAPE:
                 case (int)ID_EXIT:
                     goto AppExit;
+
+                case (int)ID_SELECT_PROFILE:
+                    {
+                        if (MenuActions.SelectProfile() == false)
+                        {
+                            Program.Clear();
+                            Terminal.Pause($"Profile selection {Terminal.AccentTextStyle}failed{ANSI_RESET} or was {Terminal.AccentTextStyle}cancelled{ANSI_RESET}.\n" +
+                                           $"Press {Terminal.AccentTextStyle}enter{ANSI_RESET} to continue. . . ");
+                            break;
+                        }
+
+                        else
+                        {
+                            // profile loaded, load main menu
+                            MenuActions.LoadProfileSession();
+                        }
+                    }
+                    break;
+
+                case (int)ID_CREATE_PROFILE:
+                    {
+                        if (MenuActions.CreateProfile() == false)
+                        {
+                            Program.Clear();
+                            Terminal.Pause($"Profile creation {Terminal.AccentTextStyle}failed{ANSI_RESET} or was {Terminal.AccentTextStyle}cancelled{ANSI_RESET}.\n" +
+                                           $"Press {Terminal.AccentTextStyle}enter{ANSI_RESET} to continue. . . ");
+                        }
+
+                        else
+                        {
+                            // profile created, load main menu
+                            MenuActions.LoadProfileSession();
+                        }
+                    }
+                    break;
 
                 // other option
                 default: break;

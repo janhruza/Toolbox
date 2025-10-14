@@ -15,5 +15,7 @@ internal enum MenuIds
     ID_VIEW_ENTRIES,
     ID_REPORTS,
     ID_EXPORT,
-    ID_IMPORT
+    ID_IMPORT,
+    ID_MANAGE_CATEGORIES,
+    ID_LOGOUT
 }
