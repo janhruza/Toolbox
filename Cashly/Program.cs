@@ -21,7 +21,6 @@ internal class Program : IApplication
         Console.WriteLine($"\t{Terminal.Colors.Accent5}╚██████╗██║  ██║███████║██║  ██║███████╗██║   {ANSI.ANSI_RESET}");
         Console.WriteLine($"\t{Terminal.Colors.Accent6} ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝   {ANSI.ANSI_RESET}");
         Console.WriteLine($"\tBudget Manager                 by {Terminal.AccentTextStyle}@jendahruza{ANSI.ANSI_RESET}");
-        Console.WriteLine($"\tVersion: {Version}");
         Console.WriteLine();
         return;
     }
