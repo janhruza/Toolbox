@@ -26,6 +26,11 @@ internal class Program : IApplication
     static List<RssChannel> _channels = [];
 
     /// <summary>
+    /// Interface implementation, unused.
+    /// </summary>
+    public static Version Version => new Version();
+
+    /// <summary>
     /// Representing the main application method.
     /// </summary>
     /// <param name="args">Command-line arguments.</param>

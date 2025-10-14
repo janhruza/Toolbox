@@ -55,6 +55,11 @@ internal class Program : IApplication
 
     static Config _config;
 
+    /// <summary>
+    /// Interface implementation, unused.
+    /// </summary>
+    public static Version Version => new Version();
+
     private static int Main(string[] args)
     {
         if (args.Length > 0)

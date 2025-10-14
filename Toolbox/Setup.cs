@@ -1,5 +1,6 @@
-﻿#if WINDOWS
-using System;
+﻿using System;
+
+#if WINDOWS
 using System.Runtime.InteropServices;
 #endif
 

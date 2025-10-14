@@ -1,4 +1,6 @@
-﻿namespace Toolbox;
+﻿using System;
+
+namespace Toolbox;
 
 /// <summary>
 /// Representing the interface for all Toolbox applications.
@@ -19,4 +21,9 @@ public interface IApplication
     /// Loads the application config (if any) and applies it to the application. For example, set accent colors, modify default styles, etc.
     /// </summary>
     static abstract void LoadConfig();
+
+    /// <summary>
+    /// Gets the version of the application.
+    /// </summary>
+    static abstract Version Version { get; }
 }

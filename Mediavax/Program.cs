@@ -68,6 +68,11 @@ internal class Program : IApplication
     public static string YT_DLP => Environment.OSVersion.Platform == PlatformID.Win32NT ? "yt-dlp.exe" : "yt-dlp";
 
     /// <summary>
+    /// Interface implementation, unused.
+    /// </summary>
+    public static Version Version => new Version();
+
+    /// <summary>
     /// Checks if YT-DLP exists in local directory, in directory defined in the PATH variable, both directories or none at all.
     /// </summary>
     /// <returns></returns>

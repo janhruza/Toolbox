@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 
 using Toolbox;
 using Toolbox.UI;
@@ -10,6 +9,8 @@ namespace Cashly;
 
 internal class Program : IApplication
 {
+    public static Version Version => new Version(2025, 10, 14);
+
     public static void DisplayBanner()
     {
         // display banner
@@ -20,6 +21,7 @@ internal class Program : IApplication
         Console.WriteLine($"\t{Terminal.Colors.Accent5}╚██████╗██║  ██║███████║██║  ██║███████╗██║   {ANSI.ANSI_RESET}");
         Console.WriteLine($"\t{Terminal.Colors.Accent6} ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝   {ANSI.ANSI_RESET}");
         Console.WriteLine($"\tBudget Manager                 by {Terminal.AccentTextStyle}@jendahruza{ANSI.ANSI_RESET}");
+        Console.WriteLine($"\tVersion: {Version}");
         Console.WriteLine();
         return;
     }
@@ -28,7 +30,7 @@ internal class Program : IApplication
     {
         // temp solution
         Terminal.Colors = ColorScheme.FromArray(ColorSchemes.BlueFade);
-        Terminal.AccentTextStyle = Terminal.Colors.Accent3;
+        Terminal.AccentTextStyle = "\e[38;5;33m"; // custom RGB value
         Terminal.AccentHighlightStyle = "\e[48;5;33m\e[38;5;15m";
 
         // load configuration from JSON file
@@ -38,6 +40,7 @@ internal class Program : IApplication
     public static void PostExitCleanup()
     {
         // additional post exit cleaning
+        Console.Clear();
         return;
     }
 
