@@ -40,14 +40,6 @@ internal static class SessionActions
         return false;
     }
 
-    static void Test()
-    {
-        if (Session.ProfileLoaded == false) return;
-        Session.Profile.Transactions.Add(new Transaction(DateTime.Now, "Salary", 3000, "Salary", TransactionType.Income));
-        Session.Profile.Transactions.Add(new Transaction(DateTime.Now, "Utilities", 200, "Home", TransactionType.Expense));
-        return;
-    }
-
     public static bool ShowDashboard()
     {
         if (Session.ProfileLoaded == false)
@@ -56,14 +48,12 @@ internal static class SessionActions
             return NoProfileLoaded();
         }
 
-        Test();
-
-        Console.WriteLine("DASHBOARD");
+        Program.WriteLine("DASHBOARD");
 
         if (Session.Profile.Transactions.Count == 0)
         {
             // no transactions yet
-            Console.WriteLine($"No transactions. Start by creating some!");
+            Program.WriteLine($"No transactions. Start by creating some!");
             return true;
         }
 
@@ -73,11 +63,11 @@ internal static class SessionActions
         int longestValue = Session.Profile.Transactions.Max(x => x.Amount.ToString().Length);
         var latestTransactions = Session.Profile.Transactions.OrderByDescending(x => x.Date).ToList();  // max first (max date = newest)
 
-        Console.WriteLine("Transaction History");
+        Program.WriteLine("Transaction History");
         for (int x = 0; x < 5; x++)
         {
             if (latestTransactions.Count == x) break;
-            Console.Write($"{latestTransactions[x].Description.PadRight(longest)} ");
+            Program.Write($"{latestTransactions[x].Description.PadRight(longest)} ");
             switch (latestTransactions[x].Type)
             {
                 // income
@@ -98,8 +88,8 @@ internal static class SessionActions
 
         // balance
         {
-            Console.WriteLine(new string('-', longest + longestValue + 2));
-            Console.Write($"{"Total".PadRight(longest)} ");
+            Program.WriteLine(new string('-', longest + longestValue + 2));
+            Program.Write($"{"Total".PadRight(longest)} ");
 
             // determine positive or negative balance (for coloring purposes)
             decimal balance = Session.Profile.Balance;
