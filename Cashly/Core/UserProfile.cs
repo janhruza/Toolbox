@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json;
@@ -53,6 +54,52 @@ public class UserProfile
     /// Representing the date and time when this profile was created.
     /// </summary>
     public DateTime Created { get; }
+
+    #region Get only properties
+
+    /// <summary>
+    /// Gets the user's current balance.
+    /// </summary>
+    public decimal Balance => GetBalance();
+
+    /// <summary>
+    /// Representing a list of income-only transactions.
+    /// </summary>
+    public List<Transaction> Incomes => Transactions.Where(x =>x.Type == TransactionType.Income).ToList();
+
+    /// <summary>
+    /// Representing a list of expanse-only transactions.
+    /// </summary>
+    public List<Transaction> Expanses => Transactions.Where(x => x.Type == TransactionType.Expense).ToList();
+
+    #endregion
+
+    #region Methods
+
+    private decimal GetBalance()
+    {
+        decimal sum = 0m;
+        foreach (Transaction transaction in Transactions)
+        {
+            switch (transaction.Type)
+            {
+                default:
+                case TransactionType.Undefined: break;
+
+                case TransactionType.Income:
+                    sum += transaction.Amount;
+                    break;
+
+                case TransactionType.Expense:
+                    sum -= transaction.Amount;
+                    break;
+            }
+        }
+
+        return sum;
+    }
+
+    #endregion
 
     #region Static code
 

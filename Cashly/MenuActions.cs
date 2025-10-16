@@ -116,7 +116,13 @@ internal static class MenuActions
 
                 case (int)ID_DASHBOARD:
                     {
-                        SessionActions.ShowDashboard();
+                        Program.Clear();
+                        if (SessionActions.ShowDashboard() == true)
+                        {
+                            Console.WriteLine();
+                            Terminal.Pause();
+                        }
+                        
                     }
                     break;
 
