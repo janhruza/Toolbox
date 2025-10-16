@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 using Toolbox;
 using Toolbox.UI;
@@ -94,7 +93,7 @@ internal static class MenuActions
         // create main menu
         MenuItemCollection mainMenu = new MenuItemCollection()
         {
-            new MenuItem((int)ID_DASHBOARD, "View Balance"),
+            new MenuItem((int)ID_DASHBOARD, "Dashboard"),
             new MenuItem((int)ID_ADD_ENTRY, "Add Transaction"),
             new MenuItem((int)ID_VIEW_ENTRIES, "View Transactions"),
             new MenuItem((int)ID_MANAGE_CATEGORIES, "Manage Categories"),
@@ -114,6 +113,12 @@ internal static class MenuActions
                 case (int)ID_EXIT:
                     case ConsoleMenu.KEY_ESCAPE:
                     goto MethodExit;
+
+                case (int)ID_DASHBOARD:
+                    {
+                        SessionActions.ShowDashboard();
+                    }
+                    break;
 
                 default: break;
             }
