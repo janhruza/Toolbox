@@ -1,4 +1,4 @@
-# Toolbox
+﻿# Toolbox
 Representing various tools and command line utilities.
 
 ## List of tools/utilities
@@ -7,6 +7,9 @@ Here is a list of containing tools or utilities from this solution.
 |Tool|Description|
 |----|-----------|
 |RSShell|Simple terminal RSS reader.|
+|Mediavax|Simple [YT-DLP](https://github.com/yt-dlp/yt-dlp) wrapper application.|
+|CnbRat|Simple currency converter based on ČNB rates data.|
+|Cashly|Terminal budget manager.|
 
 ### Toolbox project
 The Toolbox project located in this repository is a shared project containing all the logic shared across all tools/utilities.
