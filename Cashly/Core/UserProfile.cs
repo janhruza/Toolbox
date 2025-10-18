@@ -31,6 +31,7 @@ public class UserProfile
         Created = DateTime.Now;
         Name = Environment.UserName;
         Transactions = new List<Transaction>();
+        TransactionCategories = new List<string>();
     }
 
     /// <summary>
@@ -71,6 +72,11 @@ public class UserProfile
     /// Representing a list of expanse-only transactions.
     /// </summary>
     public List<Transaction> Expanses => Transactions.Where(x => x.Type == TransactionType.Expense).ToList();
+
+    /// <summary>
+    /// Representing a list of user-defined transaction categories.
+    /// </summary>
+    public List<string> TransactionCategories { get; }
 
     #endregion
 
