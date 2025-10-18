@@ -132,7 +132,6 @@ internal static class MenuActions
         }
 
     MethodExit:
-        if (UserProfile.Save(Session.Profile) == false)
         {
             Log.Error($"Profile saving failed.", nameof(LoadProfileSession));
         }
