@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Text.Json.Serialization; // <-- Tento using je klíčový
 
 using Toolbox;
 
@@ -37,24 +36,27 @@ public class UserProfile
     /// <summary>
     /// Representing the unique identifier of the user profile.
     /// </summary>
-    public Guid Id { get; }
+    [JsonInclude] // <-- OPRAVA: Povolí deserializaci této vlastnosti
+    public Guid Id { get; internal set; }
 
     /// <summary>
     /// Representing the name of the user profile,
     /// <see cref="Environment.UserName"/> by default.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } // <-- Tato byla v pořádku (public set)
 
     /// <summary>
     /// Representing the list of all transactions associated with the user profile.
     /// This list contains both income and expense transactions.
     /// </summary>
-    public List<Transaction> Transactions { get; }
+    [JsonInclude] // <-- OPRAVA: Povolí deserializaci této vlastnosti
+    public List<Transaction> Transactions { get; internal set; }
 
     /// <summary>
     /// Representing the date and time when this profile was created.
     /// </summary>
-    public DateTime Created { get; }
+    [JsonInclude] // <-- OPRAVA: Povolí deserializaci této vlastnosti
+    public DateTime Created { get; internal set; } // <-- OPRAVA: Přidán 'internal set'
 
     #region Get only properties
 
@@ -66,7 +68,7 @@ public class UserProfile
     /// <summary>
     /// Representing a list of income-only transactions.
     /// </summary>
-    public List<Transaction> Incomes => Transactions.Where(x =>x.Type == TransactionType.Income).ToList();
+    public List<Transaction> Incomes => Transactions.Where(x => x.Type == TransactionType.Income).ToList();
 
     /// <summary>
     /// Representing a list of expanse-only transactions.
@@ -76,7 +78,8 @@ public class UserProfile
     /// <summary>
     /// Representing a list of user-defined transaction categories.
     /// </summary>
-    public List<string> TransactionCategories { get; }
+    [JsonInclude] // <-- OPRAVA: Povolí deserializaci této vlastnosti
+    public List<string> TransactionCategories { get; internal set; }
 
     #endregion
 
@@ -109,6 +112,17 @@ public class UserProfile
 
     #region Static code
 
+    /// <summary>
+    /// Representing a default, invalid user profile structure.
+    /// </summary>
+    public static readonly UserProfile Empty = new UserProfile
+    {
+        Id = Guid.Empty,
+        Transactions = new List<Transaction>(),
+        Name = string.Empty,
+        TransactionCategories = new List<string>()
+    };
+
     private static string ProfilesFolder => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Profiles");
 
     /// <summary>
@@ -131,6 +145,11 @@ public class UserProfile
                 Log.Error("Failed to create profiles folder.", nameof(Save));
                 return false;
             }
+        }
+
+        if (profile.Id == Guid.Empty)
+        {
+            profile.Id = Guid.CreateVersion7();
         }
 
         // create file name (hex representation of the Id property)
@@ -158,7 +177,7 @@ public class UserProfile
     public static bool Load(string filename, out UserProfile profile)
     {
         // load profile from file (JSON)
-        profile = new UserProfile();
+        profile = new UserProfile(); // <-- Toto je v pořádku, ale bude přepsáno
 
         if (File.Exists(filename) == false)
         {
@@ -167,6 +186,8 @@ public class UserProfile
         }
 
         string json = File.ReadAllText(filename, Encoding.UTF8);
+
+        // Díky [JsonInclude] teď 'loadedObject' bude mít správné Id, transakce atd.
         var loadedObject = JsonSerializer.Deserialize(json, UserProfileTypeInfo.Default.UserProfile);
         if (loadedObject == null)
         {
@@ -174,7 +195,7 @@ public class UserProfile
             return false;
         }
 
-        profile = loadedObject;
+        profile = loadedObject; // 'profile' teď obsahuje správně načtená data
         Log.Information("User profile loaded successfully.", nameof(Load));
         return true;
     }

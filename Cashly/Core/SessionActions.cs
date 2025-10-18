@@ -40,14 +40,6 @@ internal static class SessionActions
         return false;
     }
 
-    static void Test()
-    {
-        if (Session.ProfileLoaded == false) return;
-        Session.Profile.Transactions.Add(new Transaction(DateTime.Now, "Salary", 3000, "Salary", TransactionType.Income));
-        Session.Profile.Transactions.Add(new Transaction(DateTime.Now, "Utilities", 200, "Home", TransactionType.Expense));
-        return;
-    }
-
     public static bool ShowDashboard()
     {
         if (Session.ProfileLoaded == false)
@@ -55,8 +47,6 @@ internal static class SessionActions
             // no profile loaded
             return NoProfileLoaded();
         }
-
-        Test();
 
         Console.WriteLine("DASHBOARD");
 
