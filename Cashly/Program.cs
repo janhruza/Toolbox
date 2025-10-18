@@ -17,13 +17,13 @@ internal class Program : IApplication
     public static void DisplayBanner()
     {
         // display banner
-        WriteLine($"{Terminal.Colors.Accent1} ██████╗ █████╗ ███████╗██╗  ██╗██╗  ██╗   ██╗{ANSI.ANSI_RESET}");
-        WriteLine($"{Terminal.Colors.Accent2}██╔════╝██╔══██╗██╔════╝██║  ██║██║  ╚██╗ ██╔╝{ANSI.ANSI_RESET}");
-        WriteLine($"{Terminal.Colors.Accent3}██║     ███████║███████╗███████║██║   ╚████╔╝ {ANSI.ANSI_RESET}");
-        WriteLine($"{Terminal.Colors.Accent4}██║     ██╔══██║╚════██║██╔══██║██║    ╚██╔╝  {ANSI.ANSI_RESET}");
-        WriteLine($"{Terminal.Colors.Accent5}╚██████╗██║  ██║███████║██║  ██║███████╗██║   {ANSI.ANSI_RESET}");
-        WriteLine($"{Terminal.Colors.Accent6} ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝   {ANSI.ANSI_RESET}");
-        WriteLine($"Budget Manager                 by {Terminal.AccentTextStyle}@jendahruza{ANSI.ANSI_RESET}");
+        Console.WriteLine($"\t{Terminal.Colors.Accent1} ██████╗ █████╗ ███████╗██╗  ██╗██╗  ██╗   ██╗{ANSI.ANSI_RESET}");
+        Console.WriteLine($"\t{Terminal.Colors.Accent2}██╔════╝██╔══██╗██╔════╝██║  ██║██║  ╚██╗ ██╔╝{ANSI.ANSI_RESET}");
+        Console.WriteLine($"\t{Terminal.Colors.Accent3}██║     ███████║███████╗███████║██║   ╚████╔╝ {ANSI.ANSI_RESET}");
+        Console.WriteLine($"\t{Terminal.Colors.Accent4}██║     ██╔══██║╚════██║██╔══██║██║    ╚██╔╝  {ANSI.ANSI_RESET}");
+        Console.WriteLine($"\t{Terminal.Colors.Accent5}╚██████╗██║  ██║███████║██║  ██║███████╗██║   {ANSI.ANSI_RESET}");
+        Console.WriteLine($"\t{Terminal.Colors.Accent6} ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝   {ANSI.ANSI_RESET}");
+        Console.WriteLine($"\tBudget Manager                 by {Terminal.AccentTextStyle}@jendahruza{ANSI.ANSI_RESET}");
         Console.WriteLine();
         return;
     }
@@ -53,26 +53,6 @@ internal class Program : IApplication
     {
         Console.Clear();
         DisplayBanner();
-        return;
-    }
-
-    /// <summary>
-    /// Custom <see cref="Console.Write(object)"/> method that ensures that the textout is aligned with the banner text (<see cref="DisplayBanner"/>).
-    /// </summary>
-    /// <param name="value"></param>
-    public static void Write(object value)
-    {
-        Console.Write($"\t{value}");
-        return;
-    }
-
-    /// <summary>
-    /// Custom <see cref="Console.WriteLine()"/> method that ensures that the textout is aligned with the banner text (<see cref="DisplayBanner"/>).
-    /// </summary>
-    /// <param name="value"></param>
-    public static void WriteLine(object value)
-    {
-        Console.WriteLine($"\t{value}");
         return;
     }
 
