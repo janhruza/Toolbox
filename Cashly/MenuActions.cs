@@ -111,7 +111,7 @@ internal static class MenuActions
             switch (option)
             {
                 case (int)ID_EXIT:
-                    case ConsoleMenu.KEY_ESCAPE:
+                case ConsoleMenu.KEY_ESCAPE:
                     goto MethodExit;
 
                 case (int)ID_DASHBOARD:
@@ -122,7 +122,7 @@ internal static class MenuActions
                             Console.WriteLine();
                             Terminal.Pause();
                         }
-                        
+
                     }
                     break;
 

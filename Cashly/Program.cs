@@ -1,12 +1,10 @@
-﻿using Cashly.Core;
-
-using System;
+﻿using System;
 
 using Toolbox;
 using Toolbox.UI;
 
-using static Toolbox.ANSI;
 using static Cashly.MenuIds;
+using static Toolbox.ANSI;
 
 namespace Cashly;
 

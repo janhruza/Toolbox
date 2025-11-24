@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Toolbox.UI;
+﻿namespace Toolbox.UI;
 
 /// <summary>
 /// Representing a class with predefined color schemes represented as arrays of 6 strings each.

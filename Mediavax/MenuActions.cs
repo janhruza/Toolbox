@@ -332,7 +332,7 @@ internal static class MenuActions
     {
         MenuItemCollection themeMenu = new MenuItemCollection();
 
-        
+
 
         do
         {
