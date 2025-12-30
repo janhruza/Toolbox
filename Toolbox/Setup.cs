@@ -26,6 +26,11 @@ public static class Setup
 #endif
 
     /// <summary>
+    /// Representing the startup
+    /// </summary>
+    public static ConsoleWindowInfo StartupWindowInfo;
+
+    /// <summary>
     /// Initializes the working environment. Contains platform-specific code.
     /// </summary>
     /// <returns>Operation result.</returns>
@@ -52,6 +57,22 @@ public static class Setup
             }
         }
 #endif
+
+        // get the initial terminal window size
+        ConsoleWindowInfo.GetConsoleWindowInfo(ref StartupWindowInfo);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Destroys the initialized setup.
+    /// Works as an exit-cleanup call.
+    /// </summary>
+    /// <returns>Operation result as <see cref="bool"/>.</returns>
+    public static bool Destroy()
+    {
+        // restore the startup window and buffer size
+        ConsoleWindowInfo.SetConsoleWindowInfo(ref StartupWindowInfo);
         return true;
     }
 }
