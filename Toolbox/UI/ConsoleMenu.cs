@@ -24,28 +24,103 @@ public static class ConsoleMenu
     /// </remarks>
     public static void DrawMenu(MenuItemCollection items, int idx)
     {
-        for (int x = 0; x < items.Count; x++)
+        DrawMenu(items, idx, string.Empty);
+        return;
+    }
+
+    // Definujeme statickou proměnnou mimo metodu, aby si aplikace pamatovala, kde menu začíná
+    private static int _menuStartLine = -1;
+
+    /// <summary>
+    /// Draws the console menu to the screen.
+    /// </summary>
+    /// <param name="items">Menu items collection.</param>
+    /// <param name="idx">Currently selected menu item (index).</param>
+    /// <param name="header">Menu header text.</param>
+    /// <remarks>
+    /// This method will only draws the console menu and no user input is required.
+    /// </remarks>
+    public static void DrawMenu(MenuItemCollection items, int idx, string header)
+    {
+        // the screen was probably cleared, adjust the start position
+        if (Console.CursorTop < _menuStartLine)
         {
-            Console.Write($"\t");
-
-            if (x == idx)
-            {
-                // item is selected
-                Console.WriteLine($"{Terminal.AccentHighlightStyle}  {items[x].Text,-Constants.MENU_ITEM_WIDTH}  {ANSI_RESET}");
-            }
-
-            else
-            {
-                // item is not selected
-                Console.WriteLine($"\e[0m  {items[x].Text,-Constants.MENU_ITEM_WIDTH}  {ANSI_RESET}");
-            }
+            _menuStartLine = -1;
         }
 
-        Console.WriteLine($"\n\t{Terminal.Colors.GrayText}Use arrows to navigate.{ANSI_RESET}");
+        if (_menuStartLine == -1)
+        {
+            _menuStartLine = Console.CursorTop;
+        }
+        else
+        {
+            Console.SetCursorPosition(0, _menuStartLine);
+        }
 
-        // write last log entry to the screen
-        Terminal.WriteLastLogEntry();
-        return;
+        int reservedSpace = 8;
+        int pageSize = Math.Max(5, Console.WindowHeight - (_menuStartLine + reservedSpace));
+        if (items.Count < pageSize) pageSize = items.Count;
+
+        int startIdx = Math.Max(0, Math.Min(idx - pageSize / 2, items.Count - pageSize));
+        int endIdx = Math.Min(startIdx + pageSize, items.Count);
+
+        if (string.IsNullOrWhiteSpace(header)) header = "MENU";
+
+        string leftOffset = "    "; // 4 spaces
+        int maxWidth = Console.WindowWidth - 1;
+
+        void WriteCleanLine(string formattedText)
+        {
+            Console.Write(formattedText);
+            // removal of the ANSI to calculate the actual width
+            string plainText = System.Text.RegularExpressions.Regex.Replace(formattedText, @"\e\[[0-9;]*m", "");
+            int paddingCount = maxWidth - plainText.Length;
+            if (paddingCount > 0) Console.Write(new string(' ', paddingCount));
+            Console.WriteLine();
+        }
+
+        // --- Drawing ---
+
+        // Header
+        WriteCleanLine($"  {leftOffset}{Terminal.AccentTextStyle}{header}{ANSI.ANSI_RESET}");
+
+        // Top separator (right under the menu header) - horizontal line
+        string topSeparator = startIdx > 0
+            ? "▲ ... more above ..."
+            : new string('―', Constants.MENU_ITEM_WIDTH);
+        WriteCleanLine($"{leftOffset}  {topSeparator}");
+
+        // Menu items itself
+        for (int x = startIdx; x < endIdx; x++)
+        {
+            // text left-padding by 2 places
+            string innerText = $"  {items[x].Text.PadRight(Constants.MENU_ITEM_WIDTH)}  ";
+            string line = (x == idx)
+                ? $"{leftOffset}{Terminal.AccentHighlightStyle}{innerText}{ANSI_RESET}"
+                : $"{leftOffset}\e[0m{innerText}{ANSI_RESET}";
+
+            WriteCleanLine(line);
+        }
+
+        // The bottom separator - horizontal line
+        string bottomSeparator = endIdx < items.Count
+            ? "▼ ... more bellow ..."
+            : new string('-', Constants.MENU_ITEM_WIDTH);
+        WriteCleanLine($"{leftOffset}  {bottomSeparator}");
+
+        WriteCleanLine("");
+        string infoText = $"{leftOffset}Use arrows to navigate (item {idx + 1} out of {items.Count})";
+        WriteCleanLine($"{Terminal.Colors.GrayText}{infoText}{ANSI_RESET}");
+
+        // --- Logs ---
+        int logRow = _menuStartLine + pageSize + 6;
+        if (logRow < Console.BufferHeight)
+        {
+            Console.SetCursorPosition(0, logRow);
+            Terminal.WriteLastLogEntry();
+            int currentPos = Console.CursorLeft;
+            if (currentPos < maxWidth) Console.Write(new string(' ', maxWidth - currentPos));
+        }
     }
 
     /// <summary>
@@ -66,6 +141,77 @@ public static class ConsoleMenu
             while (true)
             {
                 DrawMenu(items, index);
+                var key = Console.ReadKey(true).Key;
+                (nleft, ntop) = Console.GetCursorPosition();
+
+                switch (key)
+                {
+                    case ConsoleKey.Escape:
+                        return KEY_ESCAPE;
+
+                    case ConsoleKey.UpArrow:
+                        index = (index > 0 && index < items.Count) ? --index : items.Count - 1;
+                        break;
+
+                    case ConsoleKey.DownArrow:
+                        index = (index < items.Count - 1) ? ++index : 0;
+                        break;
+
+                    case ConsoleKey.Enter:
+                        selected = items[index].Id;
+
+                        if (selected == MenuItem.ID_SEPARATOR)
+                        {
+                            // ignore selection of separator
+                            break;
+                        }
+
+                        goto Exit;
+
+                    default:
+                        break;
+                }
+
+                Console.SetCursorPosition(left, top);
+            }
+
+        Exit:
+            Console.CursorVisible = true;
+            Console.SetCursorPosition(nleft, ntop);
+            return selected;
+        }
+
+        catch (Exception ex)
+        {
+            Log.Exception(ex);
+            return 0xDEAD;
+        }
+
+        finally
+        {
+            Console.CursorVisible = true;
+        }
+    }
+
+    /// <summary>
+    /// Handles the menu item selection action.
+    /// </summary>
+    /// <param name="items">Menu item collection.</param>
+    /// <param name="header">Menu header text.</param>
+    /// <returns>The ID of the selected menu item.</returns>
+    public static int SelectMenu(MenuItemCollection items, string header)
+    {
+        try
+        {
+            int top, left, index, ntop, nleft, selected;
+            index = 0;
+            top = Console.CursorTop;
+            left = Console.CursorLeft;
+
+            Console.CursorVisible = false;
+            while (true)
+            {
+                DrawMenu(items, index, header);
                 var key = Console.ReadKey(true).Key;
                 (nleft, ntop) = Console.GetCursorPosition();
 
