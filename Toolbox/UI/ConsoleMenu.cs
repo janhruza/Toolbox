@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 using static Toolbox.ANSI;
 
@@ -44,7 +45,7 @@ public static class ConsoleMenu
     /// </remarks>
     public static void DrawMenu(MenuItemCollection items, int idx, string header)
     {
-        DrawMenu(items, idx, header, string.Empty);
+        DrawMenu(items, idx, header, "Use spacebar to (de)select items.");
     }
 
     /// <summary>
@@ -74,7 +75,7 @@ public static class ConsoleMenu
             Console.SetCursorPosition(0, _menuStartLine);
         }
 
-        int reservedSpace = 8;
+        int reservedSpace = 10;
         int pageSize = Math.Max(5, Console.WindowHeight - (_menuStartLine + reservedSpace));
         if (items.Count < pageSize) pageSize = items.Count;
 
@@ -129,20 +130,32 @@ public static class ConsoleMenu
         string infoText = $"{leftOffset}Use arrows to navigate (item {idx + 1} out of {items.Count})";
         WriteCleanLine($"{Terminal.Colors.GrayText}{infoText}{ANSI_RESET}");
 
+        // --- Pre-Logging Events ---
+
+        int logRow;
+
         if (string.IsNullOrWhiteSpace(helpText) == false)
         {
-            WriteCleanLine(string.Empty);
-            WriteCleanLine($"{Terminal.Colors.GrayText}{helpText}{ANSI_RESET}");
+            // adjust the log line position
+            logRow = _menuStartLine + pageSize + 8;
+
+            // draw the jelper text
+            WriteCleanLine($"{Terminal.Colors.GrayText}{leftOffset}{helpText}{ANSI_RESET}");
+        }
+
+        else
+        {
+            logRow = _menuStartLine + pageSize + 6;
         }
 
         // --- Logs ---
-        int logRow = _menuStartLine + pageSize + 6;
         if (logRow < Console.BufferHeight)
         {
             Console.SetCursorPosition(0, logRow);
             Terminal.WriteLastLogEntry();
             int currentPos = Console.CursorLeft;
             if (currentPos < maxWidth) Console.Write(new string(' ', maxWidth - currentPos));
+            Console.CursorLeft = 0; // quick fix
         }
     }
 
@@ -247,6 +260,25 @@ public static class ConsoleMenu
         // the list of selected items
         List<int> items = [];
 
+        // helper function to (de)select item(s)
+        void SelectItem(int selectedId)
+        {
+            MenuItem mi = menu.Where(x => x.Id == selectedId).First();
+
+            // update the state of the item
+            if (items.Contains(selectedId) == true)
+            {
+                items.Remove(selectedId);
+                mi.Update(mi.GetTextWithoutAlt(), "[ ]");
+            }
+
+            else
+            {
+                items.Add(selectedId);
+                mi.Update(mi.GetTextWithoutAlt(), "[*]");
+            }
+        }
+
         try
         {
             int top, left, index, ntop, nleft, selected;
@@ -274,32 +306,37 @@ public static class ConsoleMenu
                         index = (index < menu.Count - 1) ? ++index : 0;
                         break;
 
+                    case ConsoleKey.Enter:
+                        {
+                            selected = menu[index].Id;
+
+                            switch (selected)
+                            {
+                                case MenuItem.ID_SEPARATOR:
+                                    break;
+
+                                case MenuItem.ID_EXIT:
+                                    goto Exit;
+
+                                default:
+                                    SelectItem(selected);
+                                    break;
+                            }
+                        }
+                        break;
+
                     // select/deselect the menu item
                     case ConsoleKey.Spacebar:
-                    case ConsoleKey.Enter:
                         selected = menu[index].Id;
 
-                        if (selected == MenuItem.ID_SEPARATOR)
+                        if (selected == MenuItem.ID_SEPARATOR || selected == MenuItem.ID_EXIT)
                         {
                             // ignore selection of separator
                             break;
                         }
 
-                        // get the target item
-                        MenuItem mi = menu.Where(x => x.Id == selected).First();
-
-                        // update the state of the item
-                        if (items.Contains(selected) == true)
-                        {
-                            items.Remove(selected);
-                            mi.Update(mi.GetTextWithoutAlt(), "[ ]");
-                        }
-
-                        else
-                        {
-                            items.Add(selected);
-                            mi.Update(mi.GetTextWithoutAlt(), "[*]");
-                        }
+                        // (de)select the target item
+                        SelectItem(selected);
 
                         break;
 
@@ -341,5 +378,21 @@ public static class ConsoleMenu
     public static int[] Multiselect(MenuItemCollection menu)
     {
         return Multiselect(menu, string.Empty, "Use spacebar to select/deselect items.");
+    }
+
+    /// <summary>
+    /// Allows users to select multiple menu items at once by selecting them.
+    /// </summary>
+    /// <param name="menu">List of available options.</param>
+    /// <param name="header">Specifies the caption of the menu.</param>
+    /// <returns>Array of the selected menu item indexes.</returns>
+    /// <remarks>
+    /// This method overwrites the content of the menu items' <see cref="MenuItem.Text"/>
+    /// property using the <see cref="MenuItem.Update(string, string)"/>
+    /// method to indicate selected/unselected items.
+    /// </remarks>
+    public static int[] Multiselect(MenuItemCollection menu, string header)
+    {
+        return Multiselect(menu, header, "Use spacebar to select/deselect items.");
     }
 }

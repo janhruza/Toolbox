@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Toolbox.UI;
 
@@ -14,6 +11,12 @@ public class MenuItem
     /// Representing the ID of a separator item.
     /// </summary>
     public const int ID_SEPARATOR = 0x1000;
+
+    /// <summary>
+    /// Representing the ID of an exit/back option.
+    /// This value is reserved.
+    /// </summary>
+    public const int ID_EXIT = 0x0000;
 
     /// <summary>
     /// Creates a new <see cref="MenuItem"/> with no parameters.
