@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 
+using Toolbox;
 using Toolbox.UI;
 
 namespace ToolboxTest;
@@ -28,10 +30,17 @@ internal class Program
 
         else
         {
+            Console.WriteLine($"  ID\tValue");
+            Console.WriteLine($"  --\t-----");
+
+            MenuItem mi;
             foreach (int id in result)
             {
-                Console.WriteLine($"Item {id} selected.");
+                mi = menu.Where(x => x.Id == id).First();
+                Console.WriteLine($"  {id.ToString("00")}\t{mi.GetTextWithoutAlt()}");
             }
+
+            Console.WriteLine($"\nTotal: {Terminal.AccentTextStyle}{result.Length}{ANSI.ANSI_RESET} items.");
         }
 
         return 0;

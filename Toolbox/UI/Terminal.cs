@@ -108,13 +108,15 @@ public static class Terminal
     /// The style is represented as an ANSI escape sequence.
     /// </summary>
     /// <remarks>Use this property to customize the color scheme for console applications that support ANSI
-    /// color codes. The value should be a valid ANSI escape sequence recognized by the target terminal.</remarks>
+    /// color codes. The value must be a valid ANSI escape sequence recognized by the target terminal.</remarks>
     public static string AccentTextStyle { get; set; } = "\e[38;5;210m";
 
     /// <summary>
     /// Representing a style of the highlighted items - such as highlighted menu item.
     /// The style is represented as an ANSI escape sequence.
     /// </summary>
+    /// /// <remarks>Use this property to customize the color scheme for console applications that support ANSI
+    /// color codes. The value must be a valid ANSI escape sequence recognized by the target terminal.</remarks>
     public static string AccentHighlightStyle { get; set; } = "\e[48;5;210m\e[38;5;0m";
 
     #region Accent colors
