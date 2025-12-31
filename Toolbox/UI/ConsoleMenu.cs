@@ -27,7 +27,7 @@ public static class ConsoleMenu
     /// </remarks>
     public static void DrawMenu(MenuItemCollection items, int idx)
     {
-        DrawMenu(items, idx, string.Empty);
+        DrawMenu(items, idx, string.Empty, string.Empty);
         return;
     }
 
@@ -45,7 +45,7 @@ public static class ConsoleMenu
     /// </remarks>
     public static void DrawMenu(MenuItemCollection items, int idx, string header)
     {
-        DrawMenu(items, idx, header, "Use spacebar to (de)select items.");
+        DrawMenu(items, idx, header, string.Empty);
     }
 
     /// <summary>
