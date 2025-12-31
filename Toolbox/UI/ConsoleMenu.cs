@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using static Toolbox.ANSI;
 
@@ -41,6 +43,21 @@ public static class ConsoleMenu
     /// This method will only draws the console menu and no user input is required.
     /// </remarks>
     public static void DrawMenu(MenuItemCollection items, int idx, string header)
+    {
+        DrawMenu(items, idx, header, string.Empty);
+    }
+
+    /// <summary>
+    /// Draws the console menu to the screen.
+    /// </summary>
+    /// <param name="items">Menu items collection.</param>
+    /// <param name="idx">Currently selected menu item (index).</param>
+    /// <param name="header">Menu header text.</param>
+    /// <param name="helpText">Additional help text.</param>
+    /// <remarks>
+    /// This method will only draws the console menu and no user input is required.
+    /// </remarks>
+    public static void DrawMenu(MenuItemCollection items, int idx, string header, string helpText)
     {
         // the screen was probably cleared, adjust the start position
         if (Console.CursorTop < _menuStartLine)
@@ -112,6 +129,12 @@ public static class ConsoleMenu
         string infoText = $"{leftOffset}Use arrows to navigate (item {idx + 1} out of {items.Count})";
         WriteCleanLine($"{Terminal.Colors.GrayText}{infoText}{ANSI_RESET}");
 
+        if (string.IsNullOrWhiteSpace(helpText) == false)
+        {
+            WriteCleanLine(string.Empty);
+            WriteCleanLine($"{Terminal.Colors.GrayText}{helpText}{ANSI_RESET}");
+        }
+
         // --- Logs ---
         int logRow = _menuStartLine + pageSize + 6;
         if (logRow < Console.BufferHeight)
@@ -130,67 +153,7 @@ public static class ConsoleMenu
     /// <returns>The ID of the selected menu item.</returns>
     public static int SelectMenu(MenuItemCollection items)
     {
-        try
-        {
-            int top, left, index, ntop, nleft, selected;
-            index = 0;
-            top = Console.CursorTop;
-            left = Console.CursorLeft;
-
-            Console.CursorVisible = false;
-            while (true)
-            {
-                DrawMenu(items, index);
-                var key = Console.ReadKey(true).Key;
-                (nleft, ntop) = Console.GetCursorPosition();
-
-                switch (key)
-                {
-                    case ConsoleKey.Escape:
-                        return KEY_ESCAPE;
-
-                    case ConsoleKey.UpArrow:
-                        index = (index > 0 && index < items.Count) ? --index : items.Count - 1;
-                        break;
-
-                    case ConsoleKey.DownArrow:
-                        index = (index < items.Count - 1) ? ++index : 0;
-                        break;
-
-                    case ConsoleKey.Enter:
-                        selected = items[index].Id;
-
-                        if (selected == MenuItem.ID_SEPARATOR)
-                        {
-                            // ignore selection of separator
-                            break;
-                        }
-
-                        goto Exit;
-
-                    default:
-                        break;
-                }
-
-                Console.SetCursorPosition(left, top);
-            }
-
-        Exit:
-            Console.CursorVisible = true;
-            Console.SetCursorPosition(nleft, ntop);
-            return selected;
-        }
-
-        catch (Exception ex)
-        {
-            Log.Exception(ex);
-            return 0xDEAD;
-        }
-
-        finally
-        {
-            Console.CursorVisible = true;
-        }
+        return SelectMenu(items, string.Empty);
     }
 
     /// <summary>
@@ -262,5 +225,121 @@ public static class ConsoleMenu
         {
             Console.CursorVisible = true;
         }
+    }
+
+    /// <summary>
+    /// Allows users to select multiple menu items at once by selecting them.
+    /// </summary>
+    /// <param name="menu">List of available options.</param>
+    /// <param name="header">Specifies the caption of the menu.</param>
+    /// <param name="helpText">Additional helper text.</param>
+    /// <returns>Array of the selected menu item indexes.</returns>
+    /// <remarks>
+    /// This method overwrites the content of the menu items' <see cref="MenuItem.Text"/>
+    /// property using the <see cref="MenuItem.Update(string, string)"/>
+    /// method to indicate selected/unselected items.
+    /// </remarks>
+    public static int[] Multiselect(MenuItemCollection menu, string header, string helpText)
+    {
+        // check for empty menu
+        if (menu.Count == 0) return [];
+
+        // the list of selected items
+        List<int> items = [];
+
+        try
+        {
+            int top, left, index, ntop, nleft, selected;
+            index = 0;
+            top = Console.CursorTop;
+            left = Console.CursorLeft;
+
+            Console.CursorVisible = false;
+            while (true)
+            {
+                DrawMenu(menu, index, header, helpText);
+                var key = Console.ReadKey(true).Key;
+                (nleft, ntop) = Console.GetCursorPosition();
+
+                switch (key)
+                {
+                    case ConsoleKey.Escape:
+                        goto Exit;
+
+                    case ConsoleKey.UpArrow:
+                        index = (index > 0 && index < menu.Count) ? --index : menu.Count - 1;
+                        break;
+
+                    case ConsoleKey.DownArrow:
+                        index = (index < menu.Count - 1) ? ++index : 0;
+                        break;
+
+                    // select/deselect the menu item
+                    case ConsoleKey.Spacebar:
+                    case ConsoleKey.Enter:
+                        selected = menu[index].Id;
+
+                        if (selected == MenuItem.ID_SEPARATOR)
+                        {
+                            // ignore selection of separator
+                            break;
+                        }
+
+                        // get the target item
+                        MenuItem mi = menu.Where(x => x.Id == selected).First();
+
+                        // update the state of the item
+                        if (items.Contains(selected) == true)
+                        {
+                            items.Remove(selected);
+                            mi.Update(mi.GetTextWithoutAlt(), "[ ]");
+                        }
+
+                        else
+                        {
+                            items.Add(selected);
+                            mi.Update(mi.GetTextWithoutAlt(), "[*]");
+                        }
+
+                        break;
+
+                    default:
+                        break;
+                }
+
+                Console.SetCursorPosition(left, top);
+            }
+
+        Exit:
+            Console.CursorVisible = true;
+            Console.SetCursorPosition(nleft, ntop);
+            return items.ToArray();
+        }
+
+        catch (Exception ex)
+        {
+            Log.Exception(ex);
+            return [];
+        }
+
+        finally
+        {
+            Console.CursorVisible = true;
+        }
+    }
+
+    /// <summary>
+    /// Allows users to select multiple menu items at once by selecting them.
+    /// </summary>
+    /// <param name="menu">List of available options.</param>
+    /// <returns>Array of the selected menu item indexes.</returns>
+    /// <remarks>
+    /// This method overwrites the content of the menu items' <see cref="MenuItem.Text"/>
+    /// property using the <see cref="MenuItem.Update(string, string)"/>
+    /// method to indicate selected/unselected items.
+    /// </remarks>
+    public static int[] Multiselect(MenuItemCollection menu)
+    {
+        return Multiselect(menu, string.Empty, "Use spacebar to select/deselect items.");
     }
 }

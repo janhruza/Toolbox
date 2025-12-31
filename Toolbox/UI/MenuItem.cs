@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Toolbox.UI;
 
@@ -31,6 +34,9 @@ public class MenuItem
     {
         this.Id = id;
         this.Text = text;
+
+        // initialize private properties
+        sText = text;
     }
 
     /// <summary>
@@ -42,7 +48,35 @@ public class MenuItem
     public MenuItem(int id, string text, string alt)
     {
         this.Id = id;
+        this.Text = string.Empty;
+        this.Update(text, alt);
+    }
 
+    /// <summary>
+    /// Representing the item ID.
+    /// </summary>
+    public int Id { get; }
+
+    /// <summary>
+    /// Representing the display text.
+    /// </summary>
+    public string Text { get; private set; }
+
+    /// <summary>
+    /// Representing a pointer to the extra data attached to this object.
+    /// </summary>
+    public object Extras = new object();
+
+    private string sText = string.Empty;
+    private string sAlt = string.Empty;
+
+    /// <summary>
+    /// Updates the content of this <see cref="MenuItem"/> object.
+    /// </summary>
+    /// <param name="text">New <see cref="Text"/> value.</param>
+    /// <param name="alt">New alternative text value.</param>
+    public void Update(string text, string alt)
+    {
         // trim text if needed
         if (alt.Length > Constants.MENU_ALT_MAX_SIZE)
         {
@@ -55,17 +89,29 @@ public class MenuItem
             : text.PadRight(availableWidth);
 
         this.Text = paddedText + alt;
+
+        sText = text;
+        sAlt = alt;
+        return;
     }
 
     /// <summary>
-    /// Representing the item ID.
+    /// Returns only the main text part.
     /// </summary>
-    public int Id { get; }
+    /// <returns>Main text of the item.</returns>
+    public string GetTextWithoutAlt()
+    {
+        return sText;
+    }
 
     /// <summary>
-    /// Representing the display text.
+    /// Returns only the alternative text.
     /// </summary>
-    public string Text { get; }
+    /// <returns>Alternative text of the item.</returns>
+    public string GetAltText()
+    {
+        return sAlt;
+    }
 }
 
 /// <summary>
