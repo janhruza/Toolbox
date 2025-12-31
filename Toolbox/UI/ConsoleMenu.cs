@@ -246,7 +246,7 @@ public static class ConsoleMenu
     /// <param name="menu">List of available options.</param>
     /// <param name="header">Specifies the caption of the menu.</param>
     /// <param name="helpText">Additional helper text.</param>
-    /// <returns>Array of the selected menu item indexes.</returns>
+    /// <returns>Array of the selected menu item indexes. Items are returned in the order of selection.</returns>
     /// <remarks>
     /// This method overwrites the content of the menu items' <see cref="MenuItem.Text"/>
     /// property using the <see cref="MenuItem.Update(string, string)"/>
@@ -377,7 +377,7 @@ public static class ConsoleMenu
     /// Allows users to select multiple menu items at once by selecting them.
     /// </summary>
     /// <param name="menu">List of available options.</param>
-    /// <returns>Array of the selected menu item indexes.</returns>
+    /// <returns>Array of the selected menu item indexes. Items are returned in the order of selection.</returns>
     /// <remarks>
     /// This method overwrites the content of the menu items' <see cref="MenuItem.Text"/>
     /// property using the <see cref="MenuItem.Update(string, string)"/>
@@ -393,7 +393,7 @@ public static class ConsoleMenu
     /// </summary>
     /// <param name="menu">List of available options.</param>
     /// <param name="header">Specifies the caption of the menu.</param>
-    /// <returns>Array of the selected menu item indexes.</returns>
+    /// <returns>Array of the selected menu item indexes. Items are returned in the order of selection.</returns>
     /// <remarks>
     /// This method overwrites the content of the menu items' <see cref="MenuItem.Text"/>
     /// property using the <see cref="MenuItem.Update(string, string)"/>
