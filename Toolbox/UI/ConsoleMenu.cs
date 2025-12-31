@@ -257,6 +257,8 @@ public static class ConsoleMenu
         // check for empty menu
         if (menu.Count == 0) return [];
 
+        const string ALT_SELECTED = "[*]", ALT_DESELECTED = "[ ]";
+
         // the list of selected items
         List<int> items = [];
 
@@ -269,13 +271,13 @@ public static class ConsoleMenu
             if (items.Contains(selectedId) == true)
             {
                 items.Remove(selectedId);
-                mi.Update(mi.GetTextWithoutAlt(), "[ ]");
+                mi.Update(mi.GetTextWithoutAlt(), ALT_DESELECTED);
             }
 
             else
             {
                 items.Add(selectedId);
-                mi.Update(mi.GetTextWithoutAlt(), "[*]");
+                mi.Update(mi.GetTextWithoutAlt(), ALT_SELECTED);
             }
         }
 
@@ -285,6 +287,12 @@ public static class ConsoleMenu
             index = 0;
             top = Console.CursorTop;
             left = Console.CursorLeft;
+
+            // prepare all selectable items
+            foreach (MenuItem mi in menu.Where(x => x.Id != MenuItem.ID_EXIT && x.Id != MenuItem.ID_SEPARATOR))
+            {
+                mi.Update(mi.GetTextWithoutAlt(), ALT_DESELECTED);
+            }
 
             Console.CursorVisible = false;
             while (true)
@@ -393,6 +401,6 @@ public static class ConsoleMenu
     /// </remarks>
     public static int[] Multiselect(MenuItemCollection menu, string header)
     {
-        return Multiselect(menu, header, "Use spacebar to select/deselect items.");
+        return Multiselect(menu, header, "Use spacebar/enter to select/deselect items.");
     }
 }

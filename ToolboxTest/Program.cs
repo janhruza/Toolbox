@@ -1,4 +1,6 @@
-﻿using Toolbox.UI;
+﻿using System;
+
+using Toolbox.UI;
 
 namespace ToolboxTest;
 
