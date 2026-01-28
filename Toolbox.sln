@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cashly", "Cashly\Cashly.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolboxTest", "ToolboxTest\ToolboxTest.csproj", "{5ECC5345-D629-41F8-A252-499E887ACE8C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Algebrax", "Algebrax\Algebrax.csproj", "{318AD2AC-2D64-4954-8B21-59D39EF675EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,14 @@ Global
 		{5ECC5345-D629-41F8-A252-499E887ACE8C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5ECC5345-D629-41F8-A252-499E887ACE8C}.Release|x64.ActiveCfg = Release|Any CPU
 		{5ECC5345-D629-41F8-A252-499E887ACE8C}.Release|x64.Build.0 = Release|Any CPU
+		{318AD2AC-2D64-4954-8B21-59D39EF675EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{318AD2AC-2D64-4954-8B21-59D39EF675EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{318AD2AC-2D64-4954-8B21-59D39EF675EB}.Debug|x64.ActiveCfg = Debug|x64
+		{318AD2AC-2D64-4954-8B21-59D39EF675EB}.Debug|x64.Build.0 = Debug|x64
+		{318AD2AC-2D64-4954-8B21-59D39EF675EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{318AD2AC-2D64-4954-8B21-59D39EF675EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{318AD2AC-2D64-4954-8B21-59D39EF675EB}.Release|x64.ActiveCfg = Release|Any CPU
+		{318AD2AC-2D64-4954-8B21-59D39EF675EB}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,6 +84,7 @@ Global
 		Toolbox\Toolbox.projitems*{16333aaf-f723-4375-ad7d-baf2430e1076}*SharedItemsImports = 13
 		Toolbox\Toolbox.projitems*{1784310e-9614-4663-b2bf-c4eea5f383ab}*SharedItemsImports = 5
 		Toolbox\Toolbox.projitems*{234de96d-2abe-4ba5-853a-d2f3532ff3b7}*SharedItemsImports = 5
+		Toolbox\Toolbox.projitems*{318ad2ac-2d64-4954-8b21-59d39ef675eb}*SharedItemsImports = 5
 		Toolbox\Toolbox.projitems*{5339025f-bc2e-4517-865a-b6d336b8d7a1}*SharedItemsImports = 5
 		Toolbox\Toolbox.projitems*{5ecc5345-d629-41f8-a252-499e887ace8c}*SharedItemsImports = 5
 		Toolbox\Toolbox.projitems*{e62928bf-2807-44f5-abcc-b9b70e41441c}*SharedItemsImports = 5
