@@ -88,30 +88,30 @@ public class MediaItem
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.Append(Address);
+        _ = sb.Append(Address);
 
         if (Format.IsEmpty() == false)
         {
             // custom format
-            sb.Append($" -f {Format}");
+            _ = sb.Append($" -f {Format}");
         }
 
         if (Directory.Exists(Location) == true)
         {
             // custom download folder
-            sb.Append($" -o {Path.Combine(Location, "%(title)s.%(ext)s")}");
+            _ = sb.Append($" -o {Path.Combine(Location, "%(title)s.%(ext)s")}");
         }
 
         if (BrowserCookies.IsEmpty() == false)
         {
             // import cookies
-            sb.Append($" --cookies-from-browser {BrowserCookies}");
+            _ = sb.Append($" --cookies-from-browser {BrowserCookies}");
         }
 
         if (CustomOptions.IsEmpty() == false)
         {
             // additional custom arguments
-            sb.Append($" {CustomOptions}");
+            _ = sb.Append($" {CustomOptions}");
         }
 
         return sb.ToString();

@@ -55,7 +55,7 @@ public static class Terminal
     public static void Pause()
     {
         Console.Write($"Press {Terminal.AccentTextStyle}enter{ANSI_RESET} to continue. . . ");
-        Console.ReadLine();
+        _ = Console.ReadLine();
         return;
     }
 
@@ -67,7 +67,7 @@ public static class Terminal
     public static void Pause(string message)
     {
         Console.Write(message);
-        Console.ReadLine();
+        _ = Console.ReadLine();
         return;
     }
 

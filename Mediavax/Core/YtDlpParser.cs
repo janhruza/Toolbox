@@ -39,7 +39,7 @@ public static class YtDlpParser
         catch (Exception ex)
         {
             info = new YtDlpInfo();
-            Log.Exception(ex, nameof(GetInfo));
+            _ = Log.Exception(ex, nameof(GetInfo));
             return false;
         }
     }

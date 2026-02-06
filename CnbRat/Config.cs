@@ -18,9 +18,9 @@ public class Config : Toolbox.UI.IConfig
     /// </summary>
     public Config()
     {
-        this.AccentTextStyle = "\e[38;5;76m";
-        this.AccentHighlightStyle = "\e[48;5;40m\e[38;5;0m";
-        this.Colors = new ColorScheme();
+        AccentTextStyle = "\e[38;5;76m";
+        AccentHighlightStyle = "\e[48;5;40m\e[38;5;0m";
+        Colors = new ColorScheme();
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ public class Config : Toolbox.UI.IConfig
 
     #region Static code
 
-    const string DEFAULT_CONFIG_FILE = "config.json";
+    private const string DEFAULT_CONFIG_FILE = "config.json";
 
     /// <summary>
     /// Attempts to load the default configuration from the predefined configuration file.
@@ -63,13 +63,13 @@ public class Config : Toolbox.UI.IConfig
         {
             string json = File.ReadAllText(DEFAULT_CONFIG_FILE, Resources.Encoding);
             config = JsonSerializer.Deserialize(json, ConfigInfo.Default.Config) ?? new Config();
-            Log.Information("Config loaded.", nameof(LoadDefault));
+            _ = Log.Information("Config loaded.", nameof(LoadDefault));
             return true;
         }
 
         catch (Exception ex)
         {
-            Log.Exception(ex, nameof(LoadDefault));
+            _ = Log.Exception(ex, nameof(LoadDefault));
             config = defCfg;
             return false;
         }
@@ -88,12 +88,12 @@ public class Config : Toolbox.UI.IConfig
         {
             string json = JsonSerializer.Serialize(config, ConfigInfo.Default.Config);
             File.WriteAllText(DEFAULT_CONFIG_FILE, json, Resources.Encoding);
-            Log.Information("Default config saved.", nameof(WriteDefault));
+            _ = Log.Information("Default config saved.", nameof(WriteDefault));
             return true;
         }
         catch (Exception ex)
         {
-            Log.Exception(ex, nameof(WriteDefault));
+            _ = Log.Exception(ex, nameof(WriteDefault));
             return false;
         }
     }

@@ -110,8 +110,8 @@ public static class Log
         public string Message;
     }
 
-    const string FILENAME = "Toolbox.log";
-    const char SEPARATOR = ';';
+    private const string FILENAME = "Toolbox.log";
+    private const char SEPARATOR = ';';
 
     private static Entry _lastEntry;
 
@@ -145,49 +145,49 @@ public static class Log
             StringBuilder sb = new StringBuilder();
 
             // add the date
-            sb.Append(entry.Timestamp);
-            sb.Append(SEPARATOR);
+            _ = sb.Append(entry.Timestamp);
+            _ = sb.Append(SEPARATOR);
 
             // add the type
             switch (type)
             {
                 case LogType.Error:
-                    sb.Append("ERROR");
+                    _ = sb.Append("ERROR");
                     break;
 
                 case LogType.Warning:
-                    sb.Append("WARNING");
+                    _ = sb.Append("WARNING");
                     break;
 
                 case LogType.Information:
-                    sb.Append("INFORMATION");
+                    _ = sb.Append("INFORMATION");
                     break;
 
                 case LogType.Exception:
-                    sb.Append("EXCEPTION");
+                    _ = sb.Append("EXCEPTION");
                     break;
 
                 case LogType.Critical:
-                    sb.Append("CRITICAL");
+                    _ = sb.Append("CRITICAL");
                     break;
 
                 case LogType.Success:
-                    sb.Append("SUCCESS");
+                    _ = sb.Append("SUCCESS");
                     break;
 
                 default:
-                    sb.Append("GENERIC");
+                    _ = sb.Append("GENERIC");
                     break;
             }
 
-            sb.Append(SEPARATOR);
+            _ = sb.Append(SEPARATOR);
 
             // add the tag
-            sb.Append(entry.Tag);
-            sb.Append(SEPARATOR);
+            _ = sb.Append(entry.Tag);
+            _ = sb.Append(SEPARATOR);
 
             // add the message + the new line separator
-            sb.AppendLine(entry.Message);
+            _ = sb.AppendLine(entry.Message);
 
             // write the entry to the log file
             File.AppendAllText(FILENAME, sb.ToString(), Encoding.Unicode);

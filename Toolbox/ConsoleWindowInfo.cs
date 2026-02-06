@@ -51,13 +51,13 @@ public struct ConsoleWindowInfo
     /// <remarks>Works only on Windows.</remarks>
     public static bool SetConsoleWindowInfo(ref ConsoleWindowInfo cwInfo)
     {
-        #if WINDOWS
+#if WINDOWS
         Console.WindowWidth = cwInfo.WindowWidth;
         Console.WindowHeight = cwInfo.WindowHeight;
         Console.BufferWidth = cwInfo.BufferWidth;
         Console.BufferHeight = cwInfo.BufferHeight;
         return true;
-        #endif
+#endif
 
         // always false for unsupported OS
         return false;

@@ -34,14 +34,14 @@ internal class Program : IApplication
     {
         // post exit cleanup
         Console.Clear();
-        Config.WriteDefault(_config);
+        _ = Config.WriteDefault(_config);
         return;
     }
 
     public static void LoadConfig()
     {
         // load config
-        Config.LoadDefault(out _config);
+        _ = Config.LoadDefault(out _config);
 
         // apply config
         Terminal.AccentTextStyle = _config.AccentTextStyle;
@@ -51,9 +51,9 @@ internal class Program : IApplication
     }
 
     // associated objects
-    static ExchangeManager _exchangeManager;
+    private static ExchangeManager _exchangeManager;
 
-    static Config _config;
+    private static Config _config;
 
     /// <summary>
     /// Interface implementation, unused.
@@ -69,7 +69,7 @@ internal class Program : IApplication
         }
 
         // initialize terminal
-        Setup.Initialize();
+        _ = Setup.Initialize();
         Console.Title = "CnbRat - Exchange Rates";
 
         // load config
@@ -115,7 +115,7 @@ internal class Program : IApplication
                         Console.Clear();
                         if (MenuActions.FetchReport(_exchangeManager) == true)
                         {
-                            Log.Success($"Report fetched.");
+                            _ = Log.Success($"Report fetched.");
                         }
 
                         else
@@ -131,7 +131,7 @@ internal class Program : IApplication
                         Console.Clear();
                         if (MenuActions.FetchReportToDate(_exchangeManager) == true)
                         {
-                            Log.Success($"Report fetched.");
+                            _ = Log.Success($"Report fetched.");
                         }
 
                         else
@@ -145,7 +145,7 @@ internal class Program : IApplication
                 case (int)ID_ABOUT_CNBRAT:
                     {
                         Console.Clear();
-                        MenuActions.AboutCnbRat();
+                        _ = MenuActions.AboutCnbRat();
                         Console.WriteLine();
                         Terminal.Pause();
                     }
@@ -157,7 +157,7 @@ internal class Program : IApplication
                         if (MenuActions.DisplayLastReport(_exchangeManager) == false)
                         {
                             // no report available
-                            MenuActions.ErrorNoReport();
+                            _ = MenuActions.ErrorNoReport();
                         }
 
                         Console.WriteLine();
@@ -171,7 +171,7 @@ internal class Program : IApplication
                         if (MenuActions.ViewReport(_exchangeManager) == false)
                         {
                             // no report available
-                            MenuActions.ErrorNoReport();
+                            _ = MenuActions.ErrorNoReport();
                         }
 
                         Console.WriteLine();
@@ -185,7 +185,7 @@ internal class Program : IApplication
                         if (MenuActions.CurrencyConverter(_exchangeManager) == false)
                         {
                             // no report available
-                            MenuActions.ErrorNoReport();
+                            _ = MenuActions.ErrorNoReport();
                         }
                         Console.WriteLine();
                         Terminal.Pause();

@@ -17,13 +17,13 @@ internal static class MenuActions
         List<UserProfile> profiles;
         if (UserProfile.EnumProfiles(out profiles) == false)
         {
-            Log.Error("Failed to list profiles.", nameof(SelectProfile));
+            _ = Log.Error("Failed to list profiles.", nameof(SelectProfile));
             return false;
         }
 
         if (profiles.Count == 0)
         {
-            Log.Warning("No profiles found. Please create a new profile first.", nameof(SelectProfile));
+            _ = Log.Warning("No profiles found. Please create a new profile first.", nameof(SelectProfile));
             return false;
         }
 
@@ -62,7 +62,7 @@ internal static class MenuActions
         string name = Terminal.Input($"Enter profile name (leave blank to cancel){Environment.NewLine}# ", false).Trim();
         if (string.IsNullOrWhiteSpace(name))
         {
-            Log.Information("Profile creation cancelled by user.", nameof(CreateProfile));
+            _ = Log.Information("Profile creation cancelled by user.", nameof(CreateProfile));
             return false;
         }
 
@@ -73,7 +73,7 @@ internal static class MenuActions
 
         if (UserProfile.Save(profile) == false)
         {
-            Log.Error("Failed to create the new profile.", nameof(CreateProfile));
+            _ = Log.Error("Failed to create the new profile.", nameof(CreateProfile));
             return false;
         }
 
@@ -134,7 +134,7 @@ internal static class MenuActions
     MethodExit:
         if (UserProfile.Save(Session.Profile) == false)
         {
-            Log.Error($"Profile saving failed.", nameof(LoadProfileSession));
+            _ = Log.Error($"Profile saving failed.", nameof(LoadProfileSession));
         }
         return true;
     }

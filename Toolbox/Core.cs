@@ -27,14 +27,14 @@ public static class Core
         catch (FileNotFoundException)
         {
             process = null;
-            Log.Error($"Command \'{command}\' not found.", nameof(CreateProcess));
+            _ = Log.Error($"Command \'{command}\' not found.", nameof(CreateProcess));
             return false;
         }
 
         catch (Exception ex)
         {
             process = null;
-            Log.Exception(ex, nameof(CreateProcess));
+            _ = Log.Exception(ex, nameof(CreateProcess));
             return false;
         }
     }
@@ -73,14 +73,14 @@ public static class Core
         catch (FieldAccessException)
         {
             process = null;
-            Log.Error($"File or command \'{command}\' not found.", nameof(CreateProcess));
+            _ = Log.Error($"File or command \'{command}\' not found.", nameof(CreateProcess));
             return false;
         }
 
         catch (Exception ex)
         {
             process = null;
-            Log.Exception(ex);
+            _ = Log.Exception(ex);
             return false;
         }
     }

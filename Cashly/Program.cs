@@ -54,7 +54,7 @@ internal class Program : IApplication
         return;
     }
 
-    static int Main(string[] args)
+    private static int Main(string[] args)
     {
         if (args.Length > 0)
         {
@@ -63,7 +63,7 @@ internal class Program : IApplication
         }
 
         // initialize terminal
-        Setup.Initialize();
+        _ = Setup.Initialize();
         Console.Title = "Cashly - Budget Manager";
 
         // load config
@@ -103,7 +103,7 @@ internal class Program : IApplication
                         else
                         {
                             // profile loaded, load main menu
-                            MenuActions.LoadProfileSession();
+                            _ = MenuActions.LoadProfileSession();
                         }
                     }
                     break;
@@ -120,7 +120,7 @@ internal class Program : IApplication
                         else
                         {
                             // profile created, load main menu
-                            MenuActions.LoadProfileSession();
+                            _ = MenuActions.LoadProfileSession();
                         }
                     }
                     break;

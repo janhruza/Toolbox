@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 
 using static Toolbox.ANSI;
 
@@ -230,7 +229,7 @@ public static class ConsoleMenu
 
         catch (Exception ex)
         {
-            Log.Exception(ex);
+            _ = Log.Exception(ex);
             return 0xDEAD;
         }
 
@@ -270,7 +269,7 @@ public static class ConsoleMenu
             // update the state of the item
             if (items.Contains(selectedId) == true)
             {
-                items.Remove(selectedId);
+                _ = items.Remove(selectedId);
                 mi.Update(mi.GetTextWithoutAlt(), ALT_DESELECTED);
             }
 
@@ -363,7 +362,7 @@ public static class ConsoleMenu
 
         catch (Exception ex)
         {
-            Log.Exception(ex);
+            _ = Log.Exception(ex);
             return [];
         }
 

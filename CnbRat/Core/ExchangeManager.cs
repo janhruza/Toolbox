@@ -17,9 +17,9 @@ public class ExchangeManager
     /// </summary>
     public ExchangeManager()
     {
-        _rates = [];
-        _ready = false;
-        _rawData = string.Empty;
+        this._rates = [];
+        this._ready = false;
+        this._rawData = string.Empty;
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ public class ExchangeManager
         if (string.IsNullOrWhiteSpace(sourceData) == true)
         {
             // invalid data
-            Log.Error("Invalid data.", nameof(Fetch));
+            _ = Log.Error("Invalid data.", nameof(Fetch));
             return false;
         }
 
@@ -47,7 +47,7 @@ public class ExchangeManager
         if (linesData.Length < 2)
         {
             // no data
-            Log.Error("Fetched data contain no valid lines.", nameof(Fetch));
+            _ = Log.Error("Fetched data contain no valid lines.", nameof(Fetch));
             return false;
         }
 
@@ -57,14 +57,14 @@ public class ExchangeManager
         if (metadata.Length != 2)
         {
             // invalid metadata
-            Log.Error("Invalid metadata.", nameof(Fetch));
+            _ = Log.Error("Invalid metadata.", nameof(Fetch));
             return false;
         }
 
         string[] dateInfo = metadata[0].Split('.', StringSplitOptions.TrimEntries);
         if (dateInfo.Length != 3)
         {
-            Log.Error("Invalid date format.", nameof(Fetch));
+            _ = Log.Error("Invalid date format.", nameof(Fetch));
             return false;
         }
 
@@ -75,7 +75,7 @@ public class ExchangeManager
         int release = Convert.ToInt32(metadata[1]);
 
         // assign the metadata
-        _info = new ExchangeInfo
+        this._info = new ExchangeInfo
         {
             Date = new DateOnly(year, month, day),
             Release = release
@@ -100,7 +100,7 @@ public class ExchangeManager
             };
 
             // add the rate to the list
-            _rates.Add(rate);
+            this._rates.Add(rate);
         }
 
         // add the CZK entry manually
@@ -112,9 +112,9 @@ public class ExchangeManager
             Code = "CZK",
             Value = 1.0m
         };
-        _rates.Add(czk);
+        this._rates.Add(czk);
 
-        _ready = true;
+        this._ready = true;
         return true;
     }
 
@@ -133,9 +133,9 @@ public class ExchangeManager
         try
         {
             // empty the default data
-            _info = default;
-            _rates.Clear();
-            _rawData = string.Empty;
+            this._info = default;
+            this._rates.Clear();
+            this._rawData = string.Empty;
 
             string requestUri;
             if (date == DateOnly.MinValue)
@@ -161,13 +161,13 @@ public class ExchangeManager
                 // check if the task has faulted
                 if (task.IsFaulted)
                 {
-                    Log.Error("Fetching task faulted.", nameof(Fetch));
+                    _ = Log.Error("Fetching task faulted.", nameof(Fetch));
                     return false;
                 }
 
                 // assign read data
                 data = task.Result;
-                _rawData = task.Result;
+                this._rawData = task.Result;
             }
 
             // parse the recieved data
@@ -176,7 +176,7 @@ public class ExchangeManager
 
         catch (Exception ex)
         {
-            Log.Exception(ex, nameof(Fetch));
+            _ = Log.Exception(ex, nameof(Fetch));
             return false;
         }
     }
@@ -190,14 +190,14 @@ public class ExchangeManager
         try
         {
             // output file name
-            string path = Path.Combine(ArchiveDirectory, $"{this.Exchange.Date.ToString("yyyyMMdd")}{this.Exchange.Release}.txt");
+            string path = Path.Combine(ArchiveDirectory, $"{Exchange.Date.ToString("yyyyMMdd")}{Exchange.Release}.txt");
 
             if (Directory.Exists(Path.GetDirectoryName(path)) == false)
             {
                 string dir = Path.GetDirectoryName(path) ?? string.Empty;
                 if (string.IsNullOrWhiteSpace(dir) == true)
                 {
-                    Log.Error("Unable to determine archive directory.", nameof(ArchiveReport));
+                    _ = Log.Error("Unable to determine archive directory.", nameof(ArchiveReport));
                     return false;
                 }
 
@@ -209,19 +209,19 @@ public class ExchangeManager
 
             if (File.Exists(path) == true)
             {
-                Log.Information($"Report was already archived.", nameof(ArchiveReport));
+                _ = Log.Information($"Report was already archived.", nameof(ArchiveReport));
                 return true;
             }
 
-            File.WriteAllText(path, _rawData, Resources.Encoding);
+            File.WriteAllText(path, this._rawData, Resources.Encoding);
 
-            Log.Success("Report archived.", nameof(ArchiveReport));
+            _ = Log.Success("Report archived.", nameof(ArchiveReport));
             return true;
         }
 
         catch (Exception ex)
         {
-            Log.Exception(ex, nameof(ArchiveReport));
+            _ = Log.Exception(ex, nameof(ArchiveReport));
             return false;
         }
     }
@@ -236,9 +236,9 @@ public class ExchangeManager
         try
         {
             // empty the default data
-            _info = default;
-            _rates.Clear();
-            _rawData = string.Empty;
+            this._info = default;
+            this._rates.Clear();
+            this._rawData = string.Empty;
 
             // check if file exists
             if (File.Exists(filename) == false) return false;
@@ -248,12 +248,12 @@ public class ExchangeManager
 
             if (result == true)
             {
-                Log.Success("Local exchange report loaded.", nameof(OpenArchivedRecord));
+                _ = Log.Success("Local exchange report loaded.", nameof(OpenArchivedRecord));
             }
 
             else
             {
-                Log.Error("Unable to open local exchange report.", nameof(OpenArchivedRecord));
+                _ = Log.Error("Unable to open local exchange report.", nameof(OpenArchivedRecord));
             }
 
             return result;
@@ -261,7 +261,7 @@ public class ExchangeManager
 
         catch (Exception ex)
         {
-            Log.Exception(ex, nameof(OpenArchivedRecord));
+            _ = Log.Exception(ex, nameof(OpenArchivedRecord));
             return false;
         }
     }
@@ -274,15 +274,15 @@ public class ExchangeManager
     /// <summary>
     /// Representing the recieved exchange info.
     /// </summary>
-    public ExchangeInfo Exchange => _info;
+    public ExchangeInfo Exchange => this._info;
 
     /// <summary>
     /// Representing the list of available exchange rates.
     /// </summary>
-    public List<RateInfo> Rates => _rates;
+    public List<RateInfo> Rates => this._rates;
 
     /// <summary>
     /// Determines whether the manager has fetched data successfully at least once.
     /// </summary>
-    public bool IsReady => _ready;
+    public bool IsReady => this._ready;
 }

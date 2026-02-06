@@ -39,11 +39,11 @@ public struct Transaction
     /// </summary>
     public Transaction()
     {
-        Date = DateTime.Now;
-        Description = string.Empty;
-        Amount = 0m;
-        Category = string.Empty;
-        Type = TransactionType.Undefined;
+        this.Date = DateTime.Now;
+        this.Description = string.Empty;
+        this.Amount = 0m;
+        this.Category = string.Empty;
+        this.Type = TransactionType.Undefined;
     }
 
     /// <summary>
@@ -56,11 +56,11 @@ public struct Transaction
     /// <param name="type">Type of the transaction (Income or Expense) or <see cref="TransactionType.Undefined"/> by default.</param>
     public Transaction(DateTime date, string description, decimal amount, string category, TransactionType type)
     {
-        Date = date;
-        Description = description;
-        Amount = decimal.Abs(amount);
-        Category = category;
-        Type = type;
+        this.Date = date;
+        this.Description = description;
+        this.Amount = decimal.Abs(amount);
+        this.Category = category;
+        this.Type = type;
     }
 
     /// <summary>
@@ -71,6 +71,6 @@ public struct Transaction
     /// </returns>
     public override string ToString()
     {
-        return $"{Date.ToShortDateString()} | {Description} | {Amount:2F} | {Category}";
+        return $"{this.Date.ToShortDateString()} | {this.Description} | {this.Amount:2F} | {this.Category}";
     }
 }

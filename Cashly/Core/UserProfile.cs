@@ -142,7 +142,7 @@ public class UserProfile
         {
             if (Directory.CreateDirectory(ProfilesFolder).Exists == false)
             {
-                Log.Error("Failed to create profiles folder.", nameof(Save));
+                _ = Log.Error("Failed to create profiles folder.", nameof(Save));
                 return false;
             }
         }
@@ -158,7 +158,7 @@ public class UserProfile
 
         // write to file
         File.WriteAllText(filename, json, Encoding.UTF8);
-        Log.Information("User profile saved successfully.", nameof(Save));
+        _ = Log.Information("User profile saved successfully.", nameof(Save));
 
         return true;
     }
@@ -181,7 +181,7 @@ public class UserProfile
 
         if (File.Exists(filename) == false)
         {
-            Log.Error("Profile file doesn't exist.", nameof(Load));
+            _ = Log.Error("Profile file doesn't exist.", nameof(Load));
             return false;
         }
 
@@ -191,12 +191,12 @@ public class UserProfile
         var loadedObject = JsonSerializer.Deserialize(json, UserProfileTypeInfo.Default.UserProfile);
         if (loadedObject == null)
         {
-            Log.Error("Failed to deserialize the profile file.", nameof(Load));
+            _ = Log.Error("Failed to deserialize the profile file.", nameof(Load));
             return false;
         }
 
         profile = loadedObject; // 'profile' teď obsahuje správně načtená data
-        Log.Information("User profile loaded successfully.", nameof(Load));
+        _ = Log.Information("User profile loaded successfully.", nameof(Load));
         return true;
     }
 
@@ -215,7 +215,7 @@ public class UserProfile
 
         if (Directory.Exists(ProfilesFolder) == false)
         {
-            Log.Error("Profiles folder doesn't exist.", nameof(ListProfiles));
+            _ = Log.Error("Profiles folder doesn't exist.", nameof(ListProfiles));
             return false;
         }
 
@@ -224,7 +224,7 @@ public class UserProfile
             profiles.Add(file);
         }
 
-        Log.Information($"Found {profiles.Count} profile(s).", nameof(ListProfiles));
+        _ = Log.Information($"Found {profiles.Count} profile(s).", nameof(ListProfiles));
         return true;
     }
 

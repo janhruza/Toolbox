@@ -15,7 +15,7 @@ internal static class MenuActions
 {
     public static bool ErrorNoReport()
     {
-        Log.Warning("No report available.");
+        _ = Log.Warning("No report available.");
         Console.WriteLine($"No report available. {Terminal.AccentTextStyle}Fetch{ANSI_RESET} a report first.");
         return true;
     }
@@ -59,7 +59,7 @@ internal static class MenuActions
 
         else
         {
-            manager.ArchiveReport();
+            _ = manager.ArchiveReport();
             Console.WriteLine($"Data {Terminal.AccentTextStyle}fetched successfully{ANSI_RESET}.");
         }
 
@@ -75,7 +75,7 @@ internal static class MenuActions
         string input = Terminal.Input("Enter date (YYYY-MM-DD): ", false);
         if (DateOnly.TryParse(input, out DateOnly date) == false)
         {
-            Log.Warning("Invalid date format.");
+            _ = Log.Warning("Invalid date format.");
             Console.WriteLine("Invalid date format.");
             return false;
         }
@@ -92,14 +92,14 @@ internal static class MenuActions
 
         else
         {
-            manager.ArchiveReport();
+            _ = manager.ArchiveReport();
             Console.WriteLine($"Data {Terminal.AccentTextStyle}fetched successfully{ANSI_RESET}.");
         }
 
         return result;
     }
 
-    static int GetLongerValue(int val1, int val2)
+    private static int GetLongerValue(int val1, int val2)
     {
         return val1 > val2 ? val1 : val2;
     }
@@ -143,7 +143,7 @@ internal static class MenuActions
         return true;
     }
 
-    static int SelectCurrency(ExchangeManager manager, string prompt)
+    private static int SelectCurrency(ExchangeManager manager, string prompt)
     {
         // check exchange manager (if conversions are available)
         if (manager == null || manager.IsReady == false) return -1;
@@ -210,7 +210,7 @@ internal static class MenuActions
         // check inputs
         if (sourceIndex < 0 || targetIndex < 0)
         {
-            Log.Warning("Invalid currency code.");
+            _ = Log.Warning("Invalid currency code.");
             Console.WriteLine("Invalid currency code.");
             return false;
         }
@@ -223,7 +223,7 @@ internal static class MenuActions
 
         if (int.TryParse(Terminal.Input($"Enter amount in {Terminal.AccentTextStyle}{manager.Rates[sourceIndex].Code}{ANSI_RESET}: ", false), out int amount) == false || amount <= 0)
         {
-            Log.Warning("Invalid amount.");
+            _ = Log.Warning("Invalid amount.");
             Console.WriteLine("Invalid amount.");
             return false;
         }
@@ -241,7 +241,7 @@ internal static class MenuActions
         return true;
     }
 
-    static ExchangeInfo GetInfoFromName(string filename)
+    private static ExchangeInfo GetInfoFromName(string filename)
     {
         // eg.  20250510180
         //          - year (4)
@@ -278,14 +278,14 @@ internal static class MenuActions
         // browse the archived exchange reports (so the user can load them instead of fetching a new one)
         if (Directory.Exists(ExchangeManager.ArchiveDirectory) == false)
         {
-            Log.Warning("No archive directory found.", nameof(BrowseArchive));
+            _ = Log.Warning("No archive directory found.", nameof(BrowseArchive));
             return false;
         }
 
         string[] files = Directory.GetFiles(ExchangeManager.ArchiveDirectory);
         if (files.Length == 0)
         {
-            Log.Warning("The archive is empty.", nameof(BrowseArchive));
+            _ = Log.Warning("The archive is empty.", nameof(BrowseArchive));
             return false;
         }
 
@@ -321,14 +321,14 @@ internal static class MenuActions
 
         if (int.TryParse(Terminal.Input($"{Environment.NewLine}Enter the report {Terminal.AccentTextStyle}index{ANSI_RESET}: ", false), out int index) == false)
         {
-            Log.Warning("Invalid index (user-defined).", nameof(BrowseArchive));
+            _ = Log.Warning("Invalid index (user-defined).", nameof(BrowseArchive));
             return false;
         }
 
         string path = files.ElementAtOrDefault(index) ?? string.Empty;
         if (string.IsNullOrWhiteSpace(path) == true || File.Exists(path) == false)
         {
-            Log.Warning("Invalid index (out of range).", nameof(BrowseArchive));
+            _ = Log.Warning("Invalid index (out of range).", nameof(BrowseArchive));
             return false;
         }
 
@@ -336,12 +336,12 @@ internal static class MenuActions
         bool result = manager.OpenArchivedRecord(path);
         if (result == true)
         {
-            Log.Success("Archived report loaded.", nameof(BrowseArchive));
+            _ = Log.Success("Archived report loaded.", nameof(BrowseArchive));
         }
 
         else
         {
-            Log.Error("Unable to open archived report.", nameof(BrowseArchive));
+            _ = Log.Error("Unable to open archived report.", nameof(BrowseArchive));
         }
 
         return result;

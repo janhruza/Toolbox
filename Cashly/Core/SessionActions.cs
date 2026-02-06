@@ -23,10 +23,10 @@ internal static class SessionActions
     /// Use as a return value when a profile is needed but none is loaded.
     /// </summary>
     /// <returns>Always <see langword="false"/>.</returns>
-    static bool NoProfileLoaded()
+    private static bool NoProfileLoaded()
     {
         // log unauthorized access
-        Log.Error("Unauthorized, no profile loaded.", nameof(NoProfileLoaded));
+        _ = Log.Error("Unauthorized, no profile loaded.", nameof(NoProfileLoaded));
 
         // show the unauthorized screen
         Console.Clear();

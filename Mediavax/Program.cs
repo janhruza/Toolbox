@@ -78,8 +78,6 @@ internal class Program : IApplication
     /// <returns></returns>
     public static (bool yt_dlpExists, bool yt_dlpExistsPath) DownloaderExists()
     {
-        // TODO: check if yt-dlp exists in local path, PATH env. variable or both
-        bool yt_dlpExists = false;
         bool yt_dlpExistsPath = false;
 
         // Semicolot (;)    - Windows
@@ -106,8 +104,9 @@ internal class Program : IApplication
             yt_dlpExistsPath = false;
         }
 
+        // TODO: check if yt-dlp exists in local path, PATH env. variable or both
         // check if local file exists
-        yt_dlpExists = File.Exists(YT_DLP);
+        bool yt_dlpExists = File.Exists(YT_DLP);
 
         // return
         return (yt_dlpExists, yt_dlpExistsPath);
@@ -122,7 +121,7 @@ internal class Program : IApplication
         (bool b1, bool b2) = DownloaderExists();
         if (b1 == false && b2 == false)
         {
-            Log.Error("YT-DLP not found.");
+            _ = Log.Error("YT-DLP not found.");
             return false;
         }
 
@@ -144,7 +143,7 @@ internal class Program : IApplication
 
         catch (Exception ex)
         {
-            Log.Exception(ex);
+            _ = Log.Exception(ex);
             return false;
         }
     }
@@ -218,7 +217,7 @@ internal class Program : IApplication
         return string.IsNullOrWhiteSpace(value) ? alt : value;
     }
 
-    static string GetDisplayLocation()
+    private static string GetDisplayLocation()
     {
         if (MediaItem.Current.Location.StartsWith(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)))
         {
@@ -231,7 +230,7 @@ internal class Program : IApplication
         }
     }
 
-    static int Main(string[] args)
+    private static int Main(string[] args)
     {
         if (args.Length > 0)
         {
@@ -241,13 +240,13 @@ internal class Program : IApplication
         }
 
         // initialize
-        Setup.Initialize();
+        _ = Setup.Initialize();
         Console.Title = "Mediavax - YT-DLP wrapper";
 
         // get downloader version
         if (GetDownloaderVersion(out _ytdlp_version) == false)
         {
-            Log.Error("YT-DLP was not found in either PATH or local folder.");
+            _ = Log.Error("YT-DLP was not found in either PATH or local folder.");
             Console.Error.WriteLine($"YT-DLP was not found.");
             return 0xDEAD;
         }
@@ -290,7 +289,7 @@ internal class Program : IApplication
                 case (int)ID_SELECT_URL:
                     {
                         Console.Clear();
-                        MenuActions.SelectMediaSource();
+                        _ = MenuActions.SelectMediaSource();
                     }
                     break;
 
@@ -318,7 +317,7 @@ internal class Program : IApplication
                 case (int)ID_SELECT_LOCATION:
                     {
                         Console.Clear();
-                        MenuActions.SelectLocation();
+                        _ = MenuActions.SelectLocation();
                     }
                     break;
 
@@ -326,7 +325,7 @@ internal class Program : IApplication
                 case (int)ID_EXTRAS:
                     {
                         Console.Clear();
-                        MenuActions.OpenExtras();
+                        _ = MenuActions.OpenExtras();
                     }
                     break;
 
@@ -339,13 +338,13 @@ internal class Program : IApplication
                             Console.Clear();
                             if (MenuActions.StartDownload() == false)
                             {
-                                Log.Error("Download process failed.", nameof(Main));
+                                _ = Log.Error("Download process failed.", nameof(Main));
                                 Console.WriteLine($"{Environment.NewLine}Download process {Terminal.AccentTextStyle}failed{ANSI_RESET}.");
                             }
 
                             else
                             {
-                                Log.Success("Download completed.", nameof(Main));
+                                _ = Log.Success("Download completed.", nameof(Main));
                                 Console.WriteLine($"{Environment.NewLine}Download {Terminal.AccentTextStyle}completed{ANSI_RESET}.");
 
                                 // set a new download item

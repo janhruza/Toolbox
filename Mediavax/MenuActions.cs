@@ -24,7 +24,7 @@ internal static class MenuActions
         string address = Terminal.Input($"Enter a media source ({Terminal.AccentTextStyle}absolute URL{ANSI.ANSI_RESET}). Leave blank to cancel.\n# ", false);
         if (string.IsNullOrWhiteSpace(address))
         {
-            Log.Information("Media selection cancelled.", nameof(SelectMediaSource));
+            _ = Log.Information("Media selection cancelled.", nameof(SelectMediaSource));
             return false;
         }
 
@@ -32,13 +32,13 @@ internal static class MenuActions
         if (Uri.TryCreate(address, UriKind.Absolute, out Uri? uri) == true)
         {
             MediaItem.Current.Address = uri.AbsoluteUri;
-            Log.Success("Selected media updated.", nameof(SelectMediaSource));
+            _ = Log.Success("Selected media updated.", nameof(SelectMediaSource));
             return true;
         }
 
         else
         {
-            Log.Error("Invalid URI format.", nameof(SelectMediaSource));
+            _ = Log.Error("Invalid URI format.", nameof(SelectMediaSource));
             return false;
         }
     }
@@ -81,7 +81,7 @@ internal static class MenuActions
         if (option == 0 || option == -1)
         {
             // selection cancelled
-            Log.Information("Format selection cancelled", nameof(SelectFormat));
+            _ = Log.Information("Format selection cancelled", nameof(SelectFormat));
             return false;
         }
 
@@ -90,7 +90,7 @@ internal static class MenuActions
             // selected format
             string format = formats[option].format_id;
             MediaItem.Current.Format = format;
-            Log.Success($"New format selected: {format}", nameof(SelectFormat));
+            _ = Log.Success($"New format selected: {format}", nameof(SelectFormat));
             return true;
         }
     }
@@ -99,14 +99,14 @@ internal static class MenuActions
     {
         if (string.IsNullOrEmpty(MediaItem.Current.Address))
         {
-            Log.Warning("Select a media source first.", nameof(SelectFormat));
+            _ = Log.Warning("Select a media source first.", nameof(SelectFormat));
             return false;
         }
 
         (bool bFile, bool bPath) = Program.DownloaderExists();
         if (!bFile && !bPath)
         {
-            Log.Warning("YT-DLP was not found.");
+            _ = Log.Warning("YT-DLP was not found.");
             return false;
         }
 
@@ -129,7 +129,7 @@ internal static class MenuActions
             {
                 if (proc == null)
                 {
-                    Log.Error("Process object is null.", nameof(SelectFormat));
+                    _ = Log.Error("Process object is null.", nameof(SelectFormat));
                     return false;
                 }
 
@@ -237,7 +237,7 @@ internal static class MenuActions
 
                 else
                 {
-                    Log.Error("Unable to parse formats.", nameof(SelectFormat));
+                    _ = Log.Error("Unable to parse formats.", nameof(SelectFormat));
                     return false;
                 }
             }
@@ -245,7 +245,7 @@ internal static class MenuActions
         catch (Exception ex)
         {
             Console.Error.WriteLine($"{Log.TypeNamesFormatted[Log.LogType.Error]} {ex.Message}");
-            Log.Error($"Exception: {ex.Message}", nameof(SelectFormat));
+            _ = Log.Error($"Exception: {ex.Message}", nameof(SelectFormat));
             return false;
         }
     }
@@ -255,18 +255,18 @@ internal static class MenuActions
         string location = Terminal.Input($"Enter the {Terminal.AccentTextStyle}output directory{ANSI.ANSI_RESET}. Leave blank to cancel.\n# ", false);
         if (string.IsNullOrWhiteSpace(location))
         {
-            Log.Information("Location selection cancelled.", nameof(SelectLocation));
+            _ = Log.Information("Location selection cancelled.", nameof(SelectLocation));
             return false;
         }
 
         if (Directory.Exists(location) == false)
         {
-            Log.Warning($"Directory not found. Action cancelled.", nameof(SelectLocation));
+            _ = Log.Warning($"Directory not found. Action cancelled.", nameof(SelectLocation));
             return false;
         }
 
         MediaItem.Current.Location = location;
-        Log.Success("Location updated.", nameof(SelectLocation));
+        _ = Log.Success("Location updated.", nameof(SelectLocation));
         return true;
     }
 
@@ -297,25 +297,25 @@ internal static class MenuActions
 
                 case (int)ID_IMPORT_COOKIES:
                     {
-                        SelectBrowser();
+                        _ = SelectBrowser();
                     }
                     break;
 
                 case (int)ID_CUSTOM_ARGUMENTS:
                     {
-                        GetCustomArguments();
+                        _ = GetCustomArguments();
                     }
                     break;
 
                 case (int)ID_UPDATE_YTDLP:
                     {
-                        UpdateDownloader();
+                        _ = UpdateDownloader();
                     }
                     break;
 
                 case (int)ID_SELECT_THEME:
                     {
-                        SelectTheme();
+                        _ = SelectTheme();
                     }
                     break;
 
@@ -476,7 +476,7 @@ internal static class MenuActions
         if (MediaItem.Current.IsValid() == false)
         {
             // can't download, not all required fields are filled with data
-            Log.Error("Insufficient parameters. Fill all required fields.", nameof(VerifyDownload));
+            _ = Log.Error("Insufficient parameters. Fill all required fields.", nameof(VerifyDownload));
             return false;
         }
 
@@ -496,7 +496,7 @@ internal static class MenuActions
         {
             // verify download
             _downloadVerified = true;
-            Log.Success("Download verified.", nameof(VerifyDownload));
+            _ = Log.Success("Download verified.", nameof(VerifyDownload));
             return true;
         }
 
@@ -513,7 +513,7 @@ internal static class MenuActions
         if (_downloadVerified == false)
         {
             // download was not confirmed
-            Log.Warning("Download was not confirmed.", nameof(StartDownload));
+            _ = Log.Warning("Download was not confirmed.", nameof(StartDownload));
             return false;
         }
 
@@ -525,7 +525,7 @@ internal static class MenuActions
 
         else
         {
-            Log.Error("Can't start the download process.", nameof(StartDownload));
+            _ = Log.Error("Can't start the download process.", nameof(StartDownload));
             return false;
         }
     }
@@ -537,7 +537,7 @@ internal static class MenuActions
         {
             if (process == null)
             {
-                Log.Error("Unable to start a new process.");
+                _ = Log.Error("Unable to start a new process.");
                 return false;
             }
 
@@ -546,7 +546,7 @@ internal static class MenuActions
 
             if (process?.ExitCode == 0)
             {
-                Log.Success("YT-DLP was updated.", nameof(UpdateDownloader));
+                _ = Log.Success("YT-DLP was updated.", nameof(UpdateDownloader));
                 return true;
             }
 

@@ -24,8 +24,8 @@ public class MenuItem
     /// </summary>
     public MenuItem()
     {
-        this.Id = ID_SEPARATOR;
-        this.Text = new string('―', Constants.MENU_ITEM_WIDTH); // horizontal box drawing character
+        Id = ID_SEPARATOR;
+        Text = new string('―', Constants.MENU_ITEM_WIDTH); // horizontal box drawing character
     }
 
     /// <summary>
@@ -35,11 +35,11 @@ public class MenuItem
     /// <param name="text">Display text.</param>
     public MenuItem(int id, string text)
     {
-        this.Id = id;
-        this.Text = text;
+        Id = id;
+        Text = text;
 
         // initialize private properties
-        sText = text;
+        this.sText = text;
     }
 
     /// <summary>
@@ -50,9 +50,9 @@ public class MenuItem
     /// <param name="alt">Alternative item text - aligned to the right side.</param>
     public MenuItem(int id, string text, string alt)
     {
-        this.Id = id;
-        this.Text = string.Empty;
-        this.Update(text, alt);
+        Id = id;
+        Text = string.Empty;
+        Update(text, alt);
     }
 
     /// <summary>
@@ -83,18 +83,18 @@ public class MenuItem
         // trim text if needed
         if (alt.Length > Constants.MENU_ALT_MAX_SIZE)
         {
-            alt = alt.Substring(0, Constants.MENU_ALT_MAX_SIZE - 3) + "...";
+            alt = alt[..(Constants.MENU_ALT_MAX_SIZE - 3)] + "...";
         }
 
         int availableWidth = Constants.MENU_ITEM_WIDTH - alt.Length;
         string paddedText = text.Length > availableWidth
-            ? text.Substring(0, availableWidth)
+            ? text[..availableWidth]
             : text.PadRight(availableWidth);
 
-        this.Text = paddedText + alt;
+        Text = paddedText + alt;
 
-        sText = text;
-        sAlt = alt;
+        this.sText = text;
+        this.sAlt = alt;
         return;
     }
 
@@ -104,7 +104,7 @@ public class MenuItem
     /// <returns>Main text of the item.</returns>
     public string GetTextWithoutAlt()
     {
-        return sText;
+        return this.sText;
     }
 
     /// <summary>
@@ -113,7 +113,7 @@ public class MenuItem
     /// <returns>Alternative text of the item.</returns>
     public string GetAltText()
     {
-        return sAlt;
+        return this.sAlt;
     }
 }
 

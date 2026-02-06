@@ -37,7 +37,7 @@ public class Config
 
     #region Static code
 
-    static string Path => "settings.json";
+    private static string Path => "settings.json";
 
     /// <summary>
     /// Saves the configuration file.
@@ -55,7 +55,7 @@ public class Config
 
         catch (Exception ex)
         {
-            Log.Exception(ex, nameof(Save));
+            _ = Log.Exception(ex, nameof(Save));
             return false;
         }
     }
@@ -77,13 +77,13 @@ public class Config
             }
 
             string data = File.ReadAllText(Path, Encoding.Unicode);
-            config = (Config)JsonSerializer.Deserialize<Config>(data) ?? new Config();
+            config = JsonSerializer.Deserialize<Config>(data) ?? new Config();
             return true;
         }
 
         catch (Exception ex)
         {
-            Log.Exception(ex, nameof(Load));
+            _ = Log.Exception(ex, nameof(Load));
             return false;
         }
     }

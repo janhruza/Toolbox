@@ -8,7 +8,7 @@ namespace ToolboxTest;
 
 internal class Program
 {
-    static int Main(string[] args)
+    private static int Main(string[] args)
     {
         int idx = 1;
         MenuItemCollection menu = new MenuItemCollection

@@ -15,15 +15,15 @@ namespace RSShell;
 /// </summary>
 internal class Program : IApplication
 {
-    const int ID_EXIT = 0;
-    const int ID_LIST_FEEDS = 1;
-    const int ID_ADD_FEED = 2;
-    const int ID_ABOUT = 3;
-    const int ID_SEPARATOR = 0x1000;
-    const int ID_FETCH_FEEDS = 4;
-    const int ID_SELECT_FEED = 5;
+    private const int ID_EXIT = 0;
+    private const int ID_LIST_FEEDS = 1;
+    private const int ID_ADD_FEED = 2;
+    private const int ID_ABOUT = 3;
+    private const int ID_SEPARATOR = 0x1000;
+    private const int ID_FETCH_FEEDS = 4;
+    private const int ID_SELECT_FEED = 5;
 
-    static List<RssChannel> _channels = [];
+    private static List<RssChannel> _channels = [];
 
     /// <summary>
     /// Interface implementation, unused.
@@ -35,10 +35,10 @@ internal class Program : IApplication
     /// </summary>
     /// <param name="args">Command-line arguments.</param>
     /// <returns>Application exit code.</returns>
-    static async Task<int> Main(string[] args)
+    private static async Task<int> Main(string[] args)
     {
         // initialize workspace
-        Setup.Initialize();
+        _ = Setup.Initialize();
 
         // setup colors
         Terminal.AccentTextStyle = "\e[38;5;225m";
@@ -127,7 +127,7 @@ internal class Program : IApplication
                             {
                                 // open feed view
                                 Console.Clear();
-                                OpenFeedView(channel);
+                                _ = OpenFeedView(channel);
                                 Terminal.Pause();
                             }
                         }
@@ -149,7 +149,7 @@ internal class Program : IApplication
     public static void PostExitCleanup()
     {
         // TODO: cleanup code
-        Config.Save(Config.Current);
+        _ = Config.Save(Config.Current);
         Console.Clear();
         return;
     }
@@ -181,7 +181,7 @@ internal class Program : IApplication
         return;
     }
 
-    static int HandleMenu()
+    private static int HandleMenu()
     {
         MenuItemCollection menu = new MenuItemCollection
         {
@@ -200,7 +200,7 @@ internal class Program : IApplication
         return ConsoleMenu.SelectMenu(menu);
     }
 
-    static bool ListFeeds()
+    private static bool ListFeeds()
     {
         // ensure config
         Config.Current ??= new Config();
@@ -227,7 +227,7 @@ internal class Program : IApplication
         return true;
     }
 
-    static bool AddRssFeed()
+    private static bool AddRssFeed()
     {
         // ensure config
         Config.Current ??= new Config();
@@ -247,7 +247,7 @@ internal class Program : IApplication
         return true;
     }
 
-    static bool AboutDialog()
+    private static bool AboutDialog()
     {
         Console.Clear();
 
@@ -255,7 +255,7 @@ internal class Program : IApplication
         return true;
     }
 
-    static async Task<bool> FetchAllFeeds()
+    private static async Task<bool> FetchAllFeeds()
     {
         Console.Clear();
         _channels.Clear();
@@ -275,12 +275,12 @@ internal class Program : IApplication
                 RssChannel channel = await RssReader.Read(url);
                 _channels.Add(channel);
                 Console.WriteLine($"fetched!");
-                Log.Information($"Feed {uri} fetched.", nameof(FetchAllFeeds));
+                _ = Log.Information($"Feed {uri} fetched.", nameof(FetchAllFeeds));
             }
 
             catch (Exception ex)
             {
-                Log.Exception(ex);
+                _ = Log.Exception(ex);
             }
         }
 
@@ -288,7 +288,7 @@ internal class Program : IApplication
         return true;
     }
 
-    static bool SelectFeed(out RssChannel channel)
+    private static bool SelectFeed(out RssChannel channel)
     {
         channel = new RssChannel();
         if (_channels.Count == 0)
@@ -316,7 +316,7 @@ internal class Program : IApplication
         return true;
     }
 
-    static bool OpenFeedView(RssChannel channel)
+    private static bool OpenFeedView(RssChannel channel)
     {
         if (channel.Items.Count == 0)
         {

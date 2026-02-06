@@ -82,7 +82,7 @@ public static class RssReader
         catch (Exception ex)
         {
             // an error occurred
-            Log.Exception(ex, nameof(Read));
+            _ = Log.Exception(ex, nameof(Read));
         }
 
         return channel;

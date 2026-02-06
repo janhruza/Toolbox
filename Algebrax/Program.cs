@@ -31,7 +31,7 @@ public class Program : IApplication
         return;
     }
 
-    static int Main(string[] args)
+    private static int Main(string[] args)
     {
         DisplayBanner();
 

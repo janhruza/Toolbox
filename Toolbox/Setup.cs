@@ -12,17 +12,17 @@ namespace Toolbox;
 public static class Setup
 {
 #if WINDOWS
-    const int STD_OUTPUT_HANDLE = -11;
-    const uint ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
+    private const int STD_OUTPUT_HANDLE = -11;
+    private const uint ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
 
     [DllImport("kernel32.dll", SetLastError = true)]
-    static extern IntPtr GetStdHandle(int nStdHandle);
+    private static extern IntPtr GetStdHandle(int nStdHandle);
 
     [DllImport("kernel32.dll")]
-    static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
+    private static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
 
     [DllImport("kernel32.dll")]
-    static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
+    private static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
 #endif
 
     /// <summary>
@@ -72,7 +72,7 @@ public static class Setup
     public static bool Destroy()
     {
         // restore the startup window and buffer size
-        ConsoleWindowInfo.SetConsoleWindowInfo(ref StartupWindowInfo);
+        _ = ConsoleWindowInfo.SetConsoleWindowInfo(ref StartupWindowInfo);
         return true;
     }
 }
