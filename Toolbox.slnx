@@ -1,0 +1,25 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="CLI/Algebrax/Algebrax.csproj">
+    <Platform Solution="Debug|x64" Project="x64" />
+  </Project>
+  <Project Path="CLI/Cashly/Cashly.csproj">
+    <Platform Solution="Debug|x64" Project="x64" />
+  </Project>
+  <Project Path="CLI/CnbRat/CnbRat.csproj">
+    <Platform Solution="Debug|x64" Project="x64" />
+  </Project>
+  <Project Path="CLI/Mediavax/Mediavax.csproj">
+    <Platform Solution="Debug|x64" Project="x64" />
+  </Project>
+  <Project Path="CLI/RSShell/RSShell.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="CLI/Toolbox/Toolbox.shproj" />
+  <Project Path="CLI/ToolboxTest/ToolboxTest.csproj">
+    <Platform Solution="Debug|x64" Project="x64" />
+  </Project>
+</Solution>
