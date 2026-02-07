@@ -22,4 +22,7 @@
   <Project Path="CLI/ToolboxTest/ToolboxTest.csproj">
     <Platform Solution="Debug|x64" Project="x64" />
   </Project>
+  <Project Path="VidMaster/VidMaster.csproj" Id="ac55ca39-c6b4-4e0d-ae13-6d27676ddfea">
+    <Platform Solution="Debug|x64" Project="x64" />
+  </Project>
 </Solution>
