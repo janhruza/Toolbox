@@ -26,7 +26,6 @@ public partial class DlgMessageBox : Window
     private async Task BeepAsync()
     {
         Console.Beep();
-        Console.Beep();
         return;
     }
 

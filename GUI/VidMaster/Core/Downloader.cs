@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -72,5 +73,16 @@ public static class Downloader
 
         await proc.WaitForExitAsync();
         return proc.ExitCode;
+    }
+
+    /// <summary>
+    /// Gets the list of available media formats for the specified media at <paramref name="mediaUrl"/>.
+    /// </summary>
+    /// <param name="mediaUrl">Target media URL address.</param>
+    /// <returns>A list of available formats. Can be empty.</returns>
+    public static async Task<List<string>> GetAvailableFormats(string mediaUrl)
+    {
+        List<string> formats = [];
+        return formats;
     }
 }

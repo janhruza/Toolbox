@@ -3,6 +3,8 @@ using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Styling;
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using VidMaster.Core;
@@ -132,5 +134,51 @@ public partial class MainWindow : Window
     {
         btnOk.IsEnabled = string.IsNullOrWhiteSpace(txtUrl.Text) == false;
         return;
+    }
+
+    private async Task RefreshFormats()
+    {
+        string src = txtUrl.Text ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(src))
+        {
+            await DlgMessageBox.Show(this, "No media URL provided.", "Refresh Formats");
+            return;
+        }
+
+        // clear old formats
+        cbxFormats.Items.Clear();
+
+        // fetch the list of available formats
+        List<string> formats = await Downloader.GetAvailableFormats(src);
+        if (formats.Count == 0)
+        {
+            await DlgMessageBox.Show(this, "No formats available.", "Refresh Formats");
+            return;
+        }
+
+        // update the list of formats in the UI
+        foreach (string format in formats)
+        {
+            ComboBoxItem cbi = new ComboBoxItem
+            {
+                Content = format,
+                Tag = format
+            };
+
+            cbxFormats.Items.Add(cbi);
+        }
+
+        if (cbxFormats.Items.Any())
+        {
+            // select the first item (if any)
+            cbxFormats.SelectedIndex = 0;
+        }
+
+        return;
+    }
+
+    private async void btnRefreshFormats_Click(object? sender, RoutedEventArgs e)
+    {
+        await RefreshFormats();
     }
 }
