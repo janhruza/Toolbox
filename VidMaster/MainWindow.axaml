@@ -10,7 +10,8 @@
 		CanMaximize="False"
 		CanResize="False"
 		SizeToContent="WidthAndHeight"
-		WindowStartupLocation="CenterScreen">
+		WindowStartupLocation="CenterScreen"
+		Loaded="MainWindow_Loaded">
 
 	<Grid RowDefinitions="Auto, *"
 		  Width="350">
@@ -42,10 +43,18 @@
 			</MenuItem>
 			
 			<MenuItem Header="Help">
+
+				<MenuItem Header="Get Downloader"
+						  Name="miGetDownloader"
+						  Click="miGetDownloader_Click"/>
+				
+				<Separator />
+
 				<MenuItem Header="About"
 						  InputGesture="F1"
 						  Name="miAbout"
 						  Click="miAbout_Click"/>
+				
 			</MenuItem>
 			
 		</Menu>
@@ -54,11 +63,39 @@
 					Margin="10,0,10,0">
 
 			<Label>URL</Label>
-			<TextBox />
+			<TextBox Name="txtUrl"/>
 
 			<Label>Save location</Label>
-			<TextBox />
+			<Grid ColumnDefinitions="*, Auto">
+				<TextBox Name="txtFolder"
+						 Margin="0,0,5,0"/>
+				
+				<Button Content="..."
+						Name="btnChooseFolder"
+						Grid.Column="1"
+						Click="btnChooseFolder_Click"/>
+			</Grid>
 
+			<Expander Header="Extras"
+					  HorizontalAlignment="Stretch"
+					  Margin="0,5,0,0">
+				
+				<StackPanel>
+					<Label Content="Format"/>
+					<Grid ColumnDefinitions="*, Auto">
+
+						<ComboBox Grid.Column="0"
+								  Margin="0,0,5,0"
+								  HorizontalAlignment="Stretch"/>
+						
+						<Button Grid.Column="1"
+								Content="Refresh"
+								Name="btnRefreshFormats"/>
+						
+					</Grid>
+				</StackPanel>
+			</Expander>
+			
 			<StackPanel Orientation="Horizontal"
 						HorizontalAlignment="Right"
 						Margin="0,10,0,10">
