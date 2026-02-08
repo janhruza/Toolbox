@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Styling;
 
@@ -83,8 +84,23 @@ public partial class MainWindow : Window
         return;
     }
 
-    private void btnOk_Click(object? sender, RoutedEventArgs e)
+    private async void btnOk_Click(object? sender, RoutedEventArgs e)
     {
+        string src = txtUrl.Text ?? string.Empty;
+        string dest = txtFolder.Text ?? string.Empty;
+
+        if (src == string.Empty || dest == string.Empty)
+        {
+            // can't download
+            return;
+        }
+
+        int ecode = await Downloader.Download(src, dest);
+        if (ecode != 0)
+        {
+            await DlgMessageBox.Show(this, $"Unable to download your media. Error code {ecode}.", "Download Error");
+        }
+
         return;
     }
 
@@ -109,6 +125,12 @@ public partial class MainWindow : Window
             // cant pick folder
         }
 
+        return;
+    }
+
+    private void txtUrl_TextChanged(object? sender, RoutedEventArgs e)
+    {
+        btnOk.IsEnabled = string.IsNullOrWhiteSpace(txtUrl.Text) == false;
         return;
     }
 }

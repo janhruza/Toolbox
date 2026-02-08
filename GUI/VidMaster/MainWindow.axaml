@@ -63,7 +63,8 @@
 					Margin="10,0,10,0">
 
 			<Label>URL</Label>
-			<TextBox Name="txtUrl"/>
+			<TextBox Name="txtUrl"
+					 TextChanged="txtUrl_TextChanged"/>
 
 			<Label>Save location</Label>
 			<Grid ColumnDefinitions="*, Auto">
@@ -76,7 +77,7 @@
 						Click="btnChooseFolder_Click"/>
 			</Grid>
 
-			<Expander Header="Extras"
+			<Expander Header="Extras (work in progress - ignored)"
 					  HorizontalAlignment="Stretch"
 					  Margin="0,5,0,0">
 				
@@ -107,6 +108,7 @@
 				
 				<Button Content="OK"
 						Name="btnOk"
+						IsEnabled="False"
 						Click="btnOk_Click"/>
 				
 			</StackPanel>
