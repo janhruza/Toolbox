@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
+
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace VidMaster.Core;
 
@@ -80,9 +84,47 @@ public static class Downloader
     /// </summary>
     /// <param name="mediaUrl">Target media URL address.</param>
     /// <returns>A list of available formats. Can be empty.</returns>
-    public static async Task<List<string>> GetAvailableFormats(string mediaUrl)
+    public static async Task<List<FormatInfo>> GetAvailableFormats(string mediaUrl)
     {
-        List<string> formats = [];
-        return formats;
+        if (string.IsNullOrWhiteSpace(mediaUrl) || !Downloader.Exists())
+        {
+            return [];
+        }
+
+        ProcessStartInfo psi = new ProcessStartInfo
+        {
+            FileName = _path,
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true
+        };
+
+        // -J (dump-json) returns the entire info as a single JSON object
+        psi.ArgumentList.Add("-J");
+        psi.ArgumentList.Add(mediaUrl);
+
+        using Process? proc = Process.Start(psi);
+        if (proc is null) return [];
+
+        // Capture output
+        string jsonOutput = await proc.StandardOutput.ReadToEndAsync();
+        await proc.WaitForExitAsync();
+
+        if (proc.ExitCode != 0) return [];
+
+        try
+        {
+            // Deserialize the JSON string into our objects
+            var data = JsonSerializer.Deserialize(
+                jsonOutput,
+                AppJsonContext.Default.YtDlpResponse); // Toto je vygenerovaný statický kód);
+            return data?.Formats ?? [];
+        }
+        catch (JsonException)
+        {
+            // Handle parsing errors
+            return [];
+        }
     }
 }

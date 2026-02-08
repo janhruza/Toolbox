@@ -149,7 +149,7 @@ public partial class MainWindow : Window
         cbxFormats.Items.Clear();
 
         // fetch the list of available formats
-        List<string> formats = await Downloader.GetAvailableFormats(src);
+        List<FormatInfo> formats = await Downloader.GetAvailableFormats(src);
         if (formats.Count == 0)
         {
             await DlgMessageBox.Show(this, "No formats available.", "Refresh Formats");
@@ -157,12 +157,12 @@ public partial class MainWindow : Window
         }
 
         // update the list of formats in the UI
-        foreach (string format in formats)
+        foreach (FormatInfo format in formats)
         {
             ComboBoxItem cbi = new ComboBoxItem
             {
                 Content = format,
-                Tag = format
+                Tag = format.FormatId
             };
 
             cbxFormats.Items.Add(cbi);
