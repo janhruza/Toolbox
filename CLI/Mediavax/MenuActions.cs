@@ -450,7 +450,7 @@ internal static class MenuActions
             }
         }
 
-    // method exit
+        // method exit
     MethodExit:
         return true;
     }

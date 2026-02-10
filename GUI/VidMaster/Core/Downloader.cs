@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace VidMaster.Core;
 
@@ -15,7 +12,7 @@ namespace VidMaster.Core;
 public static class Downloader
 {
 #if WINDOWS
-    static string _path = "yt-dlp.exe";
+    private static string _path = "yt-dlp.exe";
 #else
     static string _path = "yt-dlp";
 #endif

@@ -26,15 +26,15 @@ public partial class MainWindow : Window
     {
         if (string.IsNullOrWhiteSpace(message) == true)
         {
-            tbMessage.Text = string.Empty;
-            tbMessage.IsVisible = false;
+            this.tbMessage.Text = string.Empty;
+            this.tbMessage.IsVisible = false;
             return;
         }
 
         else
         {
-            tbMessage.Text = message;
-            tbMessage.IsVisible = true;
+            this.tbMessage.Text = message;
+            this.tbMessage.IsVisible = true;
             return;
         }
     }
@@ -47,7 +47,7 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         Config cfg = new Config();
-        txtFolder.Text = cfg.SaveLocation;
+        this.txtFolder.Text = cfg.SaveLocation;
     }
 
     private async void MainWindow_Loaded(object? sender, RoutedEventArgs e)
@@ -62,7 +62,7 @@ public partial class MainWindow : Window
 
     private void miClose_Click(object? sender, RoutedEventArgs e)
     {
-        this.Close();
+        Close();
     }
 
     private async void miAbout_Click(object? sender, RoutedEventArgs e)
@@ -81,19 +81,19 @@ public partial class MainWindow : Window
 
     private void miThemeLight_Click(object? sender, RoutedEventArgs e)
     {
-        App.Current?.RequestedThemeVariant = ThemeVariant.Light;
+        _ = (App.Current?.RequestedThemeVariant = ThemeVariant.Light);
         return;
     }
 
     private void miThemeDark_Click(object? sender, RoutedEventArgs e)
     {
-        App.Current?.RequestedThemeVariant = ThemeVariant.Dark;
+        _ = (App.Current?.RequestedThemeVariant = ThemeVariant.Dark);
         return;
     }
 
     private void miThemeSystem_Click(object? sender, RoutedEventArgs e)
     {
-        App.Current?.RequestedThemeVariant = ThemeVariant.Default;
+        _ = (App.Current?.RequestedThemeVariant = ThemeVariant.Default);
         return;
     }
 
@@ -105,14 +105,14 @@ public partial class MainWindow : Window
 
     private void btnCancel_Click(object? sender, RoutedEventArgs e)
     {
-        this.Close();
+        Close();
         return;
     }
 
     private async void btnOk_Click(object? sender, RoutedEventArgs e)
     {
-        string src = txtUrl.Text ?? string.Empty;
-        string dest = txtFolder.Text ?? string.Empty;
+        string src = this.txtUrl.Text ?? string.Empty;
+        string dest = this.txtFolder.Text ?? string.Empty;
 
         if (src == string.Empty || dest == string.Empty)
         {
@@ -141,7 +141,7 @@ public partial class MainWindow : Window
 
             if (folders.Count == 1)
             {
-                txtFolder.Text = folders[0].Path.AbsolutePath;
+                this.txtFolder.Text = folders[0].Path.AbsolutePath;
             }
         }
 
@@ -155,13 +155,13 @@ public partial class MainWindow : Window
 
     private void txtUrl_TextChanged(object? sender, TextChangedEventArgs e)
     {
-        btnOk.IsEnabled = string.IsNullOrWhiteSpace(txtUrl.Text) == false;
+        this.btnOk.IsEnabled = string.IsNullOrWhiteSpace(this.txtUrl.Text) == false;
         return;
     }
 
     private async Task RefreshFormats()
     {
-        string src = txtUrl.Text ?? string.Empty;
+        string src = this.txtUrl.Text ?? string.Empty;
         if (string.IsNullOrWhiteSpace(src))
         {
             await DlgMessageBox.Show(this, "No media URL provided.", "Refresh Formats");
@@ -169,7 +169,7 @@ public partial class MainWindow : Window
         }
 
         // clear old formats
-        cbxFormats.Items.Clear();
+        this.cbxFormats.Items.Clear();
 
         // fetch the list of available formats
         List<FormatInfo> formats = await Downloader.GetAvailableFormats(src);
@@ -188,13 +188,13 @@ public partial class MainWindow : Window
                 Tag = format.FormatId
             };
 
-            cbxFormats.Items.Add(cbi);
+            _ = this.cbxFormats.Items.Add(cbi);
         }
 
-        if (cbxFormats.Items.Any())
+        if (this.cbxFormats.Items.Any())
         {
             // select the first item (if any)
-            cbxFormats.SelectedIndex = 0;
+            this.cbxFormats.SelectedIndex = 0;
         }
 
         return;

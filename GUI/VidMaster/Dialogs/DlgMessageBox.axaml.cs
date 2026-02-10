@@ -19,8 +19,8 @@ public partial class DlgMessageBox : Window
     public DlgMessageBox(string message, string caption)
     {
         InitializeComponent();
-        this.Title = caption;
-        tbMessage.Text = message;
+        Title = caption;
+        this.tbMessage.Text = message;
     }
 
     private async Task BeepAsync()
@@ -36,7 +36,7 @@ public partial class DlgMessageBox : Window
 
     private void btnOk_Click(object? sender, RoutedEventArgs e)
     {
-        this.Close();
+        Close();
     }
 
     /// <summary>

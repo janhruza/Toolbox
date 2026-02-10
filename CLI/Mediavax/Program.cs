@@ -362,7 +362,7 @@ internal class Program : IApplication
             }
         }
 
-    // app exit
+        // app exit
     AppExit:
         PostExitCleanup();
         return 0;

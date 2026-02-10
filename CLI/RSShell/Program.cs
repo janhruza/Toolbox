@@ -139,7 +139,7 @@ internal class Program : IApplication
                 }
             }
 
-        // cleanup code
+            // cleanup code
         AppExit:
             PostExitCleanup();
             return 0;

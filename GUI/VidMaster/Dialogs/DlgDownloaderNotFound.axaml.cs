@@ -1,8 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
-using System.Diagnostics;
-
 using VidMaster.Core;
 
 namespace VidMaster;
@@ -22,13 +20,13 @@ public partial class DlgDownloaderNotFound : Window
 
     private void btnCancel_Click(object? sender, RoutedEventArgs e)
     {
-        this.Close();
+        Close();
     }
 
     private void btnDownloadNow_Click(object? sender, RoutedEventArgs e)
     {
         Downloader.GetDownloader();
-        this.Close();
+        Close();
         return;
     }
 }
