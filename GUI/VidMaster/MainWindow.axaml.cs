@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Styling;
 
@@ -16,6 +15,30 @@ namespace VidMaster;
 /// </summary>
 public partial class MainWindow : Window
 {
+    /// <summary>
+    /// Sets the status message.
+    /// </summary>
+    /// <param name="message">The new message tobe shown.</param>
+    /// <remarks>
+    /// You can set the <paramref name="message"/> value to <see cref="string.Empty"/> in order to hide the status message box.
+    /// </remarks>
+    public void SetStatusMessage(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message) == true)
+        {
+            tbMessage.Text = string.Empty;
+            tbMessage.IsVisible = false;
+            return;
+        }
+
+        else
+        {
+            tbMessage.Text = message;
+            tbMessage.IsVisible = true;
+            return;
+        }
+    }
+
     /// <summary>
     /// Creates a new <see cref="MainWindow"/> instance.
     /// </summary>
@@ -130,7 +153,7 @@ public partial class MainWindow : Window
         return;
     }
 
-    private void txtUrl_TextChanged(object? sender, RoutedEventArgs e)
+    private void txtUrl_TextChanged(object? sender, TextChangedEventArgs e)
     {
         btnOk.IsEnabled = string.IsNullOrWhiteSpace(txtUrl.Text) == false;
         return;
@@ -179,6 +202,8 @@ public partial class MainWindow : Window
 
     private async void btnRefreshFormats_Click(object? sender, RoutedEventArgs e)
     {
+        SetStatusMessage("Listing available formats...");
         await RefreshFormats();
+        SetStatusMessage(string.Empty);
     }
 }

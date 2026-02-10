@@ -13,7 +13,7 @@
 		WindowStartupLocation="CenterScreen"
 		Loaded="MainWindow_Loaded">
 
-	<Grid RowDefinitions="Auto, *"
+	<Grid RowDefinitions="Auto, *, Auto"
 		  Width="350">
 
 		<Menu Grid.Row="0">
@@ -114,9 +114,15 @@
 						Click="btnOk_Click"/>
 				
 			</StackPanel>
-			
+
 		</StackPanel>
-		
+
+		<TextBlock Grid.Row="2"
+				   Name="tbMessage"
+				   TextTrimming="CharacterEllipsis"
+				   IsVisible="False"
+				   Padding="5,2,5,2"/>
+
 	</Grid>
     
 </Window>
