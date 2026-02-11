@@ -50,14 +50,21 @@ public partial class MainWindow : Window
         this.txtFolder.Text = cfg.SaveLocation;
     }
 
-    private async void MainWindow_Loaded(object? sender, RoutedEventArgs e)
+    private async Task RefreshUI()
     {
         if (Downloader.Exists() == false)
         {
+            miCheckForUpdates.IsEnabled = false;
             await new DlgDownloaderNotFound().ShowDialog(this);
         }
 
+        miCheckForUpdates.IsEnabled = true;
         return;
+    }
+
+    private async void MainWindow_Loaded(object? sender, RoutedEventArgs e)
+    {
+        await RefreshUI();
     }
 
     private void miClose_Click(object? sender, RoutedEventArgs e)
@@ -117,10 +124,25 @@ public partial class MainWindow : Window
         if (src == string.Empty || dest == string.Empty)
         {
             // can't download
+            SetStatusMessage("Source or destination is empty.");
             return;
         }
 
-        int ecode = await Downloader.Download(src, dest);
+        string format = string.Empty;
+
+        if (cbxFormats.SelectedItem is ComboBoxItem cbi)
+        {
+            if (cbi.Tag is string formatId)
+            {
+                // get the selected format
+                format = formatId;
+            }
+        }
+
+        SetStatusMessage("Download in progress...");
+        int ecode = await Downloader.Download(src, dest, format);
+        SetStatusMessage(string.Empty);
+
         if (ecode != 0)
         {
             await DlgMessageBox.Show(this, $"Unable to download your media. Error code {ecode}.", "Download Error");
@@ -148,6 +170,7 @@ public partial class MainWindow : Window
         else
         {
             // cant pick folder
+            SetStatusMessage("Can't pick folder.");
         }
 
         return;
@@ -155,17 +178,18 @@ public partial class MainWindow : Window
 
     private void txtUrl_TextChanged(object? sender, TextChangedEventArgs e)
     {
-        this.btnOk.IsEnabled = string.IsNullOrWhiteSpace(this.txtUrl.Text) == false;
+        bool value = string.IsNullOrWhiteSpace(this.txtUrl.Text) == false;
+        this.btnOk.IsEnabled = value;
+        this.btnRefreshFormats.IsEnabled = value;
         return;
     }
 
-    private async Task RefreshFormats()
+    private async Task<bool> RefreshFormats()
     {
         string src = this.txtUrl.Text ?? string.Empty;
         if (string.IsNullOrWhiteSpace(src))
         {
-            await DlgMessageBox.Show(this, "No media URL provided.", "Refresh Formats");
-            return;
+            return false;
         }
 
         // clear old formats
@@ -175,8 +199,7 @@ public partial class MainWindow : Window
         List<FormatInfo> formats = await Downloader.GetAvailableFormats(src);
         if (formats.Count == 0)
         {
-            await DlgMessageBox.Show(this, "No formats available.", "Refresh Formats");
-            return;
+            return false;
         }
 
         // update the list of formats in the UI
@@ -191,19 +214,54 @@ public partial class MainWindow : Window
             _ = this.cbxFormats.Items.Add(cbi);
         }
 
-        if (this.cbxFormats.Items.Any())
+        // insert the 'default' quality item
+        ComboBoxItem cbiDefault = new ComboBoxItem
         {
-            // select the first item (if any)
-            this.cbxFormats.SelectedIndex = 0;
-        }
+            Content = "Default",
+            Tag = string.Empty
+        };
 
-        return;
+        cbxFormats.Items.Insert(0, cbiDefault);
+
+        // add the  'best quality' format item
+        ComboBoxItem cbiBest = new ComboBoxItem
+        {
+            Content = "Overall Best Quality",
+            Tag = "bestvideo+bestaudio/best"
+        };
+
+        _ = cbxFormats.Items.Add(cbiBest);
+        this.cbxFormats.SelectedIndex = 0;
+
+        return true;
+    }
+
+    private async Task RefreshFormatsWrapper()
+    {
+        SetStatusMessage("Listing available formats...");
+        string msg = await RefreshFormats() == true ? string.Empty : "Unable to retrieve the list of available formats.";
+        SetStatusMessage(msg);
+
+        if (string.IsNullOrWhiteSpace(msg) == false)
+        {
+            await DlgMessageBox.Show(this, "Unable to retrieve the list of available formats. Please make sure you entered a valid URL address and try again.", "No formats available");
+        }
     }
 
     private async void btnRefreshFormats_Click(object? sender, RoutedEventArgs e)
     {
-        SetStatusMessage("Listing available formats...");
-        await RefreshFormats();
-        SetStatusMessage(string.Empty);
+        await RefreshFormatsWrapper();
+    }
+
+    private async void miCheckForUpdates_Click(object? sender, RoutedEventArgs e)
+    {
+        SetStatusMessage("Checking for updates");
+        bool result = await Downloader.CheckForUpdates();
+        SetStatusMessage(result == true ? string.Empty : "Update failed.");
+    }
+
+    private async void miRefresh_Click(object? sender, RoutedEventArgs e)
+    {
+        await RefreshUI();
     }
 }

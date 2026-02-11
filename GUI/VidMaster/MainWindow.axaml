@@ -13,6 +13,15 @@
 		WindowStartupLocation="CenterScreen"
 		Loaded="MainWindow_Loaded">
 
+	<Window.ContextMenu>
+		<ContextMenu>
+			<MenuItem Header="Refresh"
+					  InputGesture="F5"
+					  Name="miRefresh"
+					  Click="miRefresh_Click"/>
+		</ContextMenu>
+	</Window.ContextMenu>
+
 	<Grid RowDefinitions="Auto, *, Auto"
 		  Width="350">
 
@@ -48,6 +57,10 @@
 						  Name="miGetDownloader"
 						  Click="miGetDownloader_Click"/>
 				
+				<MenuItem Header="Check for Updates"
+						  Name="miCheckForUpdates"
+						  Click="miCheckForUpdates_Click"/>
+
 				<Separator />
 
 				<MenuItem Header="About"
@@ -77,27 +90,21 @@
 						Click="btnChooseFolder_Click"/>
 			</Grid>
 
-			<Expander Header="Extras (work in progress - ignored)"
-					  HorizontalAlignment="Stretch"
-					  Margin="0,5,0,0">
-				
-				<StackPanel>
-					<Label Content="Format"/>
-					<Grid ColumnDefinitions="*, Auto">
+			<Label Content="Format"/>
+				<Grid ColumnDefinitions="*, Auto">
 
-						<ComboBox Grid.Column="0"
-								  Margin="0,0,5,0"
-								  HorizontalAlignment="Stretch"
-								  Name="cbxFormats"/>
+					<ComboBox Grid.Column="0"
+							  Margin="0,0,5,0"
+							  HorizontalAlignment="Stretch"
+							  Name="cbxFormats"/>
 						
-						<Button Grid.Column="1"
-								Content="Refresh"
-								Name="btnRefreshFormats"
-								Click="btnRefreshFormats_Click"/>
+					<Button Grid.Column="1"
+							Content="Refresh"
+							Name="btnRefreshFormats"
+							IsEnabled="False"
+							Click="btnRefreshFormats_Click"/>
 						
 					</Grid>
-				</StackPanel>
-			</Expander>
 			
 			<StackPanel Orientation="Horizontal"
 						HorizontalAlignment="Right"
@@ -108,7 +115,7 @@
 						Name="btnCancel"
 						Click="btnCancel_Click"/>
 				
-				<Button Content="OK"
+				<Button Content="Download"
 						Name="btnOk"
 						IsEnabled="False"
 						Click="btnOk_Click"/>

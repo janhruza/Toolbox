@@ -43,16 +43,25 @@ public static class Downloader
     /// </summary>
     /// <param name="url">Media source.</param>
     /// <param name="destination">Destination folder.</param>
+    /// <param name="format">The target video format. Can be null.</param>
     /// <returns>The process exit code.</returns>
     /// <remarks>
-    /// This method downloads the media with all the default settings.
+    /// If the <paramref name="format"/> is <see langword="null"/>, yt-dlp will use the default format.
     /// </remarks>
-    public static async Task<int> Download(string url, string destination)
+    public static async Task<int> Download(string url, string destination, string? format)
     {
+        bool formatSpecified = true;
+        if (string.IsNullOrWhiteSpace(format) == true)
+        {
+            formatSpecified = false;
+        }
+
         ProcessStartInfo psi = new ProcessStartInfo
         {
             UseShellExecute = true,
             FileName = _path,
+            WindowStyle = ProcessWindowStyle.Normal,
+            WorkingDirectory = destination,
             ArgumentList =
             {
                 "--restrict-filenames",
@@ -60,11 +69,18 @@ public static class Downloader
                 "--xattrs",
                 "--progress",
                 "-v",
+                "--embed-metadata",
+                "--embed-thumbnail",
+                "--embed-chapters",
+                "--embed-subs",
                 url
-            },
-            WindowStyle = ProcessWindowStyle.Normal,
-            WorkingDirectory = destination
+            }
         };
+
+        if (formatSpecified)
+        {
+            psi.ArgumentList.Add($"-f {format}");
+        }
 
         Process? proc = Process.Start(psi);
         if (proc is null)
@@ -123,5 +139,29 @@ public static class Downloader
             // Handle parsing errors
             return [];
         }
+    }
+
+    /// <summary>
+    /// Checks for yt-dlp updates.
+    /// </summary>
+    /// <returns>Operation result.</returns>
+    public static async Task<bool> CheckForUpdates()
+    {
+        if (File.Exists(_path) == false)
+        {
+            return false;
+        }
+
+        ProcessStartInfo psi = new ProcessStartInfo
+        {
+            FileName = _path,
+            Arguments = "--update"
+        };
+
+        var proc = Process.Start(psi);
+        if (proc is null) return false;
+
+        await proc.WaitForExitAsync();
+        return proc.ExitCode == 0;
     }
 }
