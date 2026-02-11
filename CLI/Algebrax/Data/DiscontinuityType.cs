@@ -8,7 +8,7 @@ public enum DiscontinuityType
     /// <summary>
     /// A removable discontinuity.
     /// </summary>
-    Removable,    // Odstranitelná (díra v grafu)
+    Removable,
 
     /// <summary>
     /// First-type (type I.) discontinuity.
