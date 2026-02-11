@@ -3,7 +3,6 @@ using Avalonia.Interactivity;
 using Avalonia.Styling;
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 using VidMaster.Core;
@@ -54,11 +53,11 @@ public partial class MainWindow : Window
     {
         if (Downloader.Exists() == false)
         {
-            miCheckForUpdates.IsEnabled = false;
+            this.miCheckForUpdates.IsEnabled = false;
             await new DlgDownloaderNotFound().ShowDialog(this);
         }
 
-        miCheckForUpdates.IsEnabled = true;
+        this.miCheckForUpdates.IsEnabled = true;
         return;
     }
 
@@ -130,7 +129,7 @@ public partial class MainWindow : Window
 
         string format = string.Empty;
 
-        if (cbxFormats.SelectedItem is ComboBoxItem cbi)
+        if (this.cbxFormats.SelectedItem is ComboBoxItem cbi)
         {
             if (cbi.Tag is string formatId)
             {
@@ -221,7 +220,7 @@ public partial class MainWindow : Window
             Tag = string.Empty
         };
 
-        cbxFormats.Items.Insert(0, cbiDefault);
+        this.cbxFormats.Items.Insert(0, cbiDefault);
 
         // add the  'best quality' format item
         ComboBoxItem cbiBest = new ComboBoxItem
@@ -230,7 +229,7 @@ public partial class MainWindow : Window
             Tag = "bestvideo+bestaudio/best"
         };
 
-        _ = cbxFormats.Items.Add(cbiBest);
+        _ = this.cbxFormats.Items.Add(cbiBest);
         this.cbxFormats.SelectedIndex = 0;
 
         return true;
