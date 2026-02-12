@@ -7,7 +7,7 @@ namespace VidMaster;
 /// <summary>
 ///     Representing the downloader not found error box.
 /// </summary>
-public class DlgDownloaderNotFound : Window
+public partial class DlgDownloaderNotFound : Window
 {
     /// <summary>
     ///     Creates a new <see cref="DlgDownloaderNotFound" /> instance.

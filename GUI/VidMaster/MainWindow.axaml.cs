@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Dialogs;
 using Avalonia.Interactivity;
@@ -12,7 +13,7 @@ namespace VidMaster;
 /// <summary>
 ///     Representing the main application window.
 /// </summary>
-public class MainWindow : Window
+public partial class MainWindow : Window
 {
     /// <summary>
     ///     Creates a new <see cref="MainWindow" /> instance.

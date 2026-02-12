@@ -8,7 +8,7 @@ namespace VidMaster;
 /// <summary>
 ///     Representing a simple message box.
 /// </summary>
-public class DlgMessageBox : Window
+public partial class DlgMessageBox : Window
 {
     /// <summary>
     ///     Representing a simple message box.
