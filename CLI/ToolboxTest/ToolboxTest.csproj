@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <PublishAot>true</PublishAot>
-    <InvariantGlobalization>true</InvariantGlobalization>
-    <Platforms>AnyCPU;x64</Platforms>
-    <StartupObject>ToolboxTest.Program</StartupObject>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <PublishAot>true</PublishAot>
+        <InvariantGlobalization>true</InvariantGlobalization>
+        <Platforms>AnyCPU;x64</Platforms>
+        <StartupObject>ToolboxTest.Program</StartupObject>
+    </PropertyGroup>
 
-  <Import Project="..\Toolbox\Toolbox.projitems" Label="Shared" />
+    <Import Project="..\Toolbox\Toolbox.projitems" Label="Shared"/>
 
 </Project>

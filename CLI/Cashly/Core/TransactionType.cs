@@ -1,22 +1,22 @@
 ﻿namespace Cashly.Core;
 
 /// <summary>
-/// Represents the type of a financial transaction.
+///     Represents the type of a financial transaction.
 /// </summary>
 public enum TransactionType : byte
 {
     /// <summary>
-    /// Represents an undefined transaction type.
+    ///     Represents an undefined transaction type.
     /// </summary>
     Undefined = 0,
 
     /// <summary>
-    /// Represents an income transaction.
+    ///     Represents an income transaction.
     /// </summary>
     Income,
 
     /// <summary>
-    /// Represents an expense transaction.
+    ///     Represents an expense transaction.
     /// </summary>
     Expense
 }

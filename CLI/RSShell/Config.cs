@@ -4,34 +4,33 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
 using Toolbox;
 
 namespace RSShell;
 
 /// <summary>
-/// Representing the type descriptor of the <see cref="RSShell.Config"/> type for the JSON serialization.
+///     Representing the type descriptor of the <see cref="RSShell.Config" /> type for the JSON serialization.
 /// </summary>
-[JsonSerializable(typeof(Config))]
+[JsonSerializable(type: typeof(Config))]
 public partial class ConfigContext : JsonSerializerContext
 {
 }
 
 /// <summary>
-/// Representing the RSShell config file.
+///     Representing the RSShell config file.
 /// </summary>
 public class Config
 {
     /// <summary>
-    /// Creates an empty instance of the <see cref="Config"/> class.
+    ///     Creates an empty instance of the <see cref="Config" /> class.
     /// </summary>
     public Config()
     {
-        Feeds = [];
+        this.Feeds = [];
     }
 
     /// <summary>
-    /// Representing the list of saved RSS feed sources.
+    ///     Representing the list of saved RSS feed sources.
     /// </summary>
     public List<string> Feeds { get; set; }
 
@@ -40,7 +39,7 @@ public class Config
     private static string Path => "settings.json";
 
     /// <summary>
-    /// Saves the configuration file.
+    ///     Saves the configuration file.
     /// </summary>
     /// <param name="config">Config to be saved.</param>
     /// <returns>operation result.</returns>
@@ -48,20 +47,20 @@ public class Config
     {
         try
         {
-            string data = JsonSerializer.Serialize(config, ConfigContext.Default.Config);
-            File.WriteAllText(Path, data, Encoding.Unicode);
+            string data = JsonSerializer.Serialize(value: config, jsonTypeInfo: ConfigContext.Default.Config);
+            File.WriteAllText(path: Config.Path, contents: data, encoding: Encoding.Unicode);
             return true;
         }
 
         catch (Exception ex)
         {
-            _ = Log.Exception(ex, nameof(Save));
+            _ = Log.Exception(exception: ex, tag: nameof(Config.Save));
             return false;
         }
     }
 
     /// <summary>
-    /// Loads the curremtly saved configuration file.
+    ///     Loads the curremtly saved configuration file.
     /// </summary>
     /// <param name="config">Config object (if any).</param>
     /// <returns>Operation result.</returns>
@@ -71,27 +70,24 @@ public class Config
 
         try
         {
-            if (File.Exists(Path) == false)
-            {
-                return false;
-            }
+            if (!File.Exists(path: Config.Path)) return false;
 
-            string data = File.ReadAllText(Path, Encoding.Unicode);
-            config = JsonSerializer.Deserialize<Config>(data) ?? new Config();
+            string data = File.ReadAllText(path: Config.Path, encoding: Encoding.Unicode);
+            config = JsonSerializer.Deserialize<Config>(json: data) ?? new Config();
             return true;
         }
 
         catch (Exception ex)
         {
-            _ = Log.Exception(ex, nameof(Load));
+            _ = Log.Exception(exception: ex, tag: nameof(Config.Load));
             return false;
         }
     }
 
     /// <summary>
-    /// Representing the current config instance.
+    ///     Representing the current config instance.
     /// </summary>
-    public static Config Current { get; set; } = new Config();
+    public static Config Current { get; set; } = new();
 
     #endregion
 }

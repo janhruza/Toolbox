@@ -2,8 +2,8 @@
 
 namespace Mediavax.Core;
 
-[JsonSerializable(typeof(YtDlpInfo))]
-[JsonSerializable(typeof(YtDlpFormat))]
+[JsonSerializable(type: typeof(YtDlpInfo))]
+[JsonSerializable(type: typeof(YtDlpFormat))]
 internal partial class YtDlpJsonContext : JsonSerializerContext
 {
 }

@@ -7,59 +7,59 @@ using System.Threading.Tasks;
 namespace VidMaster.Core;
 
 /// <summary>
-/// Representing the downloader class.
+///     Representing the downloader class.
 /// </summary>
 public static class Downloader
 {
-#if WINDOWS
+    #if WINDOWS
     private static string _path = "yt-dlp.exe";
-#else
-    static string _path = "yt-dlp";
-#endif
+    #else
+    private static readonly string _path = "yt-dlp";
+    #endif
 
     /// <summary>
-    /// Determines whether the downloader exists.
+    ///     Determines whether the downloader exists.
     /// </summary>
     /// <returns>Operation result.</returns>
-    public static bool Exists() => File.Exists(_path);
+    public static bool Exists()
+    {
+        return File.Exists(path: Downloader._path);
+    }
 
     /// <summary>
-    /// Opens the yt-dlp's latest release download page.
+    ///     Opens the yt-dlp's latest release download page.
     /// </summary>
     public static void GetDownloader()
     {
-        ProcessStartInfo psi = new ProcessStartInfo
+        ProcessStartInfo psi = new()
         {
             FileName = "https://github.com/yt-dlp/yt-dlp/releases/latest",
             UseShellExecute = true
         };
 
-        _ = Process.Start(psi);
-        return;
+        _ = Process.Start(startInfo: psi);
     }
 
     /// <summary>
-    /// Begins downloading of the given media (<paramref name="url"/>) and saves it into the <paramref name="destination"/> folder.
+    ///     Begins downloading of the given media (<paramref name="url" />) and saves it into the
+    ///     <paramref name="destination" /> folder.
     /// </summary>
     /// <param name="url">Media source.</param>
     /// <param name="destination">Destination folder.</param>
     /// <param name="format">The target video format. Can be null.</param>
     /// <returns>The process exit code.</returns>
     /// <remarks>
-    /// If the <paramref name="format"/> is <see langword="null"/>, yt-dlp will use the default format.
+    ///     If the <paramref name="format" /> is <see langword="null" />, yt-dlp will use the default format.
     /// </remarks>
     public static async Task<int> Download(string url, string destination, string? format)
     {
         bool formatSpecified = true;
-        if (string.IsNullOrWhiteSpace(format) == true)
-        {
-            formatSpecified = false;
-        }
+        if (string.IsNullOrWhiteSpace(value: format)) formatSpecified = false;
 
-        ProcessStartInfo psi = new ProcessStartInfo
+        ProcessStartInfo psi = new()
         {
             UseShellExecute = true,
-            FileName = _path,
+            FileName = Downloader._path,
             WindowStyle = ProcessWindowStyle.Normal,
             WorkingDirectory = destination,
             ArgumentList =
@@ -77,36 +77,27 @@ public static class Downloader
             }
         };
 
-        if (formatSpecified)
-        {
-            psi.ArgumentList.Add($"-f {format}");
-        }
+        if (formatSpecified) psi.ArgumentList.Add(item: $"-f {format}");
 
-        Process? proc = Process.Start(psi);
-        if (proc is null)
-        {
-            return int.MaxValue;
-        }
+        Process? proc = Process.Start(startInfo: psi);
+        if (proc is null) return int.MaxValue;
 
         await proc.WaitForExitAsync();
         return proc.ExitCode;
     }
 
     /// <summary>
-    /// Gets the list of available media formats for the specified media at <paramref name="mediaUrl"/>.
+    ///     Gets the list of available media formats for the specified media at <paramref name="mediaUrl" />.
     /// </summary>
     /// <param name="mediaUrl">Target media URL address.</param>
     /// <returns>A list of available formats. Can be empty.</returns>
     public static async Task<List<FormatInfo>> GetAvailableFormats(string mediaUrl)
     {
-        if (string.IsNullOrWhiteSpace(mediaUrl) || !Downloader.Exists())
-        {
-            return [];
-        }
+        if (string.IsNullOrWhiteSpace(value: mediaUrl) || !Downloader.Exists()) return [];
 
-        ProcessStartInfo psi = new ProcessStartInfo
+        ProcessStartInfo psi = new()
         {
-            FileName = _path,
+            FileName = Downloader._path,
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -114,10 +105,10 @@ public static class Downloader
         };
 
         // -J (dump-json) returns the entire info as a single JSON object
-        psi.ArgumentList.Add("-J");
-        psi.ArgumentList.Add(mediaUrl);
+        psi.ArgumentList.Add(item: "-J");
+        psi.ArgumentList.Add(item: mediaUrl);
 
-        using Process? proc = Process.Start(psi);
+        using Process? proc = Process.Start(startInfo: psi);
         if (proc is null) return [];
 
         // Capture output
@@ -129,9 +120,9 @@ public static class Downloader
         try
         {
             // Deserialize the JSON string into our objects
-            var data = JsonSerializer.Deserialize(
-                jsonOutput,
-                AppJsonContext.Default.YtDlpResponse); // Toto je vygenerovaný statický kód);
+            YtDlpResponse? data = JsonSerializer.Deserialize(
+                json: jsonOutput,
+                jsonTypeInfo: AppJsonContext.Default.YtDlpResponse); // Toto je vygenerovaný statický kód);
             return data?.Formats ?? [];
         }
         catch (JsonException)
@@ -142,23 +133,20 @@ public static class Downloader
     }
 
     /// <summary>
-    /// Checks for yt-dlp updates.
+    ///     Checks for yt-dlp updates.
     /// </summary>
     /// <returns>Operation result.</returns>
     public static async Task<bool> CheckForUpdates()
     {
-        if (File.Exists(_path) == false)
-        {
-            return false;
-        }
+        if (!File.Exists(path: Downloader._path)) return false;
 
-        ProcessStartInfo psi = new ProcessStartInfo
+        ProcessStartInfo psi = new()
         {
-            FileName = _path,
+            FileName = Downloader._path,
             Arguments = "--update"
         };
 
-        var proc = Process.Start(psi);
+        Process? proc = Process.Start(startInfo: psi);
         if (proc is null) return false;
 
         await proc.WaitForExitAsync();

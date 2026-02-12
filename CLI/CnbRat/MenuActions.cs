@@ -1,13 +1,9 @@
-﻿using CnbRat.Core;
-
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
-
+using CnbRat.Core;
 using Toolbox;
 using Toolbox.UI;
-
-using static Toolbox.ANSI;
 
 namespace CnbRat;
 
@@ -15,30 +11,35 @@ internal static class MenuActions
 {
     public static bool ErrorNoReport()
     {
-        _ = Log.Warning("No report available.");
-        Console.WriteLine($"No report available. {Terminal.AccentTextStyle}Fetch{ANSI_RESET} a report first.");
+        _ = Log.Warning(message: "No report available.");
+        Console.WriteLine(
+            value: $"No report available. {Terminal.AccentTextStyle}Fetch{ANSI.ANSI_RESET} a report first.");
         return true;
     }
 
     public static bool AboutCnbRat()
     {
-        Console.WriteLine($"About {Terminal.AccentTextStyle}CnbRat{ANSI_RESET}");
-        Console.WriteLine($"Convert currencies with CNB precision. {Terminal.AccentTextStyle}Local. Fast. Reliable.{ANSI_RESET}");
+        Console.WriteLine(value: $"About {Terminal.AccentTextStyle}CnbRat{ANSI.ANSI_RESET}");
+        Console.WriteLine(
+            value:
+            $"Convert currencies with CNB precision. {Terminal.AccentTextStyle}Local. Fast. Reliable.{ANSI.ANSI_RESET}");
         Console.WriteLine();
-        Console.WriteLine($"CnbRat is a local-first CLI tool for currency conversion using official daily exchange rates from the Czech National Bank (ČNB). Fetch rates, view supported currencies, and convert money amounts directly in your terminal. Fast, offline-friendly, and configurable via JSON.");
+        Console.WriteLine(
+            value:
+            "CnbRat is a local-first CLI tool for currency conversion using official daily exchange rates from the Czech National Bank (ČNB). Fetch rates, view supported currencies, and convert money amounts directly in your terminal. Fast, offline-friendly, and configurable via JSON.");
         return true;
     }
 
     public static bool DisplayLastReport(ExchangeManager manager)
     {
         // check if previous report is valid
-        if (manager.IsReady == false) return false;
+        if (!manager.IsReady) return false;
 
         // display lates report info
-        Console.WriteLine($"{Terminal.Colors.Accent4}LATEST REPORT{ANSI_RESET}");
-        Console.WriteLine($"Date:       {Terminal.AccentTextStyle}{manager.Exchange.Date}{ANSI_RESET}\n" +
-                          $"Release:    {Terminal.AccentTextStyle}{manager.Exchange.Release}{ANSI_RESET}\n" +
-                          $"Currencies: {Terminal.AccentTextStyle}{manager.Rates.Count}{ANSI_RESET}");
+        Console.WriteLine(value: $"{Terminal.Colors.Accent4}LATEST REPORT{ANSI.ANSI_RESET}");
+        Console.WriteLine(value: $"Date:       {Terminal.AccentTextStyle}{manager.Exchange.Date}{ANSI.ANSI_RESET}\n" +
+                                 $"Release:    {Terminal.AccentTextStyle}{manager.Exchange.Release}{ANSI.ANSI_RESET}\n" +
+                                 $"Currencies: {Terminal.AccentTextStyle}{manager.Rates.Count}{ANSI.ANSI_RESET}");
 
         return true;
     }
@@ -48,19 +49,21 @@ internal static class MenuActions
         // check if can fetch
         if (manager == null) return false;
 
-        Console.Write("Fetching data... ");
-        bool result = manager.Fetch(DateOnly.MinValue);
+        Console.Write(value: "Fetching data... ");
+        bool result = manager.Fetch(date: DateOnly.MinValue);
         Console.WriteLine();
 
-        if (result == false)
+        if (!result)
         {
-            Console.WriteLine($"Unable to fetch report data. See the {Terminal.AccentTextStyle}log file{ANSI_RESET} for more information.");
+            Console.WriteLine(
+                value:
+                $"Unable to fetch report data. See the {Terminal.AccentTextStyle}log file{ANSI.ANSI_RESET} for more information.");
         }
 
         else
         {
             _ = manager.ArchiveReport();
-            Console.WriteLine($"Data {Terminal.AccentTextStyle}fetched successfully{ANSI_RESET}.");
+            Console.WriteLine(value: $"Data {Terminal.AccentTextStyle}fetched successfully{ANSI.ANSI_RESET}.");
         }
 
         return result;
@@ -72,28 +75,30 @@ internal static class MenuActions
         if (manager == null) return false;
 
         // get date from user
-        string input = Terminal.Input("Enter date (YYYY-MM-DD): ", false);
-        if (DateOnly.TryParse(input, out DateOnly date) == false)
+        string input = Terminal.Input(prompt: "Enter date (YYYY-MM-DD): ", ensureValue: false);
+        if (!DateOnly.TryParse(s: input, result: out DateOnly date))
         {
-            _ = Log.Warning("Invalid date format.");
-            Console.WriteLine("Invalid date format.");
+            _ = Log.Warning(message: "Invalid date format.");
+            Console.WriteLine(value: "Invalid date format.");
             return false;
         }
 
         // fetch data to date
-        Console.Write("Fetching data... ");
-        bool result = manager.Fetch(date);
+        Console.Write(value: "Fetching data... ");
+        bool result = manager.Fetch(date: date);
         Console.WriteLine();
 
-        if (result == false)
+        if (!result)
         {
-            Console.WriteLine($"Unable to fetch report data. See the {Terminal.AccentTextStyle}log file{ANSI_RESET} for more information.");
+            Console.WriteLine(
+                value:
+                $"Unable to fetch report data. See the {Terminal.AccentTextStyle}log file{ANSI.ANSI_RESET} for more information.");
         }
 
         else
         {
             _ = manager.ArchiveReport();
-            Console.WriteLine($"Data {Terminal.AccentTextStyle}fetched successfully{ANSI_RESET}.");
+            Console.WriteLine(value: $"Data {Terminal.AccentTextStyle}fetched successfully{ANSI.ANSI_RESET}.");
         }
 
         return result;
@@ -107,7 +112,7 @@ internal static class MenuActions
     public static bool ViewReport(ExchangeManager manager)
     {
         // check exchange manager
-        if (manager.IsReady == false) return false;
+        if (!manager.IsReady) return false;
         if (manager.Rates.Count == 0) return false;
 
         // display report (currencies, values, etc.)
@@ -120,24 +125,31 @@ internal static class MenuActions
         string RATE = "Rate (CZK)";
 
         // get data size (for display purposes)
-        lcountry = GetLongerValue(manager.Rates.Max(x => x.Country.Length), COUNTRY.Length);
-        lcurrency = GetLongerValue(manager.Rates.Max(x => x.Currency.Length), CURRENCY.Length);
-        lamount = GetLongerValue(manager.Rates.Max(x => x.Amount.ToString().Length), AMOUNT.Length);
-        lcode = GetLongerValue(manager.Rates.Max(x => x.Code.Length), CODE.Length);
-        lrate = GetLongerValue(manager.Rates.Max(x => x.Value.ToString().Length), RATE.Length);
+        lcountry = MenuActions.GetLongerValue(val1: manager.Rates.Max(selector: x => x.Country.Length),
+            val2: COUNTRY.Length);
+        lcurrency = MenuActions.GetLongerValue(val1: manager.Rates.Max(selector: x => x.Currency.Length),
+            val2: CURRENCY.Length);
+        lamount = MenuActions.GetLongerValue(val1: manager.Rates.Max(selector: x => x.Amount.ToString().Length),
+            val2: AMOUNT.Length);
+        lcode = MenuActions.GetLongerValue(val1: manager.Rates.Max(selector: x => x.Code.Length), val2: CODE.Length);
+        lrate = MenuActions.GetLongerValue(val1: manager.Rates.Max(selector: x => x.Value.ToString().Length),
+            val2: RATE.Length);
 
         // first rows
-        string firstLine = $"{COUNTRY.PadRight(lcountry)} {CURRENCY.PadRight(lcurrency)} {AMOUNT.PadRight(lamount)} {CODE.PadRight(lcode)} {RATE.PadRight(lrate)}";
-        Console.WriteLine($"{Terminal.AccentTextStyle}{firstLine}{ANSI_RESET}");
-        Console.WriteLine(new string('-', firstLine.Length));
+        string firstLine =
+            $"{COUNTRY.PadRight(totalWidth: lcountry)} {CURRENCY.PadRight(totalWidth: lcurrency)} {AMOUNT.PadRight(totalWidth: lamount)} {CODE.PadRight(totalWidth: lcode)} {RATE.PadRight(totalWidth: lrate)}";
+        Console.WriteLine(value: $"{Terminal.AccentTextStyle}{firstLine}{ANSI.ANSI_RESET}");
+        Console.WriteLine(value: new string(c: '-', count: firstLine.Length));
 
         // data rows
         for (int x = 0; x < manager.Rates.Count; x++)
         {
-            RateInfo rate = manager.Rates[x];
+            RateInfo rate = manager.Rates[index: x];
 
             // TODO: fix line coloring
-            Console.WriteLine($"{(x % 2 == 0 ? Terminal.Colors.Accent6 : ANSI_RESET)}{rate.Country.PadRight(lcountry)} {rate.Currency.PadRight(lcurrency)} {rate.Amount.ToString().PadLeft(lamount)} {rate.Code.PadRight(lcode)} {rate.Value.ToString().PadLeft(lrate)}{ANSI.ANSI_RESET}");
+            Console.WriteLine(
+                value:
+                $"{(x % 2 == 0 ? Terminal.Colors.Accent6 : ANSI.ANSI_RESET)}{rate.Country.PadRight(totalWidth: lcountry)} {rate.Currency.PadRight(totalWidth: lcurrency)} {rate.Amount.ToString().PadLeft(totalWidth: lamount)} {rate.Code.PadRight(totalWidth: lcode)} {rate.Value.ToString().PadLeft(totalWidth: lrate)}{ANSI.ANSI_RESET}");
         }
 
         return true;
@@ -146,85 +158,87 @@ internal static class MenuActions
     private static int SelectCurrency(ExchangeManager manager, string prompt)
     {
         // check exchange manager (if conversions are available)
-        if (manager == null || manager.IsReady == false) return -1;
+        if (manager == null || !manager.IsReady) return -1;
 
         // list currencies and let user select one
-        int longest = manager.Rates.Max(x => x.Country.Length);
+        int longest = manager.Rates.Max(selector: x => x.Country.Length);
 
         Console.Clear();
-        for (int x = 0; x < manager.Rates.OrderBy(x => x.Code.Normalize()).Count(); x += 2)
+        for (int x = 0; x < manager.Rates.OrderBy(keySelector: x => x.Code.Normalize()).Count(); x += 2)
         {
-            RateInfo rate1 = manager.Rates[x];
+            RateInfo rate1 = manager.Rates[index: x];
             RateInfo rate2;
 
             if (manager.Rates.Count > x + 1)
-            {
-                rate2 = manager.Rates[x + 1];
-            }
+                rate2 = manager.Rates[index: x + 1];
             else
-            {
                 rate2 = new RateInfo { Code = "N/A" };
-            }
 
-            Console.Write($"{Terminal.AccentTextStyle}{rate1.Code:D2}{ANSI_RESET} - {rate1.Country.Normalize().PadRight(longest)} | ");
+            Console.Write(
+                value:
+                $"{Terminal.AccentTextStyle}{rate1.Code:D2}{ANSI.ANSI_RESET} - {rate1.Country.Normalize().PadRight(totalWidth: longest)} | ");
 
             if (rate2.Code != "N/A")
-            {
-                Console.WriteLine($"{Terminal.AccentTextStyle}{rate2.Code:D2}{ANSI_RESET} - {rate2.Country.Normalize().PadRight(longest)}");
-            }
+                Console.WriteLine(
+                    value:
+                    $"{Terminal.AccentTextStyle}{rate2.Code:D2}{ANSI.ANSI_RESET} - {rate2.Country.Normalize().PadRight(totalWidth: longest)}");
 
             else
-            {
                 Console.WriteLine(); // line break
-            }
         }
 
         Console.WriteLine();
 
-        string selectedCode = Terminal.Input($"{prompt}{Environment.NewLine}Select currency by {Terminal.AccentTextStyle}code{ANSI_RESET}: ", false);
-        int index = manager.Rates.FindIndex(x => string.Equals(x.Code, selectedCode, StringComparison.OrdinalIgnoreCase));
-        if (index >= 0)
-        {
-            return index;
-        }
+        string selectedCode =
+            Terminal.Input(
+                prompt:
+                $"{prompt}{Environment.NewLine}Select currency by {Terminal.AccentTextStyle}code{ANSI.ANSI_RESET}: ",
+                ensureValue: false);
+        int index =
+            manager.Rates.FindIndex(match: x =>
+                string.Equals(a: x.Code, b: selectedCode, comparisonType: StringComparison.OrdinalIgnoreCase));
+        if (index >= 0) return index;
 
-        else
-        {
-            return -2;
-        }
+        return -2;
     }
 
     public static bool CurrencyConverter(ExchangeManager manager)
     {
         // check exchange manager (if conversions are available)
-        if (manager == null || manager.IsReady == false) return false;
+        if (manager == null || !manager.IsReady) return false;
 
         // get source currency code (convert from)
-        int sourceIndex = SelectCurrency(manager, "Select source currency (convert from)");
+        int sourceIndex = MenuActions.SelectCurrency(manager: manager, prompt: "Select source currency (convert from)");
         Console.WriteLine();
 
         // get target currency code (convert to)
-        int targetIndex = SelectCurrency(manager, "Select target currency (convert to)");
+        int targetIndex = MenuActions.SelectCurrency(manager: manager, prompt: "Select target currency (convert to)");
         Console.WriteLine();
 
         // check inputs
         if (sourceIndex < 0 || targetIndex < 0)
         {
-            _ = Log.Warning("Invalid currency code.");
-            Console.WriteLine("Invalid currency code.");
+            _ = Log.Warning(message: "Invalid currency code.");
+            Console.WriteLine(value: "Invalid currency code.");
             return false;
         }
 
         Console.Clear();
 
         // get amount to convert (decimal)
-        Console.WriteLine($"Converting from {Terminal.AccentTextStyle}{manager.Rates[sourceIndex].Code}{ANSI_RESET} to {Terminal.AccentTextStyle}{manager.Rates[targetIndex].Code}{ANSI_RESET}");
+        Console.WriteLine(
+            value:
+            $"Converting from {Terminal.AccentTextStyle}{manager.Rates[index: sourceIndex].Code}{ANSI.ANSI_RESET} to {Terminal.AccentTextStyle}{manager.Rates[index: targetIndex].Code}{ANSI.ANSI_RESET}");
         Console.WriteLine();
 
-        if (int.TryParse(Terminal.Input($"Enter amount in {Terminal.AccentTextStyle}{manager.Rates[sourceIndex].Code}{ANSI_RESET}: ", false), out int amount) == false || amount <= 0)
+        if (!int.TryParse(
+                s: Terminal.Input(
+                    prompt:
+                    $"Enter amount in {Terminal.AccentTextStyle}{manager.Rates[index: sourceIndex].Code}{ANSI.ANSI_RESET}: ",
+                    ensureValue: false), result: out int amount) || amount <= 0)
         {
-            _ = Log.Warning("Invalid amount.");
-            Console.WriteLine("Invalid amount.");
+            _ = Log.Warning(message: "Invalid amount.");
+            Console.WriteLine(value: "Invalid amount.");
             return false;
         }
 
@@ -233,11 +247,15 @@ internal static class MenuActions
         //decimal result = manager.Rates[sourceIndex].Value / manager.Rates[targetIndex].Value * amount;
 
         // correct conversion formula
-        decimal sourceToCzk = (manager.Rates[sourceIndex].Value / manager.Rates[sourceIndex].Amount) * amount;
-        decimal result = sourceToCzk / (manager.Rates[targetIndex].Value / manager.Rates[targetIndex].Amount);
+        decimal sourceToCzk =
+            manager.Rates[index: sourceIndex].Value / manager.Rates[index: sourceIndex].Amount * amount;
+        decimal result = sourceToCzk /
+                         (manager.Rates[index: targetIndex].Value / manager.Rates[index: targetIndex].Amount);
 
         // display result
-        Console.WriteLine($"Result: {amount} {manager.Rates[sourceIndex].Code} is {Terminal.AccentTextStyle}{result:F2}{ANSI_RESET} {manager.Rates[targetIndex].Code}");
+        Console.WriteLine(
+            value:
+            $"Result: {amount} {manager.Rates[index: sourceIndex].Code} is {Terminal.AccentTextStyle}{result:F2}{ANSI.ANSI_RESET} {manager.Rates[index: targetIndex].Code}");
         return true;
     }
 
@@ -253,22 +271,22 @@ internal static class MenuActions
         if (filename.Length < 9) return new ExchangeInfo();
 
         // fallback object to return
-        ExchangeInfo invalid = new ExchangeInfo
+        ExchangeInfo invalid = new()
         {
             Date = DateOnly.MinValue,
             Release = 0
         };
 
         // parse the info from the name
-        if (int.TryParse(filename[0..4], out int year) == false) return invalid;
-        if (int.TryParse(filename[4..6], out int month) == false) return invalid;
-        if (int.TryParse(filename[6..8], out int day) == false) return invalid;
-        if (int.TryParse(filename[8..], out int release) == false) return invalid;
+        if (!int.TryParse(s: filename[..4], result: out int year)) return invalid;
+        if (!int.TryParse(s: filename[4..6], result: out int month)) return invalid;
+        if (!int.TryParse(s: filename[6..8], result: out int day)) return invalid;
+        if (!int.TryParse(s: filename[8..], result: out int release)) return invalid;
 
         // return the info
         return new ExchangeInfo
         {
-            Date = new DateOnly(year, month, day),
+            Date = new DateOnly(year: year, month: month, day: day),
             Release = release
         };
     }
@@ -276,23 +294,20 @@ internal static class MenuActions
     public static bool BrowseArchive(ExchangeManager manager)
     {
         // browse the archived exchange reports (so the user can load them instead of fetching a new one)
-        if (Directory.Exists(ExchangeManager.ArchiveDirectory) == false)
+        if (!Directory.Exists(path: ExchangeManager.ArchiveDirectory))
         {
-            _ = Log.Warning("No archive directory found.", nameof(BrowseArchive));
+            _ = Log.Warning(message: "No archive directory found.", tag: nameof(MenuActions.BrowseArchive));
             return false;
         }
 
-        string[] files = Directory.GetFiles(ExchangeManager.ArchiveDirectory);
+        string[] files = Directory.GetFiles(path: ExchangeManager.ArchiveDirectory);
         if (files.Length == 0)
         {
-            _ = Log.Warning("The archive is empty.", nameof(BrowseArchive));
+            _ = Log.Warning(message: "The archive is empty.", tag: nameof(MenuActions.BrowseArchive));
             return false;
         }
 
-        if (manager == null)
-        {
-            manager = new ExchangeManager();
-        }
+        if (manager == null) manager = new ExchangeManager();
 
         Console.Clear();
 
@@ -303,46 +318,44 @@ internal static class MenuActions
             for (int y = 0; y < batchSize; y++)
             {
                 if (files.Length <= x + y) break;
-                string filename = Path.GetFileNameWithoutExtension(files[x + y]);
+                string filename = Path.GetFileNameWithoutExtension(path: files[x + y]);
 
                 // parse the info from the name
-                ExchangeInfo info = GetInfoFromName(filename);
+                ExchangeInfo info = MenuActions.GetInfoFromName(filename: filename);
                 if (info.Date == DateOnly.MinValue || info.Release == 0)
-                {
                     // invalid file name
                     continue;
-                }
 
-                Console.Write($"{Terminal.AccentTextStyle}{(x + y):D2}{ANSI_RESET} {info.Date} #{info.Release:D3} ");
+                Console.Write(
+                    value: $"{Terminal.AccentTextStyle}{x + y:D2}{ANSI.ANSI_RESET} {info.Date} #{info.Release:D3} ");
             }
 
             Console.WriteLine();
         }
 
-        if (int.TryParse(Terminal.Input($"{Environment.NewLine}Enter the report {Terminal.AccentTextStyle}index{ANSI_RESET}: ", false), out int index) == false)
+        if (!int.TryParse(
+                s: Terminal.Input(
+                    prompt: $"{Environment.NewLine}Enter the report {Terminal.AccentTextStyle}index{ANSI.ANSI_RESET}: ",
+                    ensureValue: false), result: out int index))
         {
-            _ = Log.Warning("Invalid index (user-defined).", nameof(BrowseArchive));
+            _ = Log.Warning(message: "Invalid index (user-defined).", tag: nameof(MenuActions.BrowseArchive));
             return false;
         }
 
-        string path = files.ElementAtOrDefault(index) ?? string.Empty;
-        if (string.IsNullOrWhiteSpace(path) == true || File.Exists(path) == false)
+        string path = files.ElementAtOrDefault(index: index) ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(value: path) || !File.Exists(path: path))
         {
-            _ = Log.Warning("Invalid index (out of range).", nameof(BrowseArchive));
+            _ = Log.Warning(message: "Invalid index (out of range).", tag: nameof(MenuActions.BrowseArchive));
             return false;
         }
 
         // load the selected file
-        bool result = manager.OpenArchivedRecord(path);
-        if (result == true)
-        {
-            _ = Log.Success("Archived report loaded.", nameof(BrowseArchive));
-        }
+        bool result = manager.OpenArchivedRecord(filename: path);
+        if (result)
+            _ = Log.Success(message: "Archived report loaded.", tag: nameof(MenuActions.BrowseArchive));
 
         else
-        {
-            _ = Log.Error("Unable to open archived report.", nameof(BrowseArchive));
-        }
+            _ = Log.Error(message: "Unable to open archived report.", tag: nameof(MenuActions.BrowseArchive));
 
         return result;
     }

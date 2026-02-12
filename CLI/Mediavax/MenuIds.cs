@@ -1,9 +1,9 @@
 ﻿namespace Mediavax;
 
 /// <summary>
-/// Menu item IDs.
+///     Menu item IDs.
 /// </summary>
-internal enum MenuIds : int
+internal enum MenuIds
 {
     // main menu
     ID_EXIT = 0,

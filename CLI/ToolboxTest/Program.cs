@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-
 using Toolbox;
 using Toolbox.UI;
 
@@ -11,36 +10,36 @@ internal class Program
     private static int Main(string[] args)
     {
         int idx = 1;
-        MenuItemCollection menu = new MenuItemCollection
+        MenuItemCollection menu = new()
         {
-            new MenuItem(idx++, "Coffee"),
-            new MenuItem(idx++, "Tea"),
-            new MenuItem(idx++, "Pork"),
-            new MenuItem(idx++, "Pasta"),
+            new MenuItem(id: idx++, text: "Coffee"),
+            new MenuItem(id: idx++, text: "Tea"),
+            new MenuItem(id: idx++, text: "Pork"),
+            new MenuItem(id: idx++, text: "Pasta"),
             new MenuItem(),
-            new MenuItem(0, "Exit")
+            new MenuItem(id: 0, text: "Exit")
         };
 
-        int[] result = ConsoleMenu.Multiselect(menu, "SHOPPING LIST");
+        int[] result = ConsoleMenu.Multiselect(menu: menu, header: "SHOPPING LIST");
 
         if (result.Length == 0)
         {
-            Console.WriteLine("No items selected.");
+            Console.WriteLine(value: "No items selected.");
         }
 
         else
         {
-            Console.WriteLine($"  ID\tValue");
-            Console.WriteLine($"  --\t-----");
+            Console.WriteLine(value: "  ID\tValue");
+            Console.WriteLine(value: "  --\t-----");
 
             MenuItem mi;
             foreach (int id in result)
             {
-                mi = menu.Where(x => x.Id == id).First();
-                Console.WriteLine($"  {id.ToString("00")}\t{mi.GetTextWithoutAlt()}");
+                mi = menu.Where(predicate: x => x.Id == id).First();
+                Console.WriteLine(value: $"  {id.ToString(format: "00")}\t{mi.GetTextWithoutAlt()}");
             }
 
-            Console.WriteLine($"\nTotal: {Terminal.AccentTextStyle}{result.Length}{ANSI.ANSI_RESET} items.");
+            Console.WriteLine(value: $"\nTotal: {Terminal.AccentTextStyle}{result.Length}{ANSI.ANSI_RESET} items.");
         }
 
         return 0;

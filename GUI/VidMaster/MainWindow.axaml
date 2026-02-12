@@ -3,133 +3,133 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-		d:DesignWidth="800"
-		d:DesignHeight="450"
+        d:DesignWidth="800"
+        d:DesignHeight="450"
         x:Class="VidMaster.MainWindow"
         Title="Video Master"
-		CanMaximize="False"
-		CanResize="False"
-		SizeToContent="WidthAndHeight"
-		WindowStartupLocation="CenterScreen"
-		Loaded="MainWindow_Loaded">
+        CanMaximize="False"
+        CanResize="False"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterScreen"
+        Loaded="MainWindow_Loaded">
 
-	<Window.ContextMenu>
-		<ContextMenu>
-			<MenuItem Header="Refresh"
-					  InputGesture="F5"
-					  Name="miRefresh"
-					  Click="miRefresh_Click"/>
-		</ContextMenu>
-	</Window.ContextMenu>
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="Refresh"
+                      InputGesture="F5"
+                      Name="miRefresh"
+                      Click="miRefresh_Click" />
+        </ContextMenu>
+    </Window.ContextMenu>
 
-	<Grid RowDefinitions="Auto, *, Auto"
-		  Width="350">
+    <Grid RowDefinitions="Auto, *, Auto"
+          Width="350">
 
-		<Menu Grid.Row="0">
-			<MenuItem Header="File">
-				<MenuItem Header="Close"
-						  InputGesture="Alt+F4"
-						  Name="miClose"
-						  Click="miClose_Click"/>
-			</MenuItem>
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="Close"
+                          InputGesture="Alt+F4"
+                          Name="miClose"
+                          Click="miClose_Click" />
+            </MenuItem>
 
-			<MenuItem Header="View">
-				<MenuItem Header="Theme">
-					<MenuItem Header="Light"
-							  Name="miThemeLight"
-							  Click="miThemeLight_Click"/>
-					
-					<MenuItem Header="Dark"
-							  Name="miThemeDark"
-							  Click="miThemeDark_Click"/>
-					
-					<Separator />
-					
-					<MenuItem Header="System"
-							  Name="miThemeSystem"
-							  Click="miThemeSystem_Click"/>
-				</MenuItem>
-			</MenuItem>
-			
-			<MenuItem Header="Help">
+            <MenuItem Header="View">
+                <MenuItem Header="Theme">
+                    <MenuItem Header="Light"
+                              Name="miThemeLight"
+                              Click="miThemeLight_Click" />
 
-				<MenuItem Header="Get Downloader"
-						  Name="miGetDownloader"
-						  Click="miGetDownloader_Click"/>
-				
-				<MenuItem Header="Check for Updates"
-						  Name="miCheckForUpdates"
-						  Click="miCheckForUpdates_Click"/>
+                    <MenuItem Header="Dark"
+                              Name="miThemeDark"
+                              Click="miThemeDark_Click" />
 
-				<Separator />
+                    <Separator />
 
-				<MenuItem Header="About"
-						  InputGesture="F1"
-						  Name="miAbout"
-						  Click="miAbout_Click"/>
-				
-			</MenuItem>
-			
-		</Menu>
+                    <MenuItem Header="System"
+                              Name="miThemeSystem"
+                              Click="miThemeSystem_Click" />
+                </MenuItem>
+            </MenuItem>
 
-		<StackPanel Grid.Row="1"
-					Margin="10,0,10,0">
+            <MenuItem Header="Help">
 
-			<Label>URL</Label>
-			<TextBox Name="txtUrl"
-					 TextChanged="txtUrl_TextChanged"/>
+                <MenuItem Header="Get Downloader"
+                          Name="miGetDownloader"
+                          Click="miGetDownloader_Click" />
 
-			<Label>Save location</Label>
-			<Grid ColumnDefinitions="*, Auto">
-				<TextBox Name="txtFolder"
-						 Margin="0,0,5,0"/>
-				
-				<Button Content="..."
-						Name="btnChooseFolder"
-						Grid.Column="1"
-						Click="btnChooseFolder_Click"/>
-			</Grid>
+                <MenuItem Header="Check for Updates"
+                          Name="miCheckForUpdates"
+                          Click="miCheckForUpdates_Click" />
 
-			<Label Content="Format"/>
-				<Grid ColumnDefinitions="*, Auto">
+                <Separator />
 
-					<ComboBox Grid.Column="0"
-							  Margin="0,0,5,0"
-							  HorizontalAlignment="Stretch"
-							  Name="cbxFormats"/>
-						
-					<Button Grid.Column="1"
-							Content="Refresh"
-							Name="btnRefreshFormats"
-							IsEnabled="False"
-							Click="btnRefreshFormats_Click"/>
-						
-					</Grid>
-			
-			<StackPanel Orientation="Horizontal"
-						HorizontalAlignment="Right"
-						Margin="0,10,0,10">
+                <MenuItem Header="About"
+                          InputGesture="F1"
+                          Name="miAbout"
+                          Click="miAbout_Click" />
 
-				<Button Content="Cancel"
-						Margin="0,0,5,0"
-						Name="btnCancel"
-						Click="btnCancel_Click"/>
-				
-				<Button Content="Download"
-						Name="btnOk"
-						IsEnabled="False"
-						Click="btnOk_Click"/>
-				
-			</StackPanel>
+            </MenuItem>
 
-		</StackPanel>
+        </Menu>
 
-		<TextBlock Grid.Row="2"
-				   Name="tbMessage"
-				   TextTrimming="CharacterEllipsis"
-				   IsVisible="False"
-				   Padding="5,2,5,2"/>
+        <StackPanel Grid.Row="1"
+                    Margin="10,0,10,0">
 
-	</Grid>
-    
+            <Label>URL</Label>
+            <TextBox Name="txtUrl"
+                     TextChanged="txtUrl_TextChanged" />
+
+            <Label>Save location</Label>
+            <Grid ColumnDefinitions="*, Auto">
+                <TextBox Name="txtFolder"
+                         Margin="0,0,5,0" />
+
+                <Button Content="..."
+                        Name="btnChooseFolder"
+                        Grid.Column="1"
+                        Click="btnChooseFolder_Click" />
+            </Grid>
+
+            <Label Content="Format" />
+            <Grid ColumnDefinitions="*, Auto">
+
+                <ComboBox Grid.Column="0"
+                          Margin="0,0,5,0"
+                          HorizontalAlignment="Stretch"
+                          Name="cbxFormats" />
+
+                <Button Grid.Column="1"
+                        Content="Refresh"
+                        Name="btnRefreshFormats"
+                        IsEnabled="False"
+                        Click="btnRefreshFormats_Click" />
+
+            </Grid>
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="0,10,0,10">
+
+                <Button Content="Cancel"
+                        Margin="0,0,5,0"
+                        Name="btnCancel"
+                        Click="btnCancel_Click" />
+
+                <Button Content="Download"
+                        Name="btnOk"
+                        IsEnabled="False"
+                        Click="btnOk_Click" />
+
+            </StackPanel>
+
+        </StackPanel>
+
+        <TextBlock Grid.Row="2"
+                   Name="tbMessage"
+                   TextTrimming="CharacterEllipsis"
+                   IsVisible="False"
+                   Padding="5,2,5,2" />
+
+    </Grid>
+
 </Window>

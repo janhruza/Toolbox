@@ -3,49 +3,49 @@
 namespace VidMaster.Core;
 
 /// <summary>
-/// Representing a media format information.
+///     Representing a media format information.
 /// </summary>
 public class FormatInfo
 {
     /// <summary>
-    /// Representing the format ID.
+    ///     Representing the format ID.
     /// </summary>
-    [JsonPropertyName("format_id")]
+    [JsonPropertyName(name: "format_id")]
     public string FormatId { get; set; } = string.Empty;
 
     /// <summary>
-    /// Representing the file extension.
+    ///     Representing the file extension.
     /// </summary>
-    [JsonPropertyName("ext")]
+    [JsonPropertyName(name: "ext")]
     public string Extension { get; set; } = string.Empty;
 
     /// <summary>
-    /// Representing the resolution in the {width}x{height} format.
+    ///     Representing the resolution in the {width}x{height} format.
     /// </summary>
-    [JsonPropertyName("resolution")]
+    [JsonPropertyName(name: "resolution")]
     public string? Resolution { get; set; }
 
     /// <summary>
-    /// Representing the video codec.
+    ///     Representing the video codec.
     /// </summary>
-    [JsonPropertyName("vcodec")]
+    [JsonPropertyName(name: "vcodec")]
     public string? VideoCodec { get; set; }
 
     /// <summary>
-    /// Representing the audio codec.
+    ///     Representing the audio codec.
     /// </summary>
-    [JsonPropertyName("acodec")]
+    [JsonPropertyName(name: "acodec")]
     public string? AudioCodec { get; set; }
 
     /// <summary>
-    /// Representing the file size.
+    ///     Representing the file size.
     /// </summary>
-    [JsonPropertyName("filesize")]
+    [JsonPropertyName(name: "filesize")]
     public long? FileSize { get; set; }
 
     /// <inheritdoc />
     public override string ToString()
     {
-        return $"{FormatId}: {Resolution ?? "No video"}, {Extension}";
+        return $"{this.FormatId}: {this.Resolution ?? "No video"}, {this.Extension}";
     }
 }

@@ -1,22 +1,16 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-
 using Toolbox;
 
 namespace Mediavax.Core;
 
 /// <summary>
-/// Representing a single media item.
-/// This item contains information about the media which will be downloaded using the yt-dlp tool.
+///     Representing a single media item.
+///     This item contains information about the media which will be downloaded using the yt-dlp tool.
 /// </summary>
 public class MediaItem
 {
-    static MediaItem()
-    {
-        Current ??= new MediaItem();
-    }
-
     internal const string BROWSER_BRAVE = "brave";
     internal const string BROWSER_CHROME = "chrome";
     internal const string BROWSER_CHROMIUM = "chromium";
@@ -27,98 +21,93 @@ public class MediaItem
     internal const string BROWSER_SAFARI = "safari";
     internal const string BROWSER_WHALE = "whale";
 
-    /// <summary>
-    /// Creates a new <see cref="MediaItem"/> instance with default parameters.
-    /// </summary>
-    public MediaItem()
+    static MediaItem()
     {
-        Address = string.Empty;
-        Format = string.Empty;
-        Location = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-        BrowserCookies = string.Empty;
-        CustomOptions = string.Empty;
-        Current = this;
+        MediaItem.Current ??= new MediaItem();
     }
 
     /// <summary>
-    /// Representing the media source (URL address).
+    ///     Creates a new <see cref="MediaItem" /> instance with default parameters.
+    /// </summary>
+    public MediaItem()
+    {
+        this.Address = string.Empty;
+        this.Format = string.Empty;
+        this.Location = Path.Combine(path1: Environment.GetFolderPath(folder: Environment.SpecialFolder.UserProfile),
+            path2: "Downloads");
+        this.BrowserCookies = string.Empty;
+        this.CustomOptions = string.Empty;
+        MediaItem.Current = this;
+    }
+
+    /// <summary>
+    ///     Representing the media source (URL address).
     /// </summary>
     public string Address { get; set; }
 
     /// <summary>
-    /// Representing the download format, such as: MP4, MP3, etc.
+    ///     Representing the download format, such as: MP4, MP3, etc.
     /// </summary>
     public string Format { get; set; }
 
     /// <summary>
-    /// Representing a directory for the downloaded media.
-    /// Default is the user's Downloads directory.
+    ///     Representing a directory for the downloaded media.
+    ///     Default is the user's Downloads directory.
     /// </summary>
     public string Location { get; set; }
 
     /// <summary>
-    /// Representing a browser to import cookies from.
-    /// Can be <see cref="string.Empty"/>.
+    ///     Representing a browser to import cookies from.
+    ///     Can be <see cref="string.Empty" />.
     /// </summary>
     public string BrowserCookies { get; set; }
 
     /// <summary>
-    /// Representing additional command line arguments for the YT-DLP.
+    ///     Representing additional command line arguments for the YT-DLP.
     /// </summary>
     public string CustomOptions { get; set; }
 
     /// <summary>
-    /// Determines whether the item can be downloaded.
+    ///     Representing the curremt <see cref="MediaItem" /> instance.
     /// </summary>
-    /// <returns><see langword="true"/> if all the required fields are filled with data, otherwise <see langword="false"/>.</returns>
+    public static MediaItem Current { get; set; }
+
+    /// <summary>
+    ///     Determines whether the item can be downloaded.
+    /// </summary>
+    /// <returns><see langword="true" /> if all the required fields are filled with data, otherwise <see langword="false" />.</returns>
     public bool IsValid()
     {
-        return string.IsNullOrEmpty(Address) == false;
+        return !string.IsNullOrEmpty(value: this.Address);
     }
 
     /// <summary>
-    /// Builds the final command for yt-dlp.
+    ///     Builds the final command for yt-dlp.
     /// </summary>
     /// <returns></returns>
     public string BuildCommand()
     {
-        if (Address.IsEmpty() == true)
-        {
-            return string.Empty;
-        }
+        if (this.Address.IsEmpty()) return string.Empty;
 
-        StringBuilder sb = new StringBuilder();
-        _ = sb.Append(Address);
+        StringBuilder sb = new();
+        _ = sb.Append(value: this.Address);
 
-        if (Format.IsEmpty() == false)
-        {
+        if (!this.Format.IsEmpty())
             // custom format
-            _ = sb.Append($" -f {Format}");
-        }
+            _ = sb.Append(handler: $" -f {this.Format}");
 
-        if (Directory.Exists(Location) == true)
-        {
+        if (Directory.Exists(path: this.Location))
             // custom download folder
-            _ = sb.Append($" -o {Path.Combine(Location, "%(title)s.%(ext)s")}");
-        }
+            _ = sb.Append(handler: $" -o {Path.Combine(path1: this.Location, path2: "%(title)s.%(ext)s")}");
 
-        if (BrowserCookies.IsEmpty() == false)
-        {
+        if (!this.BrowserCookies.IsEmpty())
             // import cookies
-            _ = sb.Append($" --cookies-from-browser {BrowserCookies}");
-        }
+            _ = sb.Append(handler: $" --cookies-from-browser {this.BrowserCookies}");
 
-        if (CustomOptions.IsEmpty() == false)
-        {
+        if (!this.CustomOptions.IsEmpty())
             // additional custom arguments
-            _ = sb.Append($" {CustomOptions}");
-        }
+            _ = sb.Append(handler: $" {this.CustomOptions}");
 
         return sb.ToString();
     }
-
-    /// <summary>
-    /// Representing the curremt <see cref="MediaItem"/> instance.
-    /// </summary>
-    public static MediaItem Current { get; set; }
 }

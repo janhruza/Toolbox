@@ -1,17 +1,16 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-
 using VidMaster.Core;
 
 namespace VidMaster;
 
 /// <summary>
-/// Representing the downloader not found error box.
+///     Representing the downloader not found error box.
 /// </summary>
-public partial class DlgDownloaderNotFound : Window
+public class DlgDownloaderNotFound : Window
 {
     /// <summary>
-    /// Creates a new <see cref="DlgDownloaderNotFound"/> instance.
+    ///     Creates a new <see cref="DlgDownloaderNotFound" /> instance.
     /// </summary>
     public DlgDownloaderNotFound()
     {
@@ -20,13 +19,12 @@ public partial class DlgDownloaderNotFound : Window
 
     private void btnCancel_Click(object? sender, RoutedEventArgs e)
     {
-        Close();
+        this.Close();
     }
 
     private void btnDownloadNow_Click(object? sender, RoutedEventArgs e)
     {
         Downloader.GetDownloader();
-        Close();
-        return;
+        this.Close();
     }
 }

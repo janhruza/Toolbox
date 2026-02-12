@@ -1,65 +1,57 @@
 ﻿using System;
-
 using Toolbox;
 using Toolbox.UI;
 
 namespace Algebrax;
 
 /// <summary>
-/// Main program class.
+///     Main program class.
 /// </summary>
 public class Program : IApplication
 {
-    /// <inheritdoc/>
-    public static Version Version => new Version(1, 0, 0, 0);
+    /// <inheritdoc />
+    public static Version Version => new(major: 1, minor: 0, build: 0, revision: 0);
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public static void DisplayBanner()
     {
-        return;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public static void LoadConfig()
     {
-        return;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public static void PostExitCleanup()
     {
-        return;
     }
 
     private static int Main(string[] args)
     {
-        DisplayBanner();
+        Program.DisplayBanner();
 
-        Console.WriteLine("QUADRATIC EQUATION");
-        Console.WriteLine("ax^2 +/- bx +/- c");
+        Console.WriteLine(value: "QUADRATIC EQUATION");
+        Console.WriteLine(value: "ax^2 +/- bx +/- c");
         // x^2 + x - 6 => 2, -3
         double a, b, c;
 
-        a = double.Parse(Terminal.Input("A: ", true));
-        b = double.Parse(Terminal.Input("B: ", true));
-        c = double.Parse(Terminal.Input("C: ", true));
+        a = double.Parse(s: Terminal.Input(prompt: "A: "));
+        b = double.Parse(s: Terminal.Input(prompt: "B: "));
+        c = double.Parse(s: Terminal.Input(prompt: "C: "));
 
         Console.WriteLine();
 
         double x1, x2;
-        if (AlgMath.QuadraticEquation(a, b, c, out x1, out x2) == true)
-        {
+        if (AlgMath.QuadraticEquation(a: a, b: b, c: c, x1: out x1, x2: out x2))
             // solution found
-            Console.WriteLine($"X1 = {x1}{Environment.NewLine}X2 = {x2}");
-        }
+            Console.WriteLine(value: $"X1 = {x1}{Environment.NewLine}X2 = {x2}");
 
         else
-        {
             // no solution
-            Console.WriteLine("No solution.");
-        }
+            Console.WriteLine(value: "No solution.");
 
-        PostExitCleanup();
+        Program.PostExitCleanup();
         return 0;
     }
 }

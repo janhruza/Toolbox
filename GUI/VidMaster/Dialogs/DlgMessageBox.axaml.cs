@@ -1,46 +1,44 @@
-using Avalonia.Controls;
-using Avalonia.Interactivity;
-
 using System;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
 
 namespace VidMaster;
 
 /// <summary>
-/// Representing a simple message box.
+///     Representing a simple message box.
 /// </summary>
-public partial class DlgMessageBox : Window
+public class DlgMessageBox : Window
 {
     /// <summary>
-    /// Representing a simple message box.
+    ///     Representing a simple message box.
     /// </summary>
     /// <param name="message">The message to be shown.</param>
     /// <param name="caption">Message box caption text.</param>
     public DlgMessageBox(string message, string caption)
     {
         InitializeComponent();
-        Title = caption;
+        this.Title = caption;
         this.tbMessage.Text = message;
     }
 
     private async Task BeepAsync()
     {
         Console.Beep();
-        return;
     }
 
     private async void Window_Loaded(object? sender, RoutedEventArgs e)
     {
-        await BeepAsync();
+        await this.BeepAsync();
     }
 
     private void btnOk_Click(object? sender, RoutedEventArgs e)
     {
-        Close();
+        this.Close();
     }
 
     /// <summary>
-    /// Shows a basic message box.
+    ///     Shows a basic message box.
     /// </summary>
     /// <param name="owner">Message box owner.</param>
     /// <param name="message">The message to be shown.</param>
@@ -48,7 +46,7 @@ public partial class DlgMessageBox : Window
     /// <returns>Awaitable task with no return value.</returns>
     public static async Task Show(Window owner, string message, string title)
     {
-        DlgMessageBox msgBox = new DlgMessageBox(message, title);
-        await msgBox.ShowDialog(owner);
+        DlgMessageBox msgBox = new(message: message, caption: title);
+        await msgBox.ShowDialog(owner: owner);
     }
 }

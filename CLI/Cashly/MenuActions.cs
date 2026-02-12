@@ -1,12 +1,8 @@
-﻿using Cashly.Core;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-
+using Cashly.Core;
 using Toolbox;
 using Toolbox.UI;
-
-using static Cashly.MenuIds;
 
 namespace Cashly;
 
@@ -15,43 +11,43 @@ internal static class MenuActions
     public static bool SelectProfile()
     {
         List<UserProfile> profiles;
-        if (UserProfile.EnumProfiles(out profiles) == false)
+        if (!UserProfile.EnumProfiles(profiles: out profiles))
         {
-            _ = Log.Error("Failed to list profiles.", nameof(SelectProfile));
+            _ = Log.Error(message: "Failed to list profiles.", tag: nameof(MenuActions.SelectProfile));
             return false;
         }
 
         if (profiles.Count == 0)
         {
-            _ = Log.Warning("No profiles found. Please create a new profile first.", nameof(SelectProfile));
+            _ = Log.Warning(message: "No profiles found. Please create a new profile first.",
+                tag: nameof(MenuActions.SelectProfile));
             return false;
         }
 
         Program.Clear();
-        MenuItemCollection profilesMenu = new MenuItemCollection();
+        MenuItemCollection profilesMenu = new();
 
         // list profiles
         for (int x = 0; x < profiles.Count; x++)
-        {
             // adding 1 to index to avoid the ID_EXIT (which has value 0 by default)
-            profilesMenu.Add(new MenuItem(x + 1, profiles[x].Name, profiles[x].Created.ToShortDateString()));
-        }
+            profilesMenu.Add(item: new MenuItem(id: x + 1, text: profiles[index: x].Name,
+                alt: profiles[index: x].Created.ToShortDateString()));
 
-        int option = ConsoleMenu.SelectMenu(profilesMenu);
+        int option = ConsoleMenu.SelectMenu(items: profilesMenu);
         switch (option)
         {
-            case (int)ID_EXIT:
+            case (int)MenuIds.ID_EXIT:
             case ConsoleMenu.KEY_ESCAPE:
                 return false;
 
             default:
-                {
-                    // removing 1 from option to cancel the +1 we did earlier
-                    UserProfile profile = profiles[option - 1];
-                    Session.Profile = profile;
-                    Session.ProfileLoaded = true;
-                    return true;
-                }
+            {
+                // removing 1 from option to cancel the +1 we did earlier
+                UserProfile profile = profiles[index: option - 1];
+                Session.Profile = profile;
+                Session.ProfileLoaded = true;
+                return true;
+            }
         }
     }
 
@@ -59,21 +55,22 @@ internal static class MenuActions
     {
         Program.Clear();
 
-        string name = Terminal.Input($"Enter profile name (leave blank to cancel){Environment.NewLine}# ", false).Trim();
-        if (string.IsNullOrWhiteSpace(name))
+        string name = Terminal.Input(prompt: $"Enter profile name (leave blank to cancel){Environment.NewLine}# ",
+            ensureValue: false).Trim();
+        if (string.IsNullOrWhiteSpace(value: name))
         {
-            _ = Log.Information("Profile creation cancelled by user.", nameof(CreateProfile));
+            _ = Log.Information(message: "Profile creation cancelled by user.", tag: nameof(MenuActions.CreateProfile));
             return false;
         }
 
-        UserProfile profile = new UserProfile()
+        UserProfile profile = new()
         {
             Name = name
         };
 
-        if (UserProfile.Save(profile) == false)
+        if (!UserProfile.Save(profile: profile))
         {
-            _ = Log.Error("Failed to create the new profile.", nameof(CreateProfile));
+            _ = Log.Error(message: "Failed to create the new profile.", tag: nameof(MenuActions.CreateProfile));
             return false;
         }
 
@@ -84,22 +81,20 @@ internal static class MenuActions
 
     public static bool LoadProfileSession()
     {
-        if (Session.ProfileLoaded == false)
-        {
+        if (!Session.ProfileLoaded)
             // no profile loaded
             return false;
-        }
 
         // create main menu
-        MenuItemCollection mainMenu = new MenuItemCollection()
+        MenuItemCollection mainMenu = new()
         {
-            new MenuItem((int)ID_DASHBOARD, "Dashboard"),
-            new MenuItem((int)ID_ADD_ENTRY, "Add Transaction"),
-            new MenuItem((int)ID_VIEW_ENTRIES, "View Transactions"),
-            new MenuItem((int)ID_MANAGE_CATEGORIES, "Manage Categories"),
+            new MenuItem(id: (int)MenuIds.ID_DASHBOARD, text: "Dashboard"),
+            new MenuItem(id: (int)MenuIds.ID_ADD_ENTRY, text: "Add Transaction"),
+            new MenuItem(id: (int)MenuIds.ID_VIEW_ENTRIES, text: "View Transactions"),
+            new MenuItem(id: (int)MenuIds.ID_MANAGE_CATEGORIES, text: "Manage Categories"),
             new MenuItem(),
-            new MenuItem((int)ID_LOGOUT, "Logout"),
-            new MenuItem((int)ID_EXIT, "Exit", "ESC")
+            new MenuItem(id: (int)MenuIds.ID_LOGOUT, text: "Logout"),
+            new MenuItem(id: (int)MenuIds.ID_EXIT, text: "Exit", alt: "ESC")
         };
 
         while (true)
@@ -107,35 +102,29 @@ internal static class MenuActions
             Program.Clear();
 
             // display menu
-            int option = ConsoleMenu.SelectMenu(mainMenu);
+            int option = ConsoleMenu.SelectMenu(items: mainMenu);
             switch (option)
             {
-                case (int)ID_EXIT:
+                case (int)MenuIds.ID_EXIT:
                 case ConsoleMenu.KEY_ESCAPE:
                     goto MethodExit;
 
-                case (int)ID_DASHBOARD:
+                case (int)MenuIds.ID_DASHBOARD:
+                {
+                    Program.Clear();
+                    if (SessionActions.ShowDashboard())
                     {
-                        Program.Clear();
-                        if (SessionActions.ShowDashboard() == true)
-                        {
-                            Console.WriteLine();
-                            Terminal.Pause();
-                        }
-
+                        Console.WriteLine();
+                        Terminal.Pause();
                     }
+                }
                     break;
-
-                default: break;
             }
-
         }
 
-    MethodExit:
-        if (UserProfile.Save(Session.Profile) == false)
-        {
-            _ = Log.Error($"Profile saving failed.", nameof(LoadProfileSession));
-        }
+        MethodExit:
+        if (!UserProfile.Save(profile: Session.Profile))
+            _ = Log.Error(message: "Profile saving failed.", tag: nameof(MenuActions.LoadProfileSession));
         return true;
     }
 }

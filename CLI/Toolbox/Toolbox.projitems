@@ -1,27 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-    <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>16333aaf-f723-4375-ad7d-baf2430e1076</SharedGUID>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Toolbox</Import_RootNamespace>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ANSI.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ConsoleWindowInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IApplication.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Log.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Setup.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UI\ColorSchemes.cs" />
-    <Compile Include="..\Toolbox\UI\ColorScheme.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UI\ConsoleMenu.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UI\IConfig.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UI\MenuItem.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UI\Terminal.cs" />
-  </ItemGroup>
+    <PropertyGroup>
+        <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+        <HasSharedItems>true</HasSharedItems>
+        <SharedGUID>16333aaf-f723-4375-ad7d-baf2430e1076</SharedGUID>
+    </PropertyGroup>
+    <PropertyGroup Label="Configuration">
+        <Import_RootNamespace>Toolbox</Import_RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="$(MSBuildThisFileDirectory)ANSI.cs"/>
+        <Compile Include="$(MSBuildThisFileDirectory)ConsoleWindowInfo.cs"/>
+        <Compile Include="$(MSBuildThisFileDirectory)Core.cs"/>
+        <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs"/>
+        <Compile Include="$(MSBuildThisFileDirectory)IApplication.cs"/>
+        <Compile Include="$(MSBuildThisFileDirectory)Log.cs"/>
+        <Compile Include="$(MSBuildThisFileDirectory)Setup.cs"/>
+        <Compile Include="$(MSBuildThisFileDirectory)UI\ColorSchemes.cs"/>
+        <Compile Include="..\Toolbox\UI\ColorScheme.cs"/>
+        <Compile Include="$(MSBuildThisFileDirectory)UI\ConsoleMenu.cs"/>
+        <Compile Include="$(MSBuildThisFileDirectory)Constants.cs"/>
+        <Compile Include="$(MSBuildThisFileDirectory)UI\IConfig.cs"/>
+        <Compile Include="$(MSBuildThisFileDirectory)UI\MenuItem.cs"/>
+        <Compile Include="$(MSBuildThisFileDirectory)UI\Terminal.cs"/>
+    </ItemGroup>
 </Project>

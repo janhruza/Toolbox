@@ -1,17 +1,15 @@
-﻿using System;
-
-#if WINDOWS
+﻿#if WINDOWS
 using System.Runtime.InteropServices;
 #endif
 
 namespace Toolbox;
 
 /// <summary>
-/// Representing the setup class with various initialization methods.
+///     Representing the setup class with various initialization methods.
 /// </summary>
 public static class Setup
 {
-#if WINDOWS
+    #if WINDOWS
     private const int STD_OUTPUT_HANDLE = -11;
     private const uint ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
 
@@ -23,23 +21,23 @@ public static class Setup
 
     [DllImport("kernel32.dll")]
     private static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
-#endif
+    #endif
 
     /// <summary>
-    /// Representing the startup
+    ///     Representing the startup
     /// </summary>
-    public static ConsoleWindowInfo StartupWindowInfo;
+    private static ConsoleWindowInfo _startupWindowInfo;
 
     /// <summary>
-    /// Initializes the working environment. Contains platform-specific code.
+    ///     Initializes the working environment. Contains platform-specific code.
     /// </summary>
     /// <returns>Operation result.</returns>
     /// <remarks>
-    /// Enables the virtual terminal processing on the Windows platform.
+    ///     Enables the virtual terminal processing on the Windows platform.
     /// </remarks>
     public static bool Initialize()
     {
-#if WINDOWS
+        #if WINDOWS
         {
             // enable ANSI escape codes to older terminals
             var handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -56,23 +54,23 @@ public static class Setup
                 return false;
             }
         }
-#endif
+        #endif
 
         // get the initial terminal window size
-        ConsoleWindowInfo.GetConsoleWindowInfo(ref StartupWindowInfo);
+        ConsoleWindowInfo.GetConsoleWindowInfo(cwInfo: ref Setup._startupWindowInfo);
 
         return true;
     }
 
     /// <summary>
-    /// Destroys the initialized setup.
-    /// Works as an exit-cleanup call.
+    ///     Destroys the initialized setup.
+    ///     Works as an exit-cleanup call.
     /// </summary>
-    /// <returns>Operation result as <see cref="bool"/>.</returns>
+    /// <returns>Operation result as <see cref="bool" />.</returns>
     public static bool Destroy()
     {
         // restore the startup window and buffer size
-        _ = ConsoleWindowInfo.SetConsoleWindowInfo(ref StartupWindowInfo);
+        _ = ConsoleWindowInfo.SetConsoleWindowInfo(cwInfo: ref Setup._startupWindowInfo);
         return true;
     }
 }

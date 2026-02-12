@@ -4,43 +4,43 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="VidMaster.DlgDownloaderNotFound"
-		WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="CenterScreen"
         Title="Downloader Not Found"
-		CanMaximize="False"
-		CanResize="False"
-		CanMinimize="False"
-		SizeToContent="WidthAndHeight">
+        CanMaximize="False"
+        CanResize="False"
+        CanMinimize="False"
+        SizeToContent="WidthAndHeight">
 
-	<Grid RowDefinitions="*, Auto"
-		  Margin="10"
-		  Width="320">
-		
-		<StackPanel Grid.Row="0">
-			<TextBlock TextWrapping="Wrap"
-					   TextTrimming="CharacterEllipsis">
+    <Grid RowDefinitions="*, Auto"
+          Margin="10"
+          Width="320">
 
-				<Run Text="Downloader was not found. You can choose to install it from here."/>
-				
-			</TextBlock>
-					   
-		</StackPanel>
+        <StackPanel Grid.Row="0">
+            <TextBlock TextWrapping="Wrap"
+                       TextTrimming="CharacterEllipsis">
 
-		<StackPanel Grid.Row="1"
-					Orientation="Horizontal"
-					HorizontalAlignment="Right"
-					Margin="0,10,0,0">
+                <Run Text="Downloader was not found. You can choose to install it from here." />
 
-			<Button Content="Cancel"
-					Name="btnCancel"
-					Click="btnCancel_Click"
-					Margin="0,0,5,0"/>
+            </TextBlock>
 
-			<Button Content="Download Now"
-					Name="btnDownload"
-					Click="btnDownloadNow_Click"/>
-			
-		</StackPanel>
-		
-	</Grid>
-	
+        </StackPanel>
+
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,10,0,0">
+
+            <Button Content="Cancel"
+                    Name="btnCancel"
+                    Click="btnCancel_Click"
+                    Margin="0,0,5,0" />
+
+            <Button Content="Download Now"
+                    Name="btnDownload"
+                    Click="btnDownloadNow_Click" />
+
+        </StackPanel>
+
+    </Grid>
+
 </Window>
