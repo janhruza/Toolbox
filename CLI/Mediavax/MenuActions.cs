@@ -130,120 +130,94 @@ internal static class MenuActions
                 CreateNoWindow = true
             };
 
-            using (Process? proc = Process.Start(startInfo: psi))
+            using Process? proc = Process.Start(startInfo: psi);
+            if (proc == null)
             {
-                if (proc == null)
-                {
-                    _ = Log.Error(message: "Process object is null.", tag: nameof(MenuActions.SelectFormat));
-                    return false;
-                }
-
-                Console.Write(value: "Gathering formats info... ");
-
-                // Read output BEFORE waiting
-                string json = proc.StandardOutput.ReadToEnd();
-                string err = proc.StandardError.ReadToEnd();
-
-                proc.WaitForExit();
-                Console.WriteLine(value: "\n");
-
-                if (!err.IsEmpty())
-                {
-                    Console.WriteLine(value: $"{Terminal.AccentTextStyle}yt-dlp error{ANSI.ANSI_RESET}: " + err);
-                    return false;
-                }
-
-                // parse formats
-                if (YtDlpParser.GetInfo(json: json, info: out YtDlpInfo info))
-                {
-                    // TODO: JSON parsed, enum audio/video only and combined formats and offer them to the user
-                    int idx = 0x10;
-                    Dictionary<int, YtDlpFormat> combined = [];
-                    Dictionary<int, YtDlpFormat> audioOnly = [];
-                    Dictionary<int, YtDlpFormat> videoOnly = [];
-                    Dictionary<int, YtDlpFormat> extras = [];
-
-                    // representing combined formats
-                    foreach (YtDlpFormat format in info.formats.Where(predicate: x => x.HasVideo && x.HasAudio))
-                        combined.Add(key: idx++, value: format);
-
-                    // audio only
-                    foreach (YtDlpFormat format in info.formats.Where(predicate: x => !x.HasVideo && x.HasAudio))
-                        audioOnly.Add(key: idx++, value: format);
-
-                    // video only
-                    foreach (YtDlpFormat format in info.formats.Where(predicate: x => x.HasVideo && !x.HasAudio))
-                        videoOnly.Add(key: idx++, value: format);
-
-                    // extras, thumbnails, etc.
-                    foreach (YtDlpFormat format in info.formats.Where(predicate: x => !x.HasVideo && !x.HasAudio))
-                        extras.Add(key: idx++, value: format);
-
-                    // display available categories
-                    MenuItemCollection categoriesMenu = new();
-
-                    // combined
-                    if (combined.Count > 0)
-                        categoriesMenu.Add(
-                            item: new MenuItem(id: (int)MenuIds.ID_FORMATS_COMBINED, text: "Combined",
-                                alt: combined.Count.ToString()));
-
-                    // audio only
-                    if (audioOnly.Count > 0)
-                        categoriesMenu.Add(
-                            item: new MenuItem(id: (int)MenuIds.ID_FORMATS_AUDIO, text: "Audio Only",
-                                alt: audioOnly.Count.ToString()));
-
-                    // video only
-                    if (videoOnly.Count > 0)
-                        categoriesMenu.Add(
-                            item: new MenuItem(id: (int)MenuIds.ID_FORMATS_VIDEO, text: "Video Only",
-                                alt: videoOnly.Count.ToString()));
-
-                    // extras
-                    if (extras.Count > 0)
-                        categoriesMenu.Add(item: new MenuItem(id: (int)MenuIds.ID_FORMATS_EXTRA, text: "Extras",
-                            alt: extras.Count.ToString()));
-
-                    Console.Clear();
-                    int category = ConsoleMenu.SelectMenu(items: categoriesMenu);
-                    switch (category)
-                    {
-                        case 0:
-                        case -1:
-                            return false;
-
-                        case (int)MenuIds.ID_FORMATS_COMBINED:
-                        {
-                            // TODO: list combined formats
-                            return MenuActions.SelectFormat(formats: combined);
-                        }
-
-                        case (int)MenuIds.ID_FORMATS_AUDIO:
-                        {
-                            // TODO: list audio formats
-                            return MenuActions.SelectFormat(formats: audioOnly);
-                        }
-
-                        case (int)MenuIds.ID_FORMATS_VIDEO:
-                        {
-                            // TODO: list video formats
-                            return MenuActions.SelectFormat(formats: videoOnly);
-                        }
-
-                        case (int)MenuIds.ID_FORMATS_EXTRA:
-                        {
-                            // TODO: list extra formats
-                            return MenuActions.SelectFormat(formats: extras);
-                        }
-                    }
-
-                    return true;
-                }
-
-                _ = Log.Error(message: "Unable to parse formats.", tag: nameof(MenuActions.SelectFormat));
+                _ = Log.Error(message: "Process object is null.", tag: nameof(MenuActions.SelectFormat));
                 return false;
             }
+
+            Console.Write(value: "Gathering formats info... ");
+
+            // Read output BEFORE waiting
+            string json = proc.StandardOutput.ReadToEnd();
+            string err = proc.StandardError.ReadToEnd();
+
+            proc.WaitForExit();
+            Console.WriteLine(value: "\n");
+
+            if (!err.IsEmpty())
+            {
+                Console.WriteLine(value: $"{Terminal.AccentTextStyle}yt-dlp error{ANSI.ANSI_RESET}: " + err);
+                return false;
+            }
+
+            // parse formats
+            if (YtDlpParser.GetInfo(json: json, info: out YtDlpInfo info))
+            {
+                int idx = 0x10;
+                Dictionary<int, YtDlpFormat> combined = [];
+                Dictionary<int, YtDlpFormat> audioOnly = [];
+                Dictionary<int, YtDlpFormat> videoOnly = [];
+                Dictionary<int, YtDlpFormat> extras = [];
+
+                // representing combined formats
+                foreach (YtDlpFormat format in info.formats.Where(predicate: x => x.HasVideo && x.HasAudio))
+                    combined.Add(key: idx++, value: format);
+
+                // audio only
+                foreach (YtDlpFormat format in info.formats.Where(predicate: x => !x.HasVideo && x.HasAudio))
+                    audioOnly.Add(key: idx++, value: format);
+
+                // video only
+                foreach (YtDlpFormat format in info.formats.Where(predicate: x => x.HasVideo && !x.HasAudio))
+                    videoOnly.Add(key: idx++, value: format);
+
+                // extras, thumbnails, etc.
+                foreach (YtDlpFormat format in info.formats.Where(predicate: x => !x.HasVideo && !x.HasAudio))
+                    extras.Add(key: idx++, value: format);
+
+                // display available categories
+                MenuItemCollection categoriesMenu = new();
+
+                // combined
+                if (combined.Count > 0)
+                    categoriesMenu.Add(
+                        item: new MenuItem(id: (int)MenuIds.ID_FORMATS_COMBINED, text: "Combined",
+                            alt: combined.Count.ToString()));
+
+                // audio only
+                if (audioOnly.Count > 0)
+                    categoriesMenu.Add(
+                        item: new MenuItem(id: (int)MenuIds.ID_FORMATS_AUDIO, text: "Audio Only",
+                            alt: audioOnly.Count.ToString()));
+
+                // video only
+                if (videoOnly.Count > 0)
+                    categoriesMenu.Add(
+                        item: new MenuItem(id: (int)MenuIds.ID_FORMATS_VIDEO, text: "Video Only",
+                            alt: videoOnly.Count.ToString()));
+
+                // extras
+                if (extras.Count > 0)
+                    categoriesMenu.Add(item: new MenuItem(id: (int)MenuIds.ID_FORMATS_EXTRA, text: "Extras",
+                        alt: extras.Count.ToString()));
+
+                Console.Clear();
+                int category = ConsoleMenu.SelectMenu(items: categoriesMenu);
+                return category switch
+                {
+                    0 or -1 => false,
+                    (int)MenuIds.ID_FORMATS_COMBINED => MenuActions.SelectFormat(formats: combined),
+                    (int)MenuIds.ID_FORMATS_AUDIO => MenuActions.SelectFormat(formats: audioOnly),
+                    (int)MenuIds.ID_FORMATS_VIDEO => MenuActions.SelectFormat(formats: videoOnly),
+                    (int)MenuIds.ID_FORMATS_EXTRA => MenuActions.SelectFormat(formats: extras),
+                    var _ => true
+                };
+            }
+
+            _ = Log.Error(message: "Unable to parse formats.", tag: nameof(MenuActions.SelectFormat));
+            return false;
         }
         catch (Exception ex)
         {
@@ -283,20 +257,23 @@ internal static class MenuActions
         while (true)
         {
             Console.Clear();
-            MenuItemCollection items = new()
-            {
+            MenuItemCollection items =
+            [
                 new MenuItem(id: (int)MenuIds.ID_IMPORT_COOKIES, text: "Import cookies",
                     alt: MediaItem.Current.BrowserCookies == string.Empty ? "None" : MediaItem.Current.BrowserCookies),
+
                 new MenuItem(id: (int)MenuIds.ID_CUSTOM_ARGUMENTS, text: "Cutsom YT-DLP arguments",
                     alt: MediaItem.Current.CustomOptions == string.Empty ? "None" : "[values]"),
+
                 new MenuItem(),
                 new MenuItem(id: (int)MenuIds.ID_YT_DLP_VERSION, text: "YT-DLP Version",
                     alt: Program.ActionText(value: Program._ytdlp_version, alt: "Unknown")),
+
                 new MenuItem(id: (int)MenuIds.ID_UPDATE_YTDLP, text: "Check for Updates", alt: ">"),
                 new MenuItem(id: (int)MenuIds.ID_SELECT_THEME, text: "Select Theme", alt: ""),
                 new MenuItem(),
                 new MenuItem(id: (int)MenuIds.ID_EXIT, text: "Back", alt: "ESC")
-            };
+            ];
 
             int option = ConsoleMenu.SelectMenu(items: items);
             switch (option)

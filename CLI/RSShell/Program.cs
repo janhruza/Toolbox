@@ -30,7 +30,6 @@ internal class Program : IApplication
 
     public static void PostExitCleanup()
     {
-        // TODO: cleanup code
         _ = Config.Save(config: Config.Current);
         Console.Clear();
     }

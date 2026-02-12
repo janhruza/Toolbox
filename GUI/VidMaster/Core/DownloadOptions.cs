@@ -3,9 +3,6 @@
 /// <summary>
 ///     Representing download options.
 /// </summary>
-/// <remarks>
-///     TODO: Incomplete class.
-/// </remarks>
 public class DownloadOptions
 {
     /// <summary>
