@@ -109,8 +109,6 @@ public partial class MainWindow : Window
 
     private async void MiAbout_OnClick(object? sender, RoutedEventArgs e)
     {
-        // TODO show the about box
-
         await DlgMessageBox.Show(this, "Simple system update utility. It provides basic wrapper over WinGet, PacMan and APT package managers.", "About SystemUpdate");
         return;
     }
