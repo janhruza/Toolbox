@@ -26,4 +26,14 @@
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Dialogs\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Dialogs\DlgMessageBox.axaml.cs">
+        <DependentUpon>DlgMessageBox.axaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>

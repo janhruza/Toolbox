@@ -7,6 +7,7 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using SystemUpdate.Core;
 using SystemUpdate.Core.PackageManagers;
+using SystemUpdate.Dialogs;
 
 namespace SystemUpdate;
 
@@ -106,9 +107,11 @@ public partial class MainWindow : Window
         this.Close();
     }
 
-    private void MiAbout_OnClick(object? sender, RoutedEventArgs e)
+    private async void MiAbout_OnClick(object? sender, RoutedEventArgs e)
     {
         // TODO show the about box
+
+        await DlgMessageBox.Show(this, "Simple system update utility. It provides basic wrapper over WinGet, PacMan and APT package managers.", "About SystemUpdate");
         return;
     }
 
