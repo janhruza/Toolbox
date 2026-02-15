@@ -87,8 +87,7 @@
                 
                 <!-- Status bar grid -->
                 <Grid Grid.Row="2"
-                      ColumnDefinitions="*, Auto"
-                      Background="WhiteSmoke">
+                      ColumnDefinitions="*, Auto">
                         
                         <TextBlock Grid.Column="0"
                                    x:Name="tbStatus"

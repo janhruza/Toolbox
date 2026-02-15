@@ -138,14 +138,14 @@ public partial class MainWindow : Window
             // check for the root access
             if (!Program.IsRoot())
             {
-                SetStatusText("Root access required.");
+                this.SetStatusText("Root access required.");
                 return;
             }
             
             string op = this.GetSelectedOperation();
             if (string.IsNullOrWhiteSpace(op) == true)
             {
-                SetStatusText("Invalid operation selected.");
+                this.SetStatusText("Invalid operation selected.");
                 Console.Beep();
                 return;
             }
@@ -153,37 +153,21 @@ public partial class MainWindow : Window
             // start the timer when the operation is ready to execute
             this.StartTimer();
 
-            bool result;
-        
-            switch (op)
+            bool result = op switch
             {
-                case MainWindow.OP_SYNC:
-                    result = await this._manager.Sync();
-                    break;
-            
-                case MainWindow.OP_UPDATE:
-                    result = await this._manager.Update();
-                    break;
-            
-                default:
-                    result = false;
-                    break;
-            }
-        
+                MainWindow.OP_SYNC => await this._manager.Sync(),
+                MainWindow.OP_UPDATE => await this._manager.Update(),
+                MainWindow.OP_INSTALL => await this._manager.Install(this.txtPackages?.Text?.Trim() ?? string.Empty),
+                MainWindow.OP_REMOVE => await this._manager.Remove(this.txtPackages?.Text?.Trim() ?? string.Empty),
+                var _ => false
+            };
+
             // stop the timer when the operation finished
             this.StopTimer();
         
             // display the result
-            if (result == true)
-            {
-                this.SetStatusText("Operation completed successfully.");
-            }
+            this.SetStatusText(result == true ? "Operation completed successfully." : "Operation failed.");
 
-            else
-            {
-                this.SetStatusText("Operation failed.");
-            }
-        
             Console.Beep();
             return;
         }
@@ -196,8 +180,8 @@ public partial class MainWindow : Window
 
     private void LoadPM(PackageManager pm, MenuItem item)
     {
-        UnselectAll();
-        _manager = pm;
+        this.UnselectAll();
+        this._manager = pm;
         item.IsSelected = true;
         this.lblPackageManager.Content = this._manager.Name;
         return;
@@ -220,29 +204,35 @@ public partial class MainWindow : Window
 
     private void Control_OnLoaded(object? sender, RoutedEventArgs e)
     {
-        LoadPM(new Pacman(), this.miPacMan);
-        SetStatusText("Window loaded.");
+        this.LoadPM(new Pacman(), this.miPacMan);
+        this.SetStatusText("Window loaded.");
     }
 
     private void CbxAction_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (this.cbxAction is null || this.cbxAction.SelectedItem is null) return;
-        if (this.cbxAction.SelectedItem is ComboBoxItem item)
+        switch (this.cbxAction?.SelectedItem)
         {
-            if (item.Tag is string tag)
+            case null:
+                return;
+            case ComboBoxItem item:
             {
-                if (tag == MainWindow.OP_INSTALL || tag == MainWindow.OP_REMOVE)
+                if (item.Tag is string tag)
                 {
-                    // show the package input
-                    this.lblPackages.IsVisible = true;
-                    this.txtPackages.IsVisible = true;
+                    if (tag == MainWindow.OP_INSTALL || tag == MainWindow.OP_REMOVE)
+                    {
+                        // show the package input
+                        this.lblPackages.IsVisible = true;
+                        this.txtPackages.IsVisible = true;
+                    }
+
+                    else
+                    {
+                        this.lblPackages.IsVisible = false;
+                        this.txtPackages.IsVisible = false;
+                    }
                 }
 
-                else
-                {
-                    this.lblPackages.IsVisible = false;
-                    this.txtPackages.IsVisible = false;
-                }
+                break;
             }
         }
     }
