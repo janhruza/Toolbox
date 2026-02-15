@@ -1,0 +1,108 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Class="SystemUpdate.MainWindow"
+        CanResize="False"
+        CanMaximize="False"
+        SizeToContent="WidthAndHeight"
+        Title="System Update"
+        Loaded="Control_OnLoaded">
+        
+        <Grid RowDefinitions="Auto, *, Auto"
+              Width="450">
+                
+                <!-- App menu -->
+                <Menu Grid.Row="0">
+                        <MenuItem Header="File">
+                                <MenuItem Header="Close"
+                                          InputGesture="Alt+F4"
+                                          x:Name="miClose"
+                                          Click="MiClose_OnClick"/>
+                        </MenuItem>
+                        
+                        <MenuItem Header="Package Manager">
+                                <MenuItem Header="WinGet"
+                                          x:Name="miWinGet"
+                                          Click="MiWinGet_OnClick"/>
+                                
+                                <MenuItem Header="PacMan"
+                                          x:Name="miPacMan"
+                                          Click="MiPacMan_OnClick"/>
+                                
+                                <MenuItem Header="APT"
+                                          x:Name="miAPT"
+                                          Click="MiAPT_OnClick"/>
+                        </MenuItem>
+                        
+                        <MenuItem Header="Help">
+                                <MenuItem Header="About SystemUpdate"
+                                          InputGesture="F1"
+                                          x:Name="miAbout"
+                                          Click="MiAbout_OnClick"/>
+                        </MenuItem>
+                </Menu>
+                
+                <!-- Main content -->
+                <StackPanel Grid.Row="1"
+                            Margin="10,5,10,10">
+                        
+                        <Label Content="Select action"></Label>
+                        <ComboBox x:Name="cbxAction"
+                                  SelectedIndex="0"
+                                  HorizontalAlignment="Stretch"
+                                  SelectionChanged="CbxAction_OnSelectionChanged">
+                                
+                                <ComboBoxItem Tag="sync">Synchronize Databases</ComboBoxItem>
+                                <ComboBoxItem Tag="update">Check for Updates</ComboBoxItem>
+                                <ComboBoxItem Tag="install">Install a new Package</ComboBoxItem>
+                                <ComboBoxItem Tag="remove">Remove installed Package</ComboBoxItem>
+                        </ComboBox>
+                        
+                        <Label x:Name="lblPackages"
+                               Margin="0,5,0,0"
+                               IsVisible="False">Package ID(s)</Label>
+                        <TextBox x:Name="txtPackages"
+                                 IsVisible="False"/>
+                        
+                        <Grid ColumnDefinitions="*, Auto">
+                                
+                                <Label Grid.Column="0"
+                                       x:Name="lblPackageManager"
+                                       Content="Package Manager" />
+                                
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Right"
+                                            Margin="0,10,0,0">
+                                        
+                                        <Button x:Name="btnCancel"
+                                                Margin="0,0,5,0"
+                                                Click="MiClose_OnClick">Cancel</Button>
+                                        
+                                        <Button x:Name="btnPerform"
+                                                Click="BtnPerform_OnClick">Perform</Button>
+                                </StackPanel>
+                        </Grid>
+                </StackPanel>
+                
+                <!-- Status bar grid -->
+                <Grid Grid.Row="2"
+                      ColumnDefinitions="*, Auto"
+                      Background="WhiteSmoke">
+                        
+                        <TextBlock Grid.Column="0"
+                                   x:Name="tbStatus"
+                                   Margin="5,5,5,5"
+                                   Text="Status bar text"
+                                   TextWrapping="NoWrap"
+                                   TextTrimming="CharacterEllipsis"/>
+                        
+                        <TextBlock Grid.Column="1"
+                                   x:Name="tbTime"
+                                   Text="00:00:00"
+                                   Margin="5,5,5,5"/>
+                        
+                </Grid>
+        </Grid>
+        
+</Window>
