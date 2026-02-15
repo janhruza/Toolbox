@@ -13,7 +13,7 @@ public interface IPackageManager
     string Name { get; }
     
     /// <summary>
-    /// Updates all packages.
+    /// Updates all packages without synchronizing the databases.
     /// </summary>
     /// <returns>
     /// <see langword="true"/> if the update process started, otherwise <see langword="false"/>.

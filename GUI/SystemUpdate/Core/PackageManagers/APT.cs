@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 namespace SystemUpdate.Core.PackageManagers;
 
 /// <summary>
-/// Representing the APT package manager.
+/// Representing the Advanced Package Manager (APT) package manager.
 /// </summary>
 public class APT() : PackageManager("APT")
 {

@@ -13,7 +13,7 @@ public class Pacman() : PackageManager("PacMan")
     /// <inheritdoc/>
     public override async Task<bool> Update()
     {
-        return await Program.PerformTaskAsync(Pacman._cmd, "-Suy");
+        return await Program.PerformTaskAsync(Pacman._cmd, "-Su");
     }
 
     /// <inheritdoc/>
