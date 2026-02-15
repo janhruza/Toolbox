@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
@@ -12,18 +13,37 @@ namespace VidMaster.Core;
 public static class Downloader
 {
     #if WINDOWS
-    private static string _path = "yt-dlp.exe";
+    private const string FILE_NAME = "yt-dlp.exe";
+    private static string _path = FILE_NAME;
     #else
-    private static readonly string _path = "yt-dlp";
+    private const string FILE_NAME = "yt-dlp";
+    private static string _path = Downloader.FILE_NAME;
     #endif
 
+    private static bool GetSystemDownloader()
+    {
+        string value = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(value: value)) return false;
+
+        foreach (string path in value.Split(Path.PathSeparator))
+        {
+            string fullPath = Path.Combine(path, Downloader.FILE_NAME);
+            if (!File.Exists(fullPath)) continue;
+            
+            Downloader._path = fullPath;
+            return true;
+        }
+        
+        return false;
+    }
+    
     /// <summary>
     ///     Determines whether the downloader exists.
     /// </summary>
     /// <returns>Operation result.</returns>
     public static bool Exists()
     {
-        return File.Exists(path: Downloader._path);
+        return File.Exists(path: Downloader._path) || Downloader.GetSystemDownloader();
     }
 
     /// <summary>
@@ -53,8 +73,7 @@ public static class Downloader
     /// </remarks>
     public static async Task<int> Download(string url, string destination, string? format)
     {
-        bool formatSpecified = true;
-        if (string.IsNullOrWhiteSpace(value: format)) formatSpecified = false;
+        bool formatSpecified = !string.IsNullOrWhiteSpace(value: format);
 
         ProcessStartInfo psi = new()
         {
@@ -122,7 +141,7 @@ public static class Downloader
             // Deserialize the JSON string into our objects
             YtDlpResponse? data = JsonSerializer.Deserialize(
                 json: jsonOutput,
-                jsonTypeInfo: AppJsonContext.Default.YtDlpResponse); // Toto je vygenerovaný statický kód);
+                jsonTypeInfo: AppJsonContext.Default.YtDlpResponse);
             return data?.Formats ?? [];
         }
         catch (JsonException)

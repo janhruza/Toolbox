@@ -13,8 +13,7 @@ public class Config
     ///     Gets or sets the destination folder.
     /// </summary>
     public string SaveLocation { get; set; } =
-        Path.Combine(path1: Environment.GetFolderPath(folder: Environment.SpecialFolder.UserProfile),
-            path2: "Downloads");
+        Path.Combine(Environment.GetFolderPath(folder: Environment.SpecialFolder.MyVideos));
 
     /// <summary>
     ///     Gets or sets the requested theme variant.

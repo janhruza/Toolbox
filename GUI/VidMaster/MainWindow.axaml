@@ -23,7 +23,7 @@
     </Window.ContextMenu>
 
     <Grid RowDefinitions="Auto, *, Auto"
-          Width="350">
+          Width="400">
 
         <Menu Grid.Row="0">
             <MenuItem Header="File">
