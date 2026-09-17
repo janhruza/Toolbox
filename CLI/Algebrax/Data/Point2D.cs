@@ -12,8 +12,8 @@ public struct Point2D
     /// <param name="y">The Y coordinate.</param>
     public Point2D(double x, double y)
     {
-        this.X = x;
-        this.Y = y;
+        X = x;
+        Y = y;
         return;
     }
 

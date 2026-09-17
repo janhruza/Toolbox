@@ -78,7 +78,7 @@ public static class ConsoleMenu
         int pageSize = Math.Max(5, Console.WindowHeight - (_menuStartLine + reservedSpace));
         if (items.Count < pageSize) pageSize = items.Count;
 
-        int startIdx = Math.Max(0, Math.Min(idx - pageSize / 2, items.Count - pageSize));
+        int startIdx = Math.Max(0, Math.Min(idx - (pageSize / 2), items.Count - pageSize));
         int endIdx = Math.Min(startIdx + pageSize, items.Count);
 
         if (string.IsNullOrWhiteSpace(header)) header = "MENU";
@@ -111,7 +111,7 @@ public static class ConsoleMenu
         for (int x = startIdx; x < endIdx; x++)
         {
             // text left-padding by 2 places
-            string innerText = $"  {items[x].Text.PadRight(Constants.MENU_ITEM_WIDTH)}  ";
+            string innerText = $"  {items[x].Text,-Constants.MENU_ITEM_WIDTH}  ";
             string line = (x == idx)
                 ? $"{leftOffset}{Terminal.AccentHighlightStyle}{innerText}{ANSI_RESET}"
                 : $"{leftOffset}\e[0m{innerText}{ANSI_RESET}";

@@ -37,7 +37,7 @@ internal class Program
             foreach (int id in result)
             {
                 mi = menu.Where(x => x.Id == id).First();
-                Console.WriteLine($"  {id.ToString("00")}\t{mi.GetTextWithoutAlt()}");
+                Console.WriteLine($"  {id:00}\t{mi.GetTextWithoutAlt()}");
             }
 
             Console.WriteLine($"\nTotal: {Terminal.AccentTextStyle}{result.Length}{ANSI.ANSI_RESET} items.");

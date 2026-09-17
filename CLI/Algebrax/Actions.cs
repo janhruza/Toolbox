@@ -70,7 +70,7 @@ public static class Actions
                 // two solutions
                 Console.WriteLine($"X1 = {Terminal.AccentTextStyle}{x1}{ANSI.ANSI_RESET}{Environment.NewLine}X2 = {Terminal.AccentTextStyle}{x2}{ANSI.ANSI_RESET}");
             }
-            
+
             result = true;
         }
 

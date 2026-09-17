@@ -17,9 +17,9 @@ public class ExchangeManager
     /// </summary>
     public ExchangeManager()
     {
-        this._rates = [];
-        this._ready = false;
-        this._rawData = string.Empty;
+        _rates = [];
+        _ready = false;
+        _rawData = string.Empty;
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ public class ExchangeManager
         int release = Convert.ToInt32(metadata[1]);
 
         // assign the metadata
-        this._info = new ExchangeInfo
+        _info = new ExchangeInfo
         {
             Date = new DateOnly(year, month, day),
             Release = release
@@ -100,7 +100,7 @@ public class ExchangeManager
             };
 
             // add the rate to the list
-            this._rates.Add(rate);
+            _rates.Add(rate);
         }
 
         // add the CZK entry manually
@@ -112,9 +112,9 @@ public class ExchangeManager
             Code = "CZK",
             Value = 1.0m
         };
-        this._rates.Add(czk);
+        _rates.Add(czk);
 
-        this._ready = true;
+        _ready = true;
         return true;
     }
 
@@ -133,9 +133,9 @@ public class ExchangeManager
         try
         {
             // empty the default data
-            this._info = default;
-            this._rates.Clear();
-            this._rawData = string.Empty;
+            _info = default;
+            _rates.Clear();
+            _rawData = string.Empty;
 
             string requestUri;
             if (date == DateOnly.MinValue)
@@ -167,7 +167,7 @@ public class ExchangeManager
 
                 // assign read data
                 data = task.Result;
-                this._rawData = task.Result;
+                _rawData = task.Result;
             }
 
             // parse the recieved data
@@ -190,7 +190,7 @@ public class ExchangeManager
         try
         {
             // output file name
-            string path = Path.Combine(ArchiveDirectory, $"{Exchange.Date.ToString("yyyyMMdd")}{Exchange.Release}.txt");
+            string path = Path.Combine(ArchiveDirectory, $"{Exchange.Date:yyyyMMdd}{Exchange.Release}.txt");
 
             if (Directory.Exists(Path.GetDirectoryName(path)) == false)
             {
@@ -213,7 +213,7 @@ public class ExchangeManager
                 return true;
             }
 
-            File.WriteAllText(path, this._rawData, Resources.Encoding);
+            File.WriteAllText(path, _rawData, Resources.Encoding);
 
             _ = Log.Success("Report archived.", nameof(ArchiveReport));
             return true;
@@ -236,9 +236,9 @@ public class ExchangeManager
         try
         {
             // empty the default data
-            this._info = default;
-            this._rates.Clear();
-            this._rawData = string.Empty;
+            _info = default;
+            _rates.Clear();
+            _rawData = string.Empty;
 
             // check if file exists
             if (File.Exists(filename) == false) return false;
@@ -274,15 +274,15 @@ public class ExchangeManager
     /// <summary>
     /// Representing the recieved exchange info.
     /// </summary>
-    public ExchangeInfo Exchange => this._info;
+    public ExchangeInfo Exchange => _info;
 
     /// <summary>
     /// Representing the list of available exchange rates.
     /// </summary>
-    public List<RateInfo> Rates => this._rates;
+    public List<RateInfo> Rates => _rates;
 
     /// <summary>
     /// Determines whether the manager has fetched data successfully at least once.
     /// </summary>
-    public bool IsReady => this._ready;
+    public bool IsReady => _ready;
 }

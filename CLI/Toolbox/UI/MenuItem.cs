@@ -39,7 +39,7 @@ public class MenuItem
         Text = text;
 
         // initialize private properties
-        this.sText = text;
+        sText = text;
     }
 
     /// <summary>
@@ -93,8 +93,8 @@ public class MenuItem
 
         Text = paddedText + alt;
 
-        this.sText = text;
-        this.sAlt = alt;
+        sText = text;
+        sAlt = alt;
         return;
     }
 
@@ -104,7 +104,7 @@ public class MenuItem
     /// <returns>Main text of the item.</returns>
     public string GetTextWithoutAlt()
     {
-        return this.sText;
+        return sText;
     }
 
     /// <summary>
@@ -113,7 +113,7 @@ public class MenuItem
     /// <returns>Alternative text of the item.</returns>
     public string GetAltText()
     {
-        return this.sAlt;
+        return sAlt;
     }
 }
 

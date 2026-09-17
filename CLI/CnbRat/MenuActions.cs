@@ -233,7 +233,7 @@ internal static class MenuActions
         //decimal result = manager.Rates[sourceIndex].Value / manager.Rates[targetIndex].Value * amount;
 
         // correct conversion formula
-        decimal sourceToCzk = (manager.Rates[sourceIndex].Value / manager.Rates[sourceIndex].Amount) * amount;
+        decimal sourceToCzk = manager.Rates[sourceIndex].Value / manager.Rates[sourceIndex].Amount * amount;
         decimal result = sourceToCzk / (manager.Rates[targetIndex].Value / manager.Rates[targetIndex].Amount);
 
         // display result
@@ -313,7 +313,7 @@ internal static class MenuActions
                     continue;
                 }
 
-                Console.Write($"{Terminal.AccentTextStyle}{(x + y):D2}{ANSI_RESET} {info.Date} #{info.Release:D3} ");
+                Console.Write($"{Terminal.AccentTextStyle}{x + y:D2}{ANSI_RESET} {info.Date} #{info.Release:D3} ");
             }
 
             Console.WriteLine();

@@ -220,7 +220,7 @@ internal class Program : IApplication
         Console.WriteLine($"--\t{new string('\u2015', longest)}");
         for (int x = 0; x < Config.Current.Feeds.Count; x++)
         {
-            Console.WriteLine($"{(x + 1):D2}\t{Config.Current.Feeds[x]}");
+            Console.WriteLine($"{x + 1:D2}\t{Config.Current.Feeds[x]}");
         }
 
         Console.WriteLine();

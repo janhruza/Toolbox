@@ -20,7 +20,7 @@ public partial class DlgMessageBox : Window
     {
         InitializeComponent();
         Title = caption;
-        this.tbMessage.Text = message;
+        tbMessage.Text = message;
     }
 
     private async Task BeepAsync()

@@ -25,15 +25,15 @@ public partial class MainWindow : Window
     {
         if (string.IsNullOrWhiteSpace(message) == true)
         {
-            this.tbMessage.Text = string.Empty;
-            this.tbMessage.IsVisible = false;
+            tbMessage.Text = string.Empty;
+            tbMessage.IsVisible = false;
             return;
         }
 
         else
         {
-            this.tbMessage.Text = message;
-            this.tbMessage.IsVisible = true;
+            tbMessage.Text = message;
+            tbMessage.IsVisible = true;
             return;
         }
     }
@@ -46,18 +46,18 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         Config cfg = new Config();
-        this.txtFolder.Text = cfg.SaveLocation;
+        txtFolder.Text = cfg.SaveLocation;
     }
 
     private async Task RefreshUI()
     {
         if (Downloader.Exists() == false)
         {
-            this.miCheckForUpdates.IsEnabled = false;
+            miCheckForUpdates.IsEnabled = false;
             await new DlgDownloaderNotFound().ShowDialog(this);
         }
 
-        this.miCheckForUpdates.IsEnabled = true;
+        miCheckForUpdates.IsEnabled = true;
         return;
     }
 
@@ -117,8 +117,8 @@ public partial class MainWindow : Window
 
     private async void btnOk_Click(object? sender, RoutedEventArgs e)
     {
-        string src = this.txtUrl.Text ?? string.Empty;
-        string dest = this.txtFolder.Text ?? string.Empty;
+        string src = txtUrl.Text ?? string.Empty;
+        string dest = txtFolder.Text ?? string.Empty;
 
         if (src == string.Empty || dest == string.Empty)
         {
@@ -129,7 +129,7 @@ public partial class MainWindow : Window
 
         string format = string.Empty;
 
-        if (this.cbxFormats.SelectedItem is ComboBoxItem cbi)
+        if (cbxFormats.SelectedItem is ComboBoxItem cbi)
         {
             if (cbi.Tag is string formatId)
             {
@@ -162,7 +162,7 @@ public partial class MainWindow : Window
 
             if (folders.Count == 1)
             {
-                this.txtFolder.Text = folders[0].Path.AbsolutePath;
+                txtFolder.Text = folders[0].Path.AbsolutePath;
             }
         }
 
@@ -177,22 +177,22 @@ public partial class MainWindow : Window
 
     private void txtUrl_TextChanged(object? sender, TextChangedEventArgs e)
     {
-        bool value = string.IsNullOrWhiteSpace(this.txtUrl.Text) == false;
-        this.btnOk.IsEnabled = value;
-        this.btnRefreshFormats.IsEnabled = value;
+        bool value = string.IsNullOrWhiteSpace(txtUrl.Text) == false;
+        btnOk.IsEnabled = value;
+        btnRefreshFormats.IsEnabled = value;
         return;
     }
 
     private async Task<bool> RefreshFormats()
     {
-        string src = this.txtUrl.Text ?? string.Empty;
+        string src = txtUrl.Text ?? string.Empty;
         if (string.IsNullOrWhiteSpace(src))
         {
             return false;
         }
 
         // clear old formats
-        this.cbxFormats.Items.Clear();
+        cbxFormats.Items.Clear();
 
         // fetch the list of available formats
         List<FormatInfo> formats = await Downloader.GetAvailableFormats(src);
@@ -210,7 +210,7 @@ public partial class MainWindow : Window
                 Tag = format.FormatId
             };
 
-            _ = this.cbxFormats.Items.Add(cbi);
+            _ = cbxFormats.Items.Add(cbi);
         }
 
         // insert the 'default' quality item
@@ -220,7 +220,7 @@ public partial class MainWindow : Window
             Tag = string.Empty
         };
 
-        this.cbxFormats.Items.Insert(0, cbiDefault);
+        cbxFormats.Items.Insert(0, cbiDefault);
 
         // add the  'best quality' format item
         ComboBoxItem cbiBest = new ComboBoxItem
@@ -229,8 +229,8 @@ public partial class MainWindow : Window
             Tag = "bestvideo+bestaudio/best"
         };
 
-        _ = this.cbxFormats.Items.Add(cbiBest);
-        this.cbxFormats.SelectedIndex = 0;
+        _ = cbxFormats.Items.Add(cbiBest);
+        cbxFormats.SelectedIndex = 0;
 
         return true;
     }
